@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<robot name="obstacle" version="1.0" xmlns:xacro="http://www.ros.org/wiki/xacro">
+  
+  <xacro:property name="m" value="0.5" /> <!--500g-->
+  <xacro:property name="r" value="0.1" /> <!--m-->
+  <xacro:property name="I" value="${2/5 * m *r*r}" /> <!--m-->
+
+  <material name="GREEN">
+    <color rgba="0.0 1.0 0.0 1.0"/>
+  </material>
+
+  <link name="obstacle_link">
+    <visual>
+      <geometry>
+        <sphere radius="${r}" />
+      </geometry>
+      <material name="GREEN" />
+    </visual>
+    <collision>
+      <geometry>
+        <sphere radius="${r}"/>
+      </geometry>
+      <surface>
+        <friction>
+          <ode>
+            <mu>2.0</mu>
+            <mu2>2.5</mu2>
+          </ode>
+        </friction>
+      </surface>
+    </collision>
+    <inertial>
+      <mass value="${m}"/>
+      <inertia ixx="${I}" ixy="0.0" ixz="0.0" iyy="${I}" iyz="0.0" izz="${I}"/>
+    </inertial>    
+  </link>
+
+  <gazebo reference="obstacle_link">
+    <material>Gazebo/Green</material>
+  </gazebo>
+
+  <gazebo>
+    <static>true</static>
+  </gazebo>
+  
+</robot>

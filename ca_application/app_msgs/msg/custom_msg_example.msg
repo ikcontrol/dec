@@ -1,0 +1,5 @@
+# Comment
+Header header
+bool boolExampleVarName
+float64 float64ExampleVarName
+int8 int8ExampleVarName
