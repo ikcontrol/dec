@@ -1,0 +1,44 @@
+<?xml version="1.0" ?>
+<launch xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://gist.githubusercontent.com/nalt/dfa2abc9d2e3ae4feb82ca5608090387/raw/roslaunch.xsd">
+    <!-- TODO: DELETE THIS LAUNCH FILE with the launching of the 3D versión fo the old algorithm -->
+    <!-- <arg name="limited" default="true"/>
+    <arg name="paused" default="true"/>
+    <arg name="use_sim_time" default="true"/>
+    <arg name="gui" default="true"/>
+    <arg name="headless" default="false"/>
+    <arg name="debug" default="false"/>
+    <arg name="rvizconfig" default="$(find robot_labo_setups)/rviz/ur10e_sim.rviz" />
+    <arg name="robot_description" default="robot_description"/>
+    <arg name="sim" default="true"/> -->
+    <!--arg name="transmission_hw_interface" default="ur_controllers/ScaledPositionJointInterface" /--> <!-- hardware_interface/PositionJointInterface -->
+    <!-- <arg name="moveit_load_robot_description" default="true"/> -->
+    <arg name="limited" default="true"/>
+    <arg name="use_sim_time" value="true"/>
+    <arg name="gl_compat" default="false" />
+    <arg name="sim_world" default="$(find app_apf_collision_avoidance)/config/base.world" />
+    <arg name="rvizconfig" default="$(find app_apf_collision_avoidance)/config/rviz_config_3d.rviz" />
+    <arg name="transmission_hw_interface" default="ur_controllers/ScaledVelocityJointInterface" />
+    <arg name="started_controllers" default="vel_flacco_apf_controller" /> <!-- flacco_apf_controller -->
+    <arg name="stopped_controllers" default="arm_controller" /> <!-- arm_controller -->
+
+    <arg name="obstacle_model" default="$(find ca_apf_simulation)/urdf/gazebo_obstacles.urdf.xacro" />
+
+    <rosparam file="$(find app_apf_collision_avoidance)/config/sim_rtt_apf_controllers_3d.yaml" />
+    <include file="$(find robot_labo_setups)/launch/ur10e_sim_ca.launch" pass_all_args="true" />
+
+    <node pkg="ca_apf_simulation" type="obstacle_spawner_node" name="obstacle_spawner_node" output="screen">
+        <rosparam param="position" >[0.077936, 0.938011, 1.5]</rosparam>
+        <rosparam param="orientation" >[0.0, 0.0, 0.0]</rosparam>
+        <param name="obstacle_description" command="$(find xacro)/xacro --inorder $(arg obstacle_model)" />
+    </node>
+
+    <remap from="/obstacle_pub/apf_dists" to="/apf_cp_distances" />
+    <node name="obstacle_publisher" pkg="app_apf_collision_avoidance" type="apf_obstacle_publisher_3d_node" output="screen">
+        <rosparam command="load" file="$(find app_apf_collision_avoidance)/config/sim_obstacle_publish_3d.yaml" />
+    </node>
+
+    <!-- Including the vision pre-processing node -->
+    <node pkg="ca_apf_scene_segmentation" type="image_processing_node" name="vision_preprocessing_node" output="screen" />
+
+    <!-- <node pkg="rqt_graph" type="rqt_graph" name="rqt_auxiliar_node" output="screen"/> -->
+</launch>

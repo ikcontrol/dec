@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<robot name="ur10_e"
+  xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- /////////////////////////////////////////// -->
+  <!-- ///// INCLUDING/LOADING XACRO FILES /////// -->
+  <!-- /////////////////////////////////////////// -->
+  <!-- Loading the gripper (Robotic 2F-140) description -->
+  <xacro:include filename="$(find robotiq_2f_140_gripper_visualization)/urdf/robotiq_arg2f_140_model_macro.xacro"/>
+
+  <xacro:arg name="arm_prefix" default="" />
+
+  <!-- Robotic 2F-140 Gripper -->
+  <xacro:robotiq_arg2f_140 prefix="$(arg arm_prefix)"/>
+
+
+</robot>

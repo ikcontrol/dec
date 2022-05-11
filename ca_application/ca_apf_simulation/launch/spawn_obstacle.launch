@@ -1,0 +1,12 @@
+<?xml version="1.0" ?>
+<launch xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://gist.githubusercontent.com/nalt/dfa2abc9d2e3ae4feb82ca5608090387/raw/roslaunch.xsd">
+
+    <arg name="obstacle_model" default="$(find ca_apf_simulation)/urdf/gazebo_obstacles.urdf.xacro" />
+
+    <node pkg="ca_apf_simulation" type="obstacle_spawner_node" name="obstacle_spawner_node" output="screen">
+        <rosparam param="position" >[0.077936, 0.938011, 1.5]</rosparam>
+        <rosparam param="orientation" >[0.0, 0.0, 0.0]</rosparam>
+        <param name="obstacle_description" command="$(find xacro)/xacro --inorder $(arg obstacle_model)" />
+    </node>
+
+</launch>

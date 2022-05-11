@@ -1,0 +1,44 @@
+<?xml version="1.0" ?>
+<launch xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:noNamespaceSchemaLocation="https://gist.githubusercontent.com/nalt/dfa2abc9d2e3ae4feb82ca5608090387/raw/roslaunch.xsd">
+  
+  <arg name="rvizconfig" default="$(find ca_apf_robot)/config/rviz_config.rviz" />
+  <arg name="controllers" default="vel_flacco_apf_controller joint_state_controller speed_scaling_state_controller force_torque_sensor_controller" />
+  <arg name="stopped_controllers" default="arm_controller" />
+  <arg name="debug" default="false" />
+  <arg name="gui" default="true" />
+  <arg name="control_machine" default=""/>
+  <arg name="align_depth" default="false"/>
+
+  <!-- Loading ROS Controllers and ROS robot, camera, and gripper models and controllers -->
+  <rosparam file="$(find ca_apf_robot)/config/rtt_apf_controllers.yaml"/>
+  <include file="$(find robot_labo_setups)/launch/ur10e_real_ca.launch" pass_all_args="true" />    <!-- TODO: Here is where the real dual-cam config is launched. -->
+
+  <!-- TODO: Check if the obstacle publisher should be modified or the legacy content is properly used. To used the PCL2 functions the 3D version should be employed -->
+  <remap from="/obstacle_pub/apf_dists" to="/apf_cp_distances" /> 
+  <node name="obstacle_publisher" pkg="ca_apf_application" type="apf_obstacle_publisher_node" output="screen">
+    <rosparam command="load" file="$(find ca_apf_robot)/config/obstacle_publish.yaml" />
+  </node>
+
+  <!-- Launching remotely the external_ctrl.urp program in the robot controller -->
+  <node pkg="robot_labo_setups" type="ur_remote_ctrl_start" name="ur_remote_ctrl_starter" output="screen" />
+  
+  <!-- MoveIt! Node Launching -->
+  <include file="$(find moveit_ur10e_real_ca)/launch/move_group.launch">
+    <arg name="debug" default="$(arg debug)" />
+  </include>
+
+  <!-- RVIZ node -->
+  <node name="rviz" pkg="rviz" type="rviz" if="$(arg gui)" args="-d $(arg rvizconfig)" respawn="true"/>
+  
+  <!-- URDF FILTER: Setup -->
+  <param name="gripper_model" command="$(find xacro)/xacro '$(find ca_apf_robot)/urdf/gripper.xacro'" />
+  <param name="robot_model" textfile="$(find ca_apf_robot)/urdf/ur10e.urdf" />
+  <node pkg="realtime_urdf_filter" type="realtime_urdf_filter" name="d345_urdf_filter" output="screen">
+    <remap from="~input_depth" to="/camera1/depth/image_rect_raw" />
+    <remap from="~output_depth" to="/camera1/depth_registered_filtered/image_rect" />
+    <remap from="~output_mask" to="/urdf_filtered_mask" />
+    <rosparam command="load" file="$(find ca_apf_robot)/config/filter_parameters.yaml"/>
+  </node>
+
+</launch>

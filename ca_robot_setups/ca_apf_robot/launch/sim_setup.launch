@@ -1,0 +1,36 @@
+<?xml version="1.0" ?>
+<launch xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:noNamespaceSchemaLocation="https://gist.githubusercontent.com/nalt/dfa2abc9d2e3ae4feb82ca5608090387/raw/roslaunch.xsd">
+  
+  <param name="/use_sim_time" value="true"/>
+
+  <arg name="gl_compat" default="false" />
+  <arg name="sim_world" default="$(find ca_apf_robot)/config/base.world" />
+  <arg name="rvizconfig" default="$(find ca_apf_robot)/config/rviz_config.rviz" />
+  <arg name="transmission_hw_interface" default="ur_controllers/ScaledVelocityJointInterface" />
+  <arg name="started_controllers" default="vel_flacco_apf_controller" /> <!-- flacco_apf_controller -->
+  <arg name="stopped_controllers" default="arm_controller" /> <!-- arm_controller -->
+
+  <rosparam file="$(find ca_apf_robot)/config/sim_rtt_apf_controllers.yaml" />
+  <include file="$(find robot_labo_setups)/launch/ur10e_sim_ca.launch" pass_all_args="true" />
+
+  <!-- TODO: Check if the obstacle publisher should be modified or the legacy content is properly used. To used the PCL2 functions the 3D version should be employed -->
+  <remap from="/obstacle_pub/apf_dists" to="/apf_cp_distances" />
+  <node name="obstacle_publisher" pkg="app_apf_collision_avoidance" type="apf_obstacle_publisher_node" output="screen">
+    <rosparam command="load" file="$(find ca_apf_robot)/config/sim_obstacle_publish.yaml" />
+  </node>
+  
+  <!-- URDF FILTER: Setup -->
+  <param name="gripper_model" command="$(find xacro)/xacro '$(find ca_apf_robot)/urdf/gripper.xacro'" />
+  <param name="robot_model" textfile="$(find ca_apf_robot)/urdf/ur10e.urdf" />
+  <node pkg="realtime_urdf_filter" type="realtime_urdf_filter" name="d345_urdf_filter" output="screen">
+    <remap from="~input_depth" to="/camera1/aligned_depth_to_color/image_raw" />
+    <remap from="~output_depth" to="/camera1/depth_registered_filtered/image_rect" />
+    <remap from="~output_mask" to="/urdf_filtered_mask" />
+    <rosparam command="load" file="$(find ca_apf_robot)/config/filter_parameters.yaml"/>
+  </node>
+
+  <include file="$(find ca_apf_simulation)/launch/spawn_obstacle.launch"/>
+
+  <!-- <node pkg="rqt_graph" type="rqt_graph" name="rqt_auxiliar_node" output="screen"/> -->
+</launch>

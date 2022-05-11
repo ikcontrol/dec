@@ -20,7 +20,12 @@ There is still no official original release for the actual packages distribuitio
   * Developers list:
   * Mantainers list:
   * Package list:
-    * *Package 1*: 
+    * *Package 1*: ur10e_hw_integration
     * *Package 2*:
     * *...*:
     * *Package n*:
+
+## TO_DO
+The following tasks are still required
+* Bring the UR10e_ca *.launch and *.urdf.xacro files to this package.
+* Bring the moveit_configs specific of the application

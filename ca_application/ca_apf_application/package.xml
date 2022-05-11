@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>ca_apf_application</name>
+  <version>0.0.0</version>
+  <description>The ca_apf_application package</description>
+
+  <!-- One maintainer tag required, multiple allowed, one person per tag -->
+  <!-- Example:  -->
+  <!-- <maintainer email="jane.doe@example.com">Jane Doe</maintainer> -->
+  <maintainer email="diego.rodriguez@ikerlan.com">dr-mel</maintainer>
+  <author email="ander.gonzalez@ikerlan.es">Ander Gonzalez Tome</author>
+
+  <!-- One license tag required, multiple allowed, one license per tag -->
+  <!-- Commonly used license strings: -->
+  <!--   BSD, MIT, Boost Software License, GPLv2, GPLv3, LGPLv2.1, LGPLv3 -->
+  <license>BSD-4</license>
+  <buildtool_depend>catkin</buildtool_depend>
+
+
+  <depend>roscpp</depend>
+  <depend>std_msgs</depend>
+  <depend>apf_msgs</depend>
+  <depend>sensor_msgs</depend>
+  <depend>apf_algorithms</depend>
+  <depend>tf2</depend>
+  <depend>tf2_ros</depend>
+  <depend>tf2_eigen</depend>
+  <depend>image_transport</depend>
+  <depend>cv_bridge</depend>
+  <depend>ur_interface_handler</depend>
+  <depend>apf_controller_msgs</depend>
+  <depend>pcl_conversions</depend>
+  <depend>pcl_ros</depend>
+  <depend>libpcl-all-dev</depend>
+    
+  <depend>robotiq_gripper_msgs</depend>
+  <depend>moveit_ros_planning_interface</depend>
+  <depend>moveit_visual_tools</depend>
+
+  <depend>control_msgs</depend>
+  <depend>moveit_core</depend>
+  <depend>pluginlib</depend>
+  <depend>moveit_switching_controller_manager</depend>
+
+
+  <exec_depend>rtt_ur_apf_controllers</exec_depend>
+  <exec_depend>robot_labo_setups</exec_depend>
+  <exec_depend>controller_manager</exec_depend>
+
+
+  <export>
+  </export>
+</package>

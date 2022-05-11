@@ -1,63 +1,29 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(app_gui)
+project(ca_apf_scene_segmentation)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
-# add_compile_options(-std=c++11)
+add_compile_options(-std=c++11)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
   roscpp
-  ca_apf_msgs
+  rospy
+  std_msgs
+  sensor_msgs
+  cv_bridge               # package to use cv_bridge to link ros with open cv 
+  image_transport         # package to import between opencv images format and ros image format
+  tf2
+  tf2_ros
+  tf2_msgs
+  tf2_sensor_msgs
+  pcl_conversions
+  pcl_ros
 )
 
-#find_package(Qt REQUIRED Core Widgets)
-#set(QT_LIBRARIES Qt5::Widgets)
-include_directories(${catkin_INCLUDE_DIRS})
-# Use this to define what the package will export (e.g. libs, headers).
-catkin_package(INCLUDE_DIRS include
-               LIBRARIES app_gui
-               CATKIN_DEPENDS roscpp
-                              ca_apf_msgs
-               DEPENDS system_lib)
-
-##############################################################################
-# Qt Environment
-##############################################################################
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
-set(CMAKE_AUTOMOC ON)
-#SET(CMAKE_AUTOUIC ON)
-
-find_package(Qt5 COMPONENTS Core Gui Widgets PrintSupport)
-# this comes from qt_build's qt-ros.cmake which is automatically 
-# included via the dependency call in package.xml
-#rosbuild_prepare_qt4(QtCore QtGui) # Add the appropriate components to the component list here
-
-##############################################################################
-# Sections
-##############################################################################
-file(GLOB QT_FORMS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} ui/*.ui)
-file(GLOB QT_RESOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} resources/*.qrc)
-file(GLOB_RECURSE QT_MOC RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} FOLLOW_SYMLINKS include/app_gui/*.hpp)
-
-QT5_ADD_RESOURCES(QT_RESOURCES_CPP ${QT_RESOURCES})
-QT5_WRAP_UI(QT_FORMS_HPP ${QT_FORMS})
-QT5_WRAP_CPP(QT_MOC_HPP ${QT_MOC})
-
-include_directories(
-    ${Qt5Core_INCLUDE_DIRS}
-    ${Qt5Gui_INCLUDE_DIRS}
-    ${Qt5Widgets_INCLUDE_DIRS}
-    ${Qt5PrintSupport_INCLUDE_DIRS}
-    )
-
-add_definitions( -std=c++11 -fPIC)
-##############################################################################
-# Sources
-##############################################################################
-file(GLOB_RECURSE QT_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} FOLLOW_SYMLINKS src/*.cpp)
-
+## OpenCV Packages
+find_package(OpenCV 3.2 REQUIRED)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -68,6 +34,56 @@ file(GLOB_RECURSE QT_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} FOLLOW_SYMLINK
 ## See http://ros.org/doc/api/catkin/html/user_guide/setup_dot_py.html
 # catkin_python_setup()
 
+################################################
+## Declare ROS messages, services and actions ##
+################################################
+
+## To declare and build messages, services or actions from within this
+## package, follow these steps:
+## * Let MSG_DEP_SET be the set of packages whose message types you use in
+##   your messages/services/actions (e.g. std_msgs, actionlib_msgs, ...).
+## * In the file package.xml:
+##   * add a build_depend tag for "message_generation"
+##   * add a build_depend and a exec_depend tag for each package in MSG_DEP_SET
+##   * If MSG_DEP_SET isn't empty the following dependency has been pulled in
+##     but can be declared for certainty nonetheless:
+##     * add a exec_depend tag for "message_runtime"
+## * In this file (CMakeLists.txt):
+##   * add "message_generation" and every package in MSG_DEP_SET to
+##     find_package(catkin REQUIRED COMPONENTS ...)
+##   * add "message_runtime" and every package in MSG_DEP_SET to
+##     catkin_package(CATKIN_DEPENDS ...)
+##   * uncomment the add_*_files sections below as needed
+##     and list every .msg/.srv/.action file to be processed
+##   * uncomment the generate_messages entry below
+##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
+
+## Generate messages in the 'msg' folder
+# add_message_files(
+#   FILES
+#   Message1.msg
+#   Message2.msg
+# )
+
+## Generate services in the 'srv' folder
+# add_service_files(
+#   FILES
+#   Service1.srv
+#   Service2.srv
+# )
+
+## Generate actions in the 'action' folder
+# add_action_files(
+#   FILES
+#   Action1.action
+#   Action2.action
+# )
+
+## Generate added messages and services with any dependencies listed here
+# generate_messages(
+#   DEPENDENCIES
+#   std_msgs
+# )
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -100,9 +116,20 @@ file(GLOB_RECURSE QT_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} FOLLOW_SYMLINK
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
 #  INCLUDE_DIRS include
-#  LIBRARIES app_gui
-#  CATKIN_DEPENDS roscpp
-#  DEPENDS system_lib
+#  LIBRARIES app_nodes
+  CATKIN_DEPENDS roscpp 
+                 rospy
+                 std_msgs
+                 sensor_msgs
+                 cv_bridge
+                 image_transport
+                 tf2
+                 tf2_ros
+                 tf2_msgs
+                 tf2_sensor_msgs
+                 pcl_conversions
+                 pcl_ros
+  # DEPENDS system_lib
 )
 
 ###########
@@ -112,14 +139,27 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(
-# include
+  ${OpenCV_INCLUDE_DIRS}
   ${catkin_INCLUDE_DIRS}
 )
-
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
-#   src/${PROJECT_NAME}/app_gui.cpp
+#   src/${PROJECT_NAME}/ca_apf_scene_segmentation.cpp
 # )
+add_library(image_conversion_class
+  src/vision/image_conversion_class.cpp
+)
+add_library(image_processing_class
+  src/vision/image_processing_class.cpp
+)
+
+## Libraries target links
+target_link_libraries(image_conversion_class ${catkin_LIBRARIES}
+                                             ${OpenCV_LIBRARIES})
+target_link_libraries(image_processing_class ${catkin_LIBRARIES}
+                                             ${OpenCV_LIBRARIES}
+                                             image_conversion_class)
+
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
@@ -129,7 +169,9 @@ include_directories(
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-# add_executable(${PROJECT_NAME}_node src/app_gui_node.cpp)
+# add_executable(${PROJECT_NAME}_node src/ca_apf_scene_segmentation_node.cpp)
+add_executable(dual_camera_test_node src/dual_camera_test_node.cpp)
+add_executable(image_processing_node src/image_processing_node.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -140,11 +182,19 @@ include_directories(
 ## Add cmake target dependencies of the executable
 ## same as for the library above
 # add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(dual_camera_test_node  ${catkin_EXPORTED_TARGETS})
+add_dependencies(image_processing_node  ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
 # target_link_libraries(${PROJECT_NAME}_node
 #   ${catkin_LIBRARIES}
 # )
+target_link_libraries(dual_camera_test_node ${catkin_LIBRARIES}
+                                                   ${OpenCV_LIBRARIES}
+                                                   image_conversion_class)
+target_link_libraries(image_processing_node ${catkin_LIBRARIES}
+                                            ${OpenCV_LIBRARIES}
+                                            image_processing_class)
 
 #############
 ## Install ##
@@ -187,24 +237,27 @@ include_directories(
 #   # myfile2
 #   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 # )
+install(TARGETS image_conversion_class
+  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  RUNTIME DESTINATION ${CATKIN_GLOBAL_BIN_DESTINATION}
+)
+
+install(TARGETS image_processing_class
+  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  RUNTIME DESTINATION ${CATKIN_GLOBAL_BIN_DESTINATION}
+)
 
 #############
 ## Testing ##
 #############
 
 ## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_app_gui.cpp)
+# catkin_add_gtest(${PROJECT_NAME}-test test/test_ca_apf_scene_segmentation.cpp)
 # if(TARGET ${PROJECT_NAME}-test)
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
-
-##############################################################################
-# Binaries
-##############################################################################
-add_executable(app_gui ${QT_SOURCES} ${QT_RESOURCES_CPP} ${QT_FORMS_HPP} ${QT_MOC_HPP})
-add_dependencies(app_gui ${catkin_EXPORTED_TARGETS})
-target_link_libraries(app_gui ${QT_LIBRARIES} ${catkin_LIBRARIES}    Qt5::Core  Qt5::Widgets Qt5::PrintSupport)
-install(TARGETS app_gui RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})

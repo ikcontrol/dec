@@ -34,7 +34,7 @@
   <build_depend>qtmultimedia5-dev</build_depend>
   <build_depend>libqt5-svg-dev</build_depend>
   <build_depend>libqt5multimedia5-plugins</build_depend>
-  <build_depend>app_msgs</build_depend>
+  <build_depend>ca_apf_msgs</build_depend>
   
   <build_export_depend>roscpp</build_export_depend>
   <build_export_depend>qtbase5-dev</build_export_depend>
@@ -42,7 +42,7 @@
   <build_export_depend>qtmultimedia5-dev</build_export_depend>
   <build_export_depend>libqt5-svg-dev</build_export_depend>
   <build_export_depend>libqt5multimedia5-plugins</build_export_depend>
-  <build_export_depend>app_msgs</build_export_depend>
+  <build_export_depend>ca_apf_msgs</build_export_depend>
 
   <exec_depend>roscpp</exec_depend> 
   <exec_depend>qtbase5-dev</exec_depend>
@@ -50,7 +50,7 @@
   <exec_depend>qtmultimedia5-dev</exec_depend>
   <exec_depend>libqt5-svg-dev</exec_depend>
   <exec_depend>libqt5multimedia5-plugins</exec_depend>
-  <exec_depend>app_msgs</exec_depend>
+  <exec_depend>ca_apf_msgs</exec_depend>
 
 
   <!-- The export tag contains other, unspecified, tags -->

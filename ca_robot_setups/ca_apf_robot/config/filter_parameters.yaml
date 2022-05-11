@@ -1,0 +1,17 @@
+fixed_frame: /world
+camera_frame: /rs_d435_cam_depth_optical_frame
+camera_offset:
+  translation: [0.0, 0.0, 0.0]
+  rotation:    [0.0, 0.0, 0.0, 1.0]
+# There is one entry for each URDF that should be filtered
+models:
+- model: "robot_model"
+  tf_prefix: ""
+- model: "gripper_model"
+  tf_prefix: ""
+# how far in front of the robot model is still deleted? (e.g. 0.05 = 5cm)
+depth_distance_threshold: 0.10
+show_gui: False
+filter_replace_value: 5.0
+sample_robot_body_frame: "left_outer_knuckle"
+loose_tf_timing: False
