@@ -1,0 +1,9 @@
+[submodule "ca_control/apf_algorithms"]
+	path = ca_control/apf_algorithms
+	url = http://kaugitea.ikerlan.es/robotics/apf_algorithms.git
+[submodule "ca_control/rtt_ur_controllers"]
+	path = ca_control/rtt_ur_controllers
+	url = http://kaugitea.ikerlan.es/robotics/rtt_ur_controllers.git
+[submodule "ca_control/app_apf_collision_avoidance"]
+	path = ca_control/app_apf_collision_avoidance
+	url = http://kaugitea.ikerlan.es/robotics/app_apf_collision_avoidance.git
