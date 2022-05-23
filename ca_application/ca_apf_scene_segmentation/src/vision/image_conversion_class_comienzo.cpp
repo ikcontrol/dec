@@ -9,14 +9,11 @@ namespace pic_handling
         std::string sOutMessage;
         /* Configuring topic string names and opencv2 window names in case there's more than one camera --> Given de sCameraNumber parameter */
         if (sCameraNumber != "") {
-
- 
             sOpencvWindow = "Image Window - RealSense camera" + sCameraNumber;
             sColorTopic = "/camera" + sCameraNumber + "/color/image_raw";
             sInfra1Topic = "/camera" + sCameraNumber + "/infra1/image_rect_raw";
             sInfra2Topic = "/camera" + sCameraNumber + "/infra2/image_rect_raw";
             if (bAlignedDepthOn) {
-
                 /* Aligned depth is on -> So, we are going to record the depth picture preprocessed to match with the pixels and size of the rgb picture */
                 sDepthTopic = "/camera" + sCameraNumber + "/aligned_depth_to_color/image_raw";
             }
@@ -30,7 +27,6 @@ namespace pic_handling
             sColorTopic = "/camera/color/image_raw";
             sInfra1Topic = "/camera/infra1/image_rect_raw";
             sInfra2Topic = "/camera/infra2/image_rect_raw";
-
             if (bAlignedDepthOn) {
                 /* Aligned depth is on -> So, we are going to record the depth picture preprocessed to match with the pixels and size of the rgb picture */
                 sDepthTopic = "/camera/aligned_depth_to_color/image_raw";
@@ -45,7 +41,6 @@ namespace pic_handling
         ros::master::getTopics(master_topics);
         ROS_INFO("Checking for available topic to subscribe...");
         for (ros::master::V_TopicInfo::iterator it = master_topics.begin() ; it != master_topics.end(); it++) {
-
             const ros::master::TopicInfo& info = *it;
             /* Subscribe to the default topics for grabbing the camera pictures */
             if (info.name == sColorTopic) {

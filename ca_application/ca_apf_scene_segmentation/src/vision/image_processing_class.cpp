@@ -1,1011 +1,1961 @@
 #include "../../include/vision/image_processing_class.h"
+#include <iostream>
+#include <chrono>
+#include <thread>
 
 namespace pic_handling
 {
     /***********************************************************
      * PRIVATE METHODS OF THE CLASS
-     **********************************************************/ 
+    **********************************************************/ 
     void image_processing::main_loop() {
         /* Non-cyclic part of the main loop. For example, it can be used for moving the robot to home position (it is not this particular case) */
         double dTime = (double)cv::getTickCount();
+        ImageNumber=0;
+        bool First_Image_Prof=false;
+        bool First_Image_RGB=false;
+        bool First_Prof_No_Robot=false;
+          printf("Comienza\n\n\n");
+        printf("*****\n\n\n");
       
        
         /* Cyclic part of the main loop */
-        while (ros::ok()) {
+        while (ros::ok()) 
+        {
+            
+            if (icCamGrabber1.getbDepthReceived() && icCamGrabber1.getbColorReceived() && !bIsProcessing)
+
+            {
+                
+                try
+                {
+                        listener.waitForTransform("/rs_d435_cam_color_optical_frame", "/tool_center_point", ros::Time(0), ros::Duration(10.0) );
+                        listener.lookupTransform("/rs_d435_cam_color_optical_frame", "/base_link",ros::Time(0), base_0);
+                        listener.lookupTransform("/rs_d435_cam_color_optical_frame", "/forearm_link",ros::Time(0), forearm);
+                        listener.lookupTransform("/rs_d435_cam_color_optical_frame", "/shoulder_link",ros::Time(0), shoulder);
+                        listener.lookupTransform("/rs_d435_cam_color_optical_frame", "/wrist_1_link",ros::Time(0), wrist_1);
+                        listener.lookupTransform("/rs_d435_cam_color_optical_frame", "/wrist_2_link",ros::Time(0), wrist_2);
+                        listener.lookupTransform("/rs_d435_cam_color_optical_frame", "/wrist_3_link",ros::Time(0), wrist_3);
+                        listener.lookupTransform("/rs_d435_cam_color_optical_frame", "/tool_center_point",ros::Time(0), tool_center_point);
+
+                }
+                    catch (tf::TransformException &ex) 
+                    {
+                            ROS_ERROR("%s",ex.what());
+                            ros::Duration(1.0).sleep();
+                            
+                        }
+                        //     using boost::lexical_cast;
+                        // using std::string;
+                        // string finish_name=".txt";
+                        // string numstring;
+                        // numstring = lexical_cast<string>(ImageNumber);
+                        // numstring += finish_name;
+
+
+                        // // string nombreArchivo = "/home/ikerlan/camera_localization_ws/src/camera_localization/scripts/folder_save/Valores64.txt";
+                        // string nameFile = "/home/ikerlan/ros_wss/ws_ca_apf/src/ca_apf_application/ca_application/ca_apf_scene_segmentation/scripts/folder_save/Valores";
+
+                        // nameFile += numstring;
+
+                        // std::ofstream archivo;  
+                        // archivo.open(nameFile.c_str(), std::fstream::out);
+
+
+                        // archivo << "//Valores Base\n";
+                        //         archivo << "ValorX1=";
+
+                        //         archivo << lexical_cast<string>(base_0.getOrigin().x());
+                        //         archivo << ";";		
+                        //         archivo << std::endl;
+                        //         archivo << "ValorY1=";
+                        //         archivo << lexical_cast<string>(base_0.getOrigin().y());
+                        //         archivo << ";";
+                        //         archivo << std::endl;
+                        //         archivo << "ValorZ1=";
+                        //         archivo << lexical_cast<string>(base_0.getOrigin().z());
+                        //         archivo << ";";
+                        //         archivo << std::endl;
+                        //         archivo << std::endl;
+
+
+                        //         archivo << "//Valores forearm\n";
+                        //         archivo << "ValorX2=";
+                        //         archivo << lexical_cast<string>(forearm.getOrigin().x());
+                        //         archivo << ";";		
+                        //         archivo << std::endl;
+                        //         archivo << "ValorY2=";
+                        //         archivo << lexical_cast<string>(forearm.getOrigin().y());
+                        //         archivo << ";";
+                        //         archivo << std::endl;
+                        //         archivo << "ValorZ2=";
+                        //         archivo << lexical_cast<string>(forearm.getOrigin().z());
+                        //         archivo << ";";
+                        //         archivo << std::endl;
+                        //         archivo << "Valor2rotX=";
+                        //         archivo << lexical_cast<string>(forearm.getRotation().x());	
+                        //         archivo << ";";	
+                        //         archivo << std::endl;
+                        //         archivo << "Valor2rotY=";
+                        //         archivo << lexical_cast<string>(forearm.getRotation().y());
+                        //         archivo << ";";
+                        //         archivo << std::endl;
+                        //         archivo << "Valor2rotZ=";
+                        //         archivo << lexical_cast<string>(forearm.getRotation().z());
+                        //         archivo << ";";
+                        //         archivo << std::endl;
+                        //         archivo << "Valor2rotW=";
+                        //         archivo << lexical_cast<string>(forearm.getRotation().w());
+                        //         archivo << ";";
+                        //         archivo << std::endl;
+
+
+
+
+                        //         archivo << std::endl;
+
+
+
+                        //         archivo << "//Valores shoulder\n";
+                        //         archivo << "ValorX3=";
+
+                        //         archivo << lexical_cast<string>(shoulder.getOrigin().x());	
+                        //         archivo << ";";	
+                        //         archivo << std::endl;
+                        //         archivo << "ValorY3=";
+                        //         archivo << lexical_cast<string>(shoulder.getOrigin().y());
+                        //         archivo << ";";
+                        //         archivo << std::endl;
+                        //         archivo << "ValorZ3=";
+                        //         archivo << lexical_cast<string>(shoulder.getOrigin().z());
+                        //         archivo << ";";
+                        //         archivo << std::endl;
+                        //         archivo << "Valor3rotX=";
+                        //         archivo << lexical_cast<string>(shoulder.getRotation().x());
+                        //         archivo << ";";		
+                        //         archivo << std::endl;
+                        //         archivo << "Valor3rotY=";
+                        //         archivo << lexical_cast<string>(shoulder.getRotation().y());
+                        //         archivo << ";";
+                        //         archivo << std::endl;
+                        //         archivo << "Valor3rotZ=";
+                        //         archivo << lexical_cast<string>(shoulder.getRotation().z());
+                        //         archivo << ";";
+                        //         archivo << std::endl;
+                        //         archivo << "Valor3rotW=";
+                        //         archivo << lexical_cast<string>(shoulder.getRotation().w());
+                        //         archivo << ";";
+                        //         archivo << std::endl;
+                        //         archivo << std::endl;
+
+
+                        //         archivo << "//Valores wrist_1\n";
+                        //         archivo << "ValorX4=";
+
+                        //         archivo << lexical_cast<string>(wrist_1.getOrigin().x());
+                        //         archivo << ";";		
+                        //         archivo << std::endl;
+                        //         archivo << "ValorY4=";
+                        //         archivo << lexical_cast<string>(wrist_1.getOrigin().y());
+                        //         archivo << ";";
+                        //         archivo << std::endl;
+                        //         archivo << "ValorZ4=";
+                        //         archivo << lexical_cast<string>(wrist_1.getOrigin().z());
+                        //         archivo << ";";
+                        //         archivo << std::endl;
+                        //         archivo << "Valor4rotX=";
+                        //         archivo << lexical_cast<string>(wrist_1.getRotation().x());
+                        //         archivo << ";";		
+                        //         archivo << std::endl;
+                        //         archivo << "Valor4rotY=";
+                        //         archivo << lexical_cast<string>(wrist_1.getRotation().y());
+                        //         archivo << ";";
+                        //         archivo << std::endl;
+                        //         archivo << "Valor4rotZ=";
+                        //         archivo << lexical_cast<string>(wrist_1.getRotation().z());
+                        //         archivo << ";";
+                        //         archivo << std::endl;
+                        //         archivo << "Valor4rotW=";
+                        //         archivo << lexical_cast<string>(wrist_1.getRotation().w());
+                        //         archivo << ";";
+                        //         archivo << std::endl;
+                        //         archivo << std::endl;
+
+
+                        //         archivo << "//Valores wrist_2\n";
+                        //         archivo << "ValorX5=";
+
+                        //         archivo << lexical_cast<string>(wrist_2.getOrigin().x());
+                        //         archivo << ";";		
+                        //         archivo << std::endl;
+                        //         archivo << "ValorY5=";
+                        //         archivo << lexical_cast<string>(wrist_2.getOrigin().y());
+                        //         archivo << ";";
+                        //         archivo << std::endl;
+                        //         archivo << "ValorZ5=";
+                        //         archivo << lexical_cast<string>(wrist_2.getOrigin().z());
+                        //         archivo << ";";	
+                        //         archivo << std::endl;
+                        //         archivo << std::endl;
+
+
+                        //         archivo << "//Valores wrist_3\n";
+                        //         archivo << "ValorX6=";
+
+                        //         archivo << lexical_cast<string>(wrist_3.getOrigin().x());
+                        //         archivo << ";";		
+                        //         archivo << std::endl;
+                        //         archivo << "ValorY6=";
+                        //         archivo << lexical_cast<string>(wrist_3.getOrigin().y());
+                        //         archivo << ";";
+                        //         archivo << std::endl;
+                        //         archivo << "ValorZ6=";
+                        //         archivo << lexical_cast<string>(wrist_3.getOrigin().z());
+                        //         archivo << ";";
+                        //         archivo << std::endl;
+                        //         archivo << std::endl;
+
+                        //         archivo << "//Valores tool_center_point\n";
+                        //         archivo << "ValorX7=";
+
+                        //         archivo << lexical_cast<string>(tool_center_point.getOrigin().x());
+                        //         archivo << ";";		
+                        //         archivo << std::endl;
+                        //         archivo << "ValorY7=";
+                        //         archivo << lexical_cast<string>(tool_center_point.getOrigin().y());
+                        //         archivo << ";";
+                        //         archivo << std::endl;
+                        //         archivo << "ValorZ7=";
+                        //         archivo << lexical_cast<string>(tool_center_point.getOrigin().z());
+                        //         archivo << ";";
+                        //         archivo << std::endl;
+                        //         archivo << std::endl;
+
+
+                        //         archivo << "Valores camara\n";
+                        //         archivo << "dCam1_fx=";
+                        //         archivo << lexical_cast<string>(dCam1_fx);
+                        //         archivo << ";";		
+                        //         archivo << std::endl;
+                        //         archivo << "dCam1_cx=";
+                        //         archivo << lexical_cast<string>(dCam1_cx);
+                        //         archivo << ";";		
+                        //         archivo << std::endl;
+                        //         archivo << "dCam1_fy=";
+                        //         archivo << lexical_cast<string>(dCam1_fy);
+                        //         archivo << ";";		
+                        //         archivo << std::endl;
+                        //         archivo << "dCam1_cy=";
+                        //         archivo << lexical_cast<string>(dCam1_cy);
+                        //         archivo << ";";		
+                        //         archivo << std::endl;
+
+    
+
+                        //             // Finalmente lo cerramos
+                        //         archivo.close();
+                        //         std::cout << "Escrito correctamente";
+
+
+                
+            }
+                
+
             /* First read and store cyclicly the images */
-            if(icCamGrabber1.getbColorReceived() && !bIsProcessing){
+            if(icCamGrabber1.getbColorReceived() && !bIsProcessing)
+            {
+               
                 icCamGrabber1.getmColorImage().copyTo(mColorPic1);
+                using boost::lexical_cast;
+                using std::string;
+                string finish_nameRGB=".jpg";
+                string numstring;
+                numstring = lexical_cast<string>(ImageNumber);
+                numstring += finish_nameRGB;
+                // string nombreArchivo = "/home/ikerlan/camera_localization_ws/src/camera_localization/scripts/folder_save/Valores64.txt";
+                string nameFileRGB = "/home/ikerlan/ros_wss/ws_ca_apf/src/ca_application/ca_apf_scene_segmentation/scripts/folder_save/RGB";
+                nameFileRGB += numstring;
+                //cv::imwrite(nameFileRGB, mColorPic1);
+    
+                mColorPic1.copyTo(ImageRGB2);
+
+                if (First_Image_RGB==false)
+                {
+                    mColorPic1.copyTo(ImageRGB);
+                    ImageRGB.copyTo(BlackImage);
+                    cv::cvtColor(BlackImage, BlackImage, cv::COLOR_BGR2GRAY);
+                    // cv::imshow("BlackImage_e", BlackImage );
+                    // cv::waitKey(5000);
+                    cv::threshold(BlackImage, BlackImage, -1, 255, cv::THRESH_BINARY_INV);
+                    // cv::imshow("BlackImage", BlackImage );
+                    // cv::waitKey(5000);
+                    First_Image_RGB=true;
+
+                } 
+
+
                 bColorStored1 = true;
                 icCamGrabber1.clearbColorReceived();
+                
             }
-            if(icCamGrabber2.getbColorReceived() && !bIsProcessing) {
-                icCamGrabber2.getmColorImage().copyTo(mColorPic2);
-                bColorStored2 = true;
-                icCamGrabber2.clearbColorReceived();
-            }
-            if(icCamGrabber1.getbDepthReceived() && !bIsProcessing) {
+
+            if(icCamGrabber1.getbDepthReceived() && !bIsProcessing) 
+            {
+            
                 icCamGrabber1.getmDepthImage().copyTo(mDepthPic1);
                 // icCamGrabber1.getmDepthImage().copyTo(mDepthDistance1);
                 // mDepthDistance1 = mDepthDistance1 * 0.001;
+
+
+                using boost::lexical_cast;
+                using std::string;
+                string finish_nameProf=".tiff";
+                string numstring;
+                numstring = lexical_cast<string>(ImageNumber);
+                numstring += finish_nameProf;
+                // string nombreArchivo = "/home/ikerlan/camera_localization_ws/src/camera_localization/scripts/folder_save/Valores64.txt";
+                string nameFileProf = "/home/ikerlan/ros_wss/ws_ca_apf/src/ca_application/ca_apf_scene_segmentation/scripts/folder_save/Prof.tiff";
+                //nameFileProf += numstring;
+                cv::imwrite(nameFileProf, mDepthPic1);
+                ImagenProf2_U8 = cv::imread(nameFileProf);
+
+                mDepthPic1.copyTo(ImageProf2);
+
+                if (First_Image_Prof==false)
+                {
+                    mDepthPic1.copyTo(ImageProf);
+                    First_Image_Prof=true;
+                    ImagenProf_U8 = cv::imread(nameFileProf);
+
+                } 
+           
+
+           
+                
                 icCamGrabber1.getmDepthImage().copyTo(mDepthColor1);
                 // cv::minMaxLoc(mDepthColor1, &minValue, &maxValue);
                 cv::convertScaleAbs(mDepthColor1, mDepthColor1, 0.03);
                 cv::applyColorMap(mDepthColor1, mDepthColor1, cv::COLORMAP_JET);
                 bDepthStored1 = true;
                 icCamGrabber1.clearbDepthReceived();
+        
             }
-            if(icCamGrabber2.getbDepthReceived() && !bIsProcessing){
-                icCamGrabber2.getmDepthImage().copyTo(mDepthPic2);
-                // icCamGrabber2.getmDepthImage().copyTo(mDepthDistance2);
-                // mDepthDistance2 = mDepthDistance2 * 0.001;
-                icCamGrabber2.getmDepthImage().copyTo(mDepthColor2);
-                // cv::minMaxLoc(mDepthColor2, &minValue, &maxValue);
-                cv::convertScaleAbs(mDepthColor2, mDepthColor2, 0.03);
-                cv::applyColorMap(mDepthColor2, mDepthColor2, cv::COLORMAP_JET);
-                bDepthStored2 = true;
-                icCamGrabber2.clearbDepthReceived();
-            }
-            if(bColorStored1 && bColorStored2 && bDepthStored1 && bDepthStored2 && !bIsProcessing) {
+
+  
+            if(bColorStored1 && bDepthStored1 && !bIsProcessing) 
+            {
                 bIsProcessing = true;
                 bColorStored1 = false;
-                bColorStored2 = false;
                 bDepthStored1 = false;
-                bDepthStored2 = false;
+                
             }
 
             /* Processing the stored images for obtaining the detected obstacles positions */
-            if(bIsProcessing){
+            if(bIsProcessing)
+            {
                 dTime = (double)cv::getTickCount();
-
-                /* Processing each of the pictures for obtaining positioning box */
-                // TODO: Check if there's need for parallel computing for every of the pictures
-                odZYCam1 = process_obstacles_zy_plane();                                   // Processing the number of obstacles of the camera1 picture
-                odXYCam2 = process_obstacles_xy_plane();                                   // Processing the number of obstacles of the camera2 picture
+                
+                
+            //     // En imagen
 
 
-                /* Publishing depth into depth format image for ROS */
-                // sensor_msgs::CameraInfo ciMsg;   
-                // sensor_msgs::Image img_msg;
-                // cv_bridge::CvImage cv_img_bridge;
-                // std_msgs::Header hHeader;
-                // ciMsg = getCam1DepthInfo();
-                // ciMsg.header.frame_id = "rs_d435_cam_color_optical_frame";
-                // ciMsg.header.stamp = ros::Time::now();
-                // pcl_info_pub.publish(ciMsg);
-                // hHeader.stamp = ros::Time::now();
-                // hHeader.frame_id = "rs_d435_cam_color_optical_frame";
-                // cv_img_bridge = cv_bridge::CvImage(hHeader, sensor_msgs::image_encodings::TYPE_16UC1, mDepthDistance1);
-                // cv_img_bridge.toImageMsg(img_msg);
-                // pcl_img_pub.publish(img_msg);
-                // cv::imshow("Depth Test Image", mDepthDistance1);
-                // ROS_INFO("Exited the image color filter");
+            //     // base_0
+
+            //                 profundidaImagenBase=base_0.getOrigin().z()/0.001;
+            //                 x_imagenBase=((base_0.getOrigin().x()*dCam1_fx)/base_0.getOrigin().z())+ dCam1_cx  ;
+            //                 y_imagenBase=((base_0.getOrigin().y()*dCam1_fy)/base_0.getOrigin().z())+dCam1_cy ;
+                                            
+            //     // forearm
+
+            //                 profundidaImagenforearm=forearm.getOrigin().z()/0.001;
+            //                 x_imagenforearm= ((forearm.getOrigin().x()*dCam1_fx)/forearm.getOrigin().z())+ dCam1_cx  ;
+            //                 y_imagenforearm=((forearm.getOrigin().y()*dCam1_fy)/forearm.getOrigin().z())+dCam1_cy ;
 
                 
+            //     // shoulder
 
+            //                 profundidaImagenshoulder=shoulder.getOrigin().z()/0.001;
+            //                 x_imagenshoulder= ((shoulder.getOrigin().x()*dCam1_fx)/shoulder.getOrigin().z())+ dCam1_cx  ;
+            //                 y_imagenshoulder=((shoulder.getOrigin().y()*dCam1_fy)/shoulder.getOrigin().z())+dCam1_cy ;
 
-                /* Combination of the information of each positioning box for obstacles representation and occlusion avoidance */
-                // ocpXYZPositions = compute_xyz_obstacle_position();      // Processing the carthesian position for each of the obstacles
-
-                /* Publishing the information into the ROS net to be used by other nodes or the orocos net to support the control architecture */
-                publish_obs_point_cloud();
-
-                /* Releasing bIsProcessing attribute for a new cycle */
-                bIsProcessing = false;
                 
-                /* Computing the processing time for the whole algorithms */
-                dTime = ((double)cv::getTickCount() - dTime)/cv::getTickFrequency();
-                ROS_INFO("El tiempo elapsed ha sido: %f seconds\n", dTime);
-                ROS_INFO("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
-                // cv::waitKey();
-                // cv::destroyAllWindows();
-            }
-        }
-    }
+            //     // wrist_1
 
-    /* Processing the obstacles of the ZY plane method -> process_obstacles_zy_plane() */
-    obstacle_data image_processing::process_obstacles_zy_plane() {
-        // TODO: Check performance with cv::Mat in this method or as a stored variables in the instantation
-        cv::Mat mColorFiltered, mHsvFiltered, mGrayFiltered, mSceneGreenMask, mSceneGreenColor, mSceneGreenGray;             // Instantiation of the variables for cmaera 1 pictures
-        cv::Mat mRectanglesPic = cv::Mat::zeros(cv::Size(ciColorInfo1.width, ciColorInfo1.height), CV_8UC3);
-        cv::Mat mRectanglesPicGray = cv::Mat::zeros(cv::Size(ciColorInfo1.width, ciColorInfo1.height), CV_8UC1);
-        cv::Mat mContourMask = cv::Mat::zeros(cv::Size(ciColorInfo1.width, ciColorInfo1.height), CV_8UC3);
-        cv::Mat mContourMaskGray = cv::Mat::zeros(cv::Size(ciColorInfo1.width, ciColorInfo1.height), CV_8UC1);
-        cv::Mat mContourMaskROI = cv::Mat::zeros(cv::Size(ciColorInfo1.width, ciColorInfo1.height), CV_8UC1);
-        mDepthDistance1 = cv::Mat::zeros(cv::Size(ciColorInfo1.width, ciColorInfo1.height), CV_16UC1);
+            //                 profundidaImagenwrist_1=wrist_1.getOrigin().z()/0.001;
+            //                 x_imagenwrist_1= ((wrist_1.getOrigin().x()*dCam1_fx)/wrist_1.getOrigin().z())+ dCam1_cx  ;
+            //                 y_imagenwrist_1=((wrist_1.getOrigin().y()*dCam1_fy)/wrist_1.getOrigin().z())+dCam1_cy ;
+
                 
-        std::vector<std::vector<cv::Point>> vContours;
-        std::vector<std::vector<cv::Point>> vContoursRect;
-        std::vector<std::vector<cv::Point>> vContoursReduced;
-        std::vector<cv::Vec4i> vHierarchy;
-        std::vector<cv::Vec4i> vHierarchyRect;
-        std::vector<cv::Vec4i> vHierarchyReduced;
-        
-        std::vector<int> vDetectedObstaclesIndex;
-        std::vector<double> vDetectedObstaclesAreas;
-        
-        obstacle_data odVar;
+            //     // wrist_2
 
-        int iDetectedObstacles = 0;
-        double dAuxArea = 0.0;
-        double dFurthestPoint = 0.0, dClosestPoint = 0.0;
-        cv::Point pClosest(0, 0), pFurthest(0, 0);
+            //                 profundidaImagenwrist_2=wrist_2.getOrigin().z()/0.001;
+            //                 x_imagenwrist_2= ((wrist_2.getOrigin().x()*dCam1_fx)/wrist_2.getOrigin().z())+ dCam1_cx  ;
+            //                 y_imagenwrist_2=((wrist_2.getOrigin().y()*dCam1_fy)/wrist_2.getOrigin().z())+dCam1_cy ;
 
-        /* Working with camera 1 pictures (for both, color and depth) */
-        /* Preparing the filtered picture, the hsv picture and the grayscale picture to work with them */
-        cv::GaussianBlur(mColorPic1, mColorFiltered, cv::Size(3,3), 0);
-        cv::cvtColor(mColorFiltered,mHsvFiltered,cv::COLOR_BGR2HSV);
-        cv::cvtColor(mColorFiltered, mGrayFiltered, cv::COLOR_BGR2GRAY);
+            //     // wrist_3
 
-        /* Extracting the green obstacles by using a mask */
-        cv::inRange(mHsvFiltered, sLowerThreshold, sUpperThreshold, mSceneGreenMask);
-        cv::bitwise_and(mGrayFiltered, mSceneGreenMask, mSceneGreenGray);
-        cv::cvtColor(mSceneGreenGray, mSceneGreenColor, cv::COLOR_GRAY2BGR);
+            //                 profundidaImagenwrist_3=wrist_3.getOrigin().z()/0.001;
+            //                 x_imagenwrist_3= (( wrist_3.getOrigin().x()*dCam1_fx)/wrist_3.getOrigin().z())+ dCam1_cx  ;
+            //                 y_imagenwrist_3=((wrist_3.getOrigin().y()*dCam1_fy)/wrist_3.getOrigin().z())+dCam1_cy ;
+                
+            //     // tool_center_point
 
-        /* Once the green obstacles has been segmented from the picture, it must be counted through their contours */
-        cv::findContours(mSceneGreenGray, vContours, vHierarchy, cv::RETR_TREE, cv::CHAIN_APPROX_SIMPLE);
-        for(size_t i = 0; i < vContours.size(); i++) {
-            dAuxArea = cv::contourArea(vContours[i]);
-            if(dAuxArea > dAreaThreshold) {
-                vDetectedObstaclesIndex.push_back(i);
-                vDetectedObstaclesAreas.push_back(dAuxArea);
-                iDetectedObstacles++;
-            }
-        }
+            //                 profundidaImagentool_center_point=tool_center_point.getOrigin().z()/0.001;
+            //                 x_imagentool_center_point= ((tool_center_point.getOrigin().x()*dCam1_fx)/tool_center_point.getOrigin().z())+ dCam1_cx  ;
+            //                 y_imagentool_center_point=((tool_center_point.getOrigin().y()*dCam1_fy)/tool_center_point.getOrigin().z())+dCam1_cy ;
 
-        /* Obtaining the data from the obstacles through 4 steps */
-        if(iDetectedObstacles != 0) {
-            cv::Rect rMinRectangle;
-            mContourMask = cv::Mat::zeros(cv::Size(ciColorInfo1.width, ciColorInfo1.height), CV_8UC3);
-            mContourMaskGray = cv::Mat::zeros(cv::Size(ciColorInfo1.width, ciColorInfo1.height), CV_8UC1);
-            std::vector<std::vector<int>> box;                                                                                  // z_min, z_max, y_min, y_max for each object rectangle
-            std::vector<int> auxBox;                                                                                            // z_min, z_max, y_min, y_max for each object rectangle
-            std::vector<double> vAuxPoses;                                                                                      // z1, y1, z2, y2, z3, y3, z4, y4
-            obstacle_parameters opParams;                                                                                       // (closest_dist, furthest_dist, y_center, z_center, y_low, y_high, z_low, z_high)             
+
+            // /////////////////////////////
+            // /////////////////////////
+            // // Mostrar Tf
             
-            for(size_t i = 0; i < iDetectedObstacles; i++) {
-                auxBox.clear();
-                cv::Scalar sColor(rand()%255, rand()%255, rand()%255);
-                cv::drawContours(mSceneGreenColor, vContours, vDetectedObstaclesIndex[i], cv::Scalar(0,0,255), 2);               // drawing the rectangle in bgr pic
 
-                /* Step 1) Find the closest point to the orthonormal plane to the focal line */
-                cv::drawContours(mContourMask, vContours, vDetectedObstaclesIndex[i], sColor, cv::FILLED);
-                cv::cvtColor(mContourMask, mContourMaskGray, cv::COLOR_BGR2GRAY);
-                cv::threshold(mContourMaskGray, mContourMaskROI, 25, 255, cv::THRESH_BINARY);
-                cv::erode(mContourMaskROI, mContourMaskROI, cv::getStructuringElement(cv::MORPH_RECT, cv::Size(iKernelSize,iKernelSize)));
-                cv::bitwise_and(mDepthPic1, mDepthPic1, mDepthDistance1, mContourMaskROI);                               
-                mDepthDistance1.setTo(10200, mDepthDistance1 < 20);
+            // std::cout.precision(std::numeric_limits<double>::max_digits10 - 1);
+            // printf("\nValores Tf en camara Base\n");
+            // printf("Valor X:");
+            // std::cout << std::scientific <<  x_imagenBase << '\n';
+            // printf("Valor Y:");
+            // std::cout << std::scientific <<  y_imagenBase << '\n';
+            // printf("Valor Z:");
+            // std::cout << std::scientific <<  profundidaImagenBase << '\n';
+
+            // std::cout.precision(std::numeric_limits<double>::max_digits10 - 1);
+            // printf("\nValores Tf en camara forearm\n");
+            // printf("Valor X:");
+            // std::cout << std::scientific << x_imagenforearm << '\n';
+            // printf("Valor Y:");
+            // std::cout << std::scientific <<  y_imagenforearm << '\n';
+            // printf("Valor Z:");
+            // std::cout << std::scientific <<  profundidaImagenforearm<< '\n';
+
+           
+            // std::cout.precision(std::numeric_limits<double>::max_digits10 - 1);
+            // printf("\nValores Tf en camara shoulder\n");
+            // printf("Valor X:");
+            // std::cout << std::scientific <<  x_imagenshoulder << '\n';
+            // printf("Valor Y:");
+            // std::cout << std::scientific <<  y_imagenshoulder << '\n';
+            // printf("Valor Z:");
+            // std::cout << std::scientific <<  profundidaImagenshoulder << '\n';
 
 
-                /* Step 2) Finding the smallest rectangle which fits in the contour */
-                rMinRectangle = cv::boundingRect(vContours[vDetectedObstaclesIndex[i]]);
-                cv::rectangle(mRectanglesPic, rMinRectangle, sColor, cv::FILLED);                                               // TODO: comment this line, it is used to represent in bgr pictures the rectancles of detected obstacles
-                cv::cvtColor(mRectanglesPic, mRectanglesPicGray, cv::COLOR_BGR2GRAY);                                           // TODO: comment this line
-                cv::findContours(mRectanglesPicGray, vContoursRect, vHierarchyRect, cv::RETR_TREE, cv::CHAIN_APPROX_SIMPLE);    // TODO: comment this line
-                cv::drawContours(mColorFiltered, vContoursRect, -1, cv::Scalar(255, 255, 0), 2);                                // TODO: comment this line after debugging
-                cv::drawContours(mDepthColor1, vContoursRect, -1, cv::Scalar(255, 255, 0), 2);                                  // TODO: comment this line after debugging
-                cv::drawContours(mRectanglesPic, vContours, vDetectedObstaclesIndex[i], cv::Scalar(0, 255, 0), 2);              // TODO: check if commenting this line
-                cv::findContours(mContourMaskROI, vContoursReduced, vHierarchyReduced, cv::RETR_TREE, cv::CHAIN_APPROX_SIMPLE); // TODO: check if commenting this line
-                cv::drawContours(mRectanglesPic, vContoursReduced, -1, cv::Scalar(150, 150, 0), 2);                             // TODO: check if commenting this line
-                cv::drawContours(mColorFiltered, vContoursReduced, -1, cv::Scalar(0, 0, 255), 2);                               // TODO: check if commenting this line
-                cv::drawContours(mDepthColor1, vContoursReduced, -1, cv::Scalar(150, 150, 0), 2);                               // TODO: check if commenting this line
-                // auxBox.push_back(rMinRectangle.x);                                                                              // x_pixel_min -> y_world_min -> [0]
-                // auxBox.push_back(rMinRectangle.x + rMinRectangle.width);                                                        // x_pixel_max -> y_world_max -> [1]
-                // auxBox.push_back(rMinRectangle.y);                                                                              // y_pixel_min -> z_world_min -> [2]
-                // auxBox.push_back(rMinRectangle.y + rMinRectangle.height);                                                       // y_pixel_max -> z_world_max -> [3]
-                // box.push_back(auxBox);
-                // // ROS_INFO("Coordinates of the box1.%d in pixels: y_min=%d, y_max=%d, z_min=%d, z_max=%d", i, box[i].data()[0], box[i].data()[1], box[i].data()[2], box[i].data()[3]);
+            // std::cout.precision(std::numeric_limits<double>::max_digits10 - 1);
+            // printf("\nValores Tf en camara wrist_1\n");
+            // printf("Valor X:");
+            // std::cout << std::scientific << x_imagenwrist_1 << '\n';
+            // printf("Valor Y:");
+            // std::cout << std::scientific <<  y_imagenwrist_1<< '\n';
+            // printf("Valor Z:");
+            // std::cout << std::scientific <<  profundidaImagenwrist_1 << '\n';
 
-                // /* Step 3) Computation of (y, z) positions for the proyection to the furthest plane */
-                // vAuxPoses.clear();
-                // vAuxPoses.push_back(dFurthestPoint * (auxBox[2] - dCam1_cy) / dCam1_fy);                                        // z1 = z_min -> 0
-                // vAuxPoses.push_back(dFurthestPoint * (auxBox[0] - dCam1_cx) / dCam1_fx);                                        // y1 = y_min -> 1
-                // vAuxPoses.push_back(dFurthestPoint * (auxBox[3] - dCam1_cy) / dCam1_fy);                                        // z2 = z_max -> 2
-                // vAuxPoses.push_back(dFurthestPoint * (auxBox[0] - dCam1_cx) / dCam1_fx);                                        // y2 = y_min -> 3
-                // vAuxPoses.push_back(dFurthestPoint * (auxBox[3] - dCam1_cy) / dCam1_fy);                                        // z3 = z_max -> 4 
-                // vAuxPoses.push_back(dFurthestPoint * (auxBox[1] - dCam1_cx) / dCam1_fx);                                        // y3 = y_max -> 5
-                // vAuxPoses.push_back(dFurthestPoint * (auxBox[2] - dCam1_cy) / dCam1_fy);                                        // z4 = z_min -> 6
-                // vAuxPoses.push_back(dFurthestPoint * (auxBox[1] - dCam1_cx) / dCam1_fx);                                        // y4 = y_max -> 7
-                // // ROS_INFO("Furthest plane positions: x_min=%f, x_max=%f, y_min=%f, y_max=%f, z_min=%f, z_max=%f", dClosestPoint, dFurthestPoint, vAuxPoses[1], vAuxPoses[5], vAuxPoses[0], vAuxPoses[2]);
+            
+            // std::cout.precision(std::numeric_limits<double>::max_digits10 - 1);
+            // printf("\nValores Tf en camara wrist_2\n");
+            // printf("Valor X:");
+            // std::cout << std::scientific << x_imagenwrist_2 << '\n';
+            // printf("Valor Y:");
+            // std::cout << std::scientific <<  y_imagenwrist_2 << '\n';
+            // printf("Valor Z:");
+            // std::cout << std::scientific <<  profundidaImagenwrist_2 << '\n';
 
-                // /* Step 4) Extracting the charactization of the real world containing box */
-                // // vAuxParams.clear();
-                // opParams.dClosestPoint = dClosestPoint;                                                                         // Closest depth (x_closest)    -> 0
-                // opParams.dFurthestPoint = dFurthestPoint;                                                                       // Furthest_depth (x_furthest)  -> 1
-                // opParams.dWidthCenter = vAuxPoses[1] + (vAuxPoses[5] - vAuxPoses[1]) / 2;                                       // Y center                     -> 2
-                // opParams.dHeightCenter = vAuxPoses[0] + (vAuxPoses[2] - vAuxPoses[0]) / 2;                                      // Z center                     -> 3
-                // opParams.dWidthLower = vAuxPoses[1];                                                                            // Y_min                        -> 4
-                // opParams.dWidthHigher = vAuxPoses[5];                                                                           // Y_max                        -> 5
-                // opParams.dHeightLower = vAuxPoses[0];                                                                           // Z_min                        -> 6
-                // opParams.dHeightHigher = vAuxPoses[2];                                                                          // Z_max                        -> 7
-                // // ROS_INFO("Camera 1: x_closest=%f, x_furthest=%f, Y_center=%f, Z_center=%f", opParams.dClosestPoint, opParams.dFurthestPoint, opParams.dWidthCenter, opParams.dHeightCenter);
-                // odVar.vopObsParam.push_back(opParams);
-                // // printf("The cube paremeters:\n");
-                // // printf("  Closest X plane: %f\n", odVar.vopObsParam[i].dClosestPoint);
-                // // printf("  Furthest X plane: %f\n", odVar.vopObsParam[i].dFurthestPoint);
-                // // printf("  Center (Y,Z): (%f,%f)\n", odVar.vopObsParam[i].dWidthCenter, odVar.vopObsParam[i].dHeightCenter);
-                // // printf("  First XZ plane (lowest Y): %f\n", odVar.vopObsParam[i].dWidthLower);
-                // // printf("  Second XZ plane (highest Y): %f\n", odVar.vopObsParam[i].dWidthHigher);
-                // // printf("  First XY plane (lowest Z): %f\n", odVar.vopObsParam[i].dHeightLower);
-                // // printf("  Second XY plane (highest Z): %f\n", odVar.vopObsParam[i].dHeightHigher);
-            }
-            /* Storing the total amount of obstacles found */
-            odVar.siObsFound = iDetectedObstacles;
-            mColorFiltered.copyTo(mColorProcessed1);
 
-            /* Picturing the taken pictures and if there's any obstacle recogniced */ 
-            cv::imshow("Camera 1 - RGB Picture", mColorProcessed1);              // mColorProcessed1  mSceneGreenColor       mContourMaskROI   mContourMask   mSceneGreenColor  mContourMaskROI    mContourMaskDistance
-            cv::waitKey(10);
-        }
-        else {
-            odVar.siObsFound = 0;
-            cv::imshow("Camera 1 - RGB Picture", mColorPic1);
-            // ROS_INFO("No obstacles has been detected");
-        }
+            // std::cout.precision(std::numeric_limits<double>::max_digits10 - 1);
+            // printf("\nValores Tf en camara wrist_3\n");
+            // printf("Valor X:");
+            // std::cout << std::scientific <<  x_imagenwrist_3<< '\n';
+            // printf("Valor Y:");
+            // std::cout << std::scientific <<  y_imagenwrist_3 << '\n';
+            // printf("Valor Z:");
+            // std::cout << std::scientific <<  profundidaImagenwrist_3 << '\n';
 
-        return odVar;
+            // std::cout.precision(std::numeric_limits<float>::max_digits10 - 5);
+            // printf("\nValores Tf en camara tool_center_point\n");
+            // printf("Valor X:");
+            // std::cout << std::scientific <<  x_imagentool_center_point << '\n';
+            // printf("Valor Y:");
+            // std::cout << std::scientific <<  y_imagentool_center_point << '\n';
+            // printf("Valor Z:");
+            // std::cout << std::scientific <<  profundidaImagentool_center_point<< '\n';
+
+
+            // double z = mDepthPic1.at<uint16_t>(cv::Point(int(x_imagenBase),int(y_imagenBase)));
+            // printf("Valor de pixel:");
+            // std::cout << z << '\n';
+
+
+
+            // // copiar imagenes
+            // cv::Mat cop1,cop2,cop3,cop4,cop5,cop6,cop7;
+            // mColorPic1.copyTo(cop1);
+            // mColorPic1.copyTo(cop2);
+            // mColorPic1.copyTo(cop3);
+            // mColorPic1.copyTo(cop4);
+            // mColorPic1.copyTo(cop5);
+            // mColorPic1.copyTo(cop6);
+            // mColorPic1.copyTo(cop7);
+
+            ///////////// Mostrar los Tf en imagen
+
+    // cv::circle(cop7,cv::Point(int(x_imagenBase),int(y_imagenBase)),50,(0,0,255));
+    // cv::namedWindow("Base",cv::WINDOW_AUTOSIZE);
+    // cv::imshow("Base", cop7);
+    // cv::waitKey(5000);
+
+    // cv::circle(cop1,cv::Point(int(x_imagenforearm),int(y_imagenforearm)),50,(0,0,255));
+    // cv::namedWindow("forearm",cv::WINDOW_AUTOSIZE);
+    // cv::imshow("forearm", cop1);
+    // cv::waitKey(5000);
+
+    // cv::circle(cop2,cv::Point(int(x_imagenshoulder),int(y_imagenshoulder)),50,(0,0,255));
+    // cv::namedWindow("shoulder",cv::WINDOW_AUTOSIZE);
+    // cv::imshow("shoulder", cop2);
+    // cv::waitKey(5000);
+
+    // cv::circle(cop3,cv::Point(int(x_imagenwrist_1),int(y_imagenwrist_1)),50,(0,0,255));
+    // cv::namedWindow("wrist_1",cv::WINDOW_AUTOSIZE);
+    // cv::imshow("wrist_1", cop3);
+    // cv::waitKey(5000);
+
+    // cv::circle(cop4,cv::Point(int(x_imagenwrist_2),int(y_imagenwrist_2)),50,(0,0,255));
+    // cv::namedWindow("wrist_2",cv::WINDOW_AUTOSIZE);
+    // cv::imshow("wrist_2", cop4);
+    // cv::waitKey(5000);
+
+    // cv::circle(cop5,cv::Point(int(x_imagenwrist_3),int(y_imagenwrist_3)),50,(0,0,255));
+    // cv::namedWindow("wrist_3",cv::WINDOW_AUTOSIZE);
+    // cv::imshow("wrist_3", cop5);
+    // cv::waitKey(5000);
+
+    // cv::circle(cop6,cv::Point(int(x_imagentool_center_point),int(y_imagentool_center_point)),50,(0,0,255));
+    // cv::namedWindow("tool_center_point",cv::WINDOW_AUTOSIZE);
+    // cv::imshow("tool_center_point", cop6);
+    // cv::waitKey(5000);
+
+
+
+    //////////////////////////////////
+    /////////////  METIDO
+
+
+    Calculate_Tf();
+
+    BlackImage.copyTo(forearm_wrist_1);
+    entre_articulaciones( float(x_imageforearm), float(y_imageforearm), float(x_imagewrist_1), float(y_imagewrist_1),forearm_wrist_1);
+    // cv::imshow(" forearm_wrist_1", forearm_wrist_1);
+    // cv::waitKey(10000);
+
+    BlackImage.copyTo(shoulder_forearm_real);
+    entre_articulaciones( float(x_imageshoulder_real), float(y_imageshoulder_real), float(x_imageforearm_real), float(y_imageforearm_real),shoulder_forearm_real);
+    // cv::imshow(" shoulder_forearm_real", shoulder_forearm_real);
+    // cv::waitKey(10000);
+
+    BlackImage.copyTo(wrist_1_wrist_2);
+    entre_articulaciones( float(x_imagewrist_1), float(y_imagewrist_1), float(x_imagewrist_2), float(y_imagewrist_2),wrist_1_wrist_2);
+    // cv::imshow(" wrist_1_wrist_2", wrist_1_wrist_2);
+    // cv::waitKey(10000);
+
+    BlackImage.copyTo(wrist_2_wrist_3);
+    entre_articulaciones( float(x_imagewrist_2), float(y_imagewrist_2), float(x_imagewrist_3), float(y_imagewrist_3),wrist_2_wrist_3);
+    // cv::imshow(" wrist_2_wrist_3", wrist_2_wrist_3);
+    // cv::waitKey(10000);
+
+    BlackImage.copyTo(wrist_3_tool_center_point);
+    entre_articulaciones( float(x_imagewrist_3), float(y_imagewrist_3), float(x_imagetool_center_point), float(y_imagetool_center_point),wrist_3_tool_center_point);
+    // cv::imshow(" wrist_3_tool_center_point", wrist_3_tool_center_point);
+    // cv::waitKey(10000);
+
+    cv::imshow(" imagen antigua", ImageRGB);
+    cv::waitKey(1);
+
+    cv::imshow(" Imagen actual", ImageRGB2);
+    cv::waitKey(1);
+
+
+
+    segmentar();
+    ObtenerObjetosRGB();
+    RemoveRobot();
+    if (First_Prof_No_Robot==false)
+    {
+        Prof_No_Robot.copyTo(Prof_No_Robot_Old);
+        Prof_background();
+        First_Prof_No_Robot=true;
     }
+    shadow();
+    Prof_segmentation();
     
 
-    /* Processing the obstacles of the XY plane -> process_obstacles_xy_plane() */
-    obstacle_data image_processing::process_obstacles_xy_plane() {
-        // TODO: Check performance with cv::Mat in this method or as a stored variables in the instantation
-        cv::Mat mColorFiltered, mHsvFiltered, mGrayFiltered, mSceneGreenMask, mSceneGreenColor, mSceneGreenGray;             // Instantiation of the variables for cmaera 1 pictures
-        cv::Mat mRectanglesPic = cv::Mat::zeros(cv::Size(ciColorInfo2.width, ciColorInfo2.height), CV_8UC3);
-        cv::Mat mRectanglesPicGray = cv::Mat::zeros(cv::Size(ciColorInfo2.width, ciColorInfo2.height), CV_8UC1);
-        cv::Mat mContourMask = cv::Mat::zeros(cv::Size(ciColorInfo2.width, ciColorInfo2.height), CV_8UC3);
-        cv::Mat mContourMaskGray = cv::Mat::zeros(cv::Size(ciColorInfo2.width, ciColorInfo2.height), CV_8UC1);
-        cv::Mat mContourMaskROI = cv::Mat::zeros(cv::Size(ciColorInfo2.width, ciColorInfo2.height), CV_8UC1);
-        // cv::Mat mContourMaskDistance = cv::Mat::zeros(cv::Size(ciColorInfo1.width, ciColorInfo1.height), CV_16UC1);
-        mDepthDistance2 = cv::Mat::zeros(cv::Size(ciColorInfo1.width, ciColorInfo1.height), CV_16UC1);
-                
-        std::vector<std::vector<cv::Point>> vContours;
-        std::vector<std::vector<cv::Point>> vContoursRect;
-        std::vector<std::vector<cv::Point>> vContoursReduced;
-        std::vector<cv::Vec4i> vHierarchy;
-        std::vector<cv::Vec4i> vHierarchyRect;
-        std::vector<cv::Vec4i> vHierarchyReduced;
-        
-        std::vector<int> vDetectedObstaclesIndex;
-        std::vector<double> vDetectedObstaclesAreas;
-        
-        obstacle_data odVar;
 
-        int iDetectedObstacles = 0;
-        double dAuxArea = 0.0;
-        double dFurthestPoint = 0.0, dClosestPoint = 0.0;
+    if (ImageNumber==0)
+    {
+       Objects_scene.copyTo(Objects_scene2); 
+    }
+    if (ImageNumber==1)
+    {
+       Objects_scene2.copyTo(Objects_scene3); 
+       Objects_scene.copyTo(Objects_scene2); 
+    }
+        if (ImageNumber==2)
+    {
+        Objects_scene3.copyTo(Objects_scene4); 
+        Objects_scene2.copyTo(Objects_scene3); 
+        Objects_scene.copyTo(Objects_scene2); 
+    }
+    if (ImageNumber>=3)
+    {
+        diff_static_dynamic();
+        Objects_scene3.copyTo(Objects_scene4); 
+        Objects_scene2.copyTo(Objects_scene3); 
+        Objects_scene.copyTo(Objects_scene2); 
 
-        /* Working with camera 1 pictures (for both, color and depth) */
-        /* Preparing the filtered picture, the hsv picture and the grayscale picture to work with them */
-        cv::GaussianBlur(mColorPic2, mColorFiltered, cv::Size(3,3), 0);
-        cv::cvtColor(mColorFiltered,mHsvFiltered,cv::COLOR_BGR2HSV);
-        cv::cvtColor(mColorFiltered, mGrayFiltered, cv::COLOR_BGR2GRAY);
+    }
+    object_contour(ImageNumber);
 
-        /* Extracting the green obstacles by using a mask */
-        cv::inRange(mHsvFiltered, sLowerThreshold, sUpperThreshold, mSceneGreenMask);
-        cv::bitwise_and(mGrayFiltered, mSceneGreenMask, mSceneGreenGray);
-        cv::cvtColor(mSceneGreenGray, mSceneGreenColor, cv::COLOR_GRAY2BGR);
+    dTime = ((double)cv::getTickCount() - dTime)/cv::getTickFrequency();
+    ROS_INFO("Time: %f seconds\n", dTime);
+    ROS_INFO("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
 
-        /* Once the green obstacles has been segmented from the picture, it must be counted through their contours */
-        cv::findContours(mSceneGreenGray, vContours, vHierarchy, cv::RETR_TREE, cv::CHAIN_APPROX_SIMPLE);
-        for(size_t i = 0; i < vContours.size(); i++) {
-            dAuxArea = cv::contourArea(vContours[i]);
-            if(dAuxArea > dAreaThreshold) {
-                vDetectedObstaclesIndex.push_back(i);
-                vDetectedObstaclesAreas.push_back(dAuxArea);
-                iDetectedObstacles++;
-            }
-        }
+    
+    
 
-        /* Obtaining the data from the obstacles through 4 steps */
-        if(iDetectedObstacles != 0) {
-            cv::Rect rMinRectangle;
-            mContourMask = cv::Mat::zeros(cv::Size(ciColorInfo2.width, ciColorInfo2.height), CV_8UC3);
-            mContourMaskGray = cv::Mat::zeros(cv::Size(ciColorInfo2.width, ciColorInfo2.height), CV_8UC1);
-            std::vector<std::vector<int>> box;                                                                                  // x_min, x_max, y_min, y_max for each object rectangle
-            std::vector<int> auxBox;                                                                                            // x_min, x_max, y_min, y_max for each object rectangle
-            std::vector<double> vAuxPoses;                                                                                      // x1, y1, x2, y2, x3, y3, x4, y4
-            obstacle_parameters opParams;                                                                                       // (closest_dist, furthest_dist, y_center, x_center, y_low, y_high, x_low, x_high)             
+    //cv::destroyAllWindows();
+
+
+
+
+
+    /////////
+    ////////
+
+
             
-            for(size_t i = 0; i < iDetectedObstacles; i++) {
-                auxBox.clear();
-                cv::Scalar sColor(rand()%255, rand()%255, rand()%255);
-                cv::drawContours(mSceneGreenColor, vContours, vDetectedObstaclesIndex[i], cv::Scalar(0,0,255), 2);               // drawing the rectangle in bgr pic
-                // cv::drawContours(mSceneDepth, vContours, i, cv::Scalar(0,0,255), 2);                                             // scene_depth_bgr_pìc in python algorithm
 
-                /* Step 1) Find the closest point to the orthonormal plane to the focal line */
-                cv::drawContours(mContourMask, vContours, vDetectedObstaclesIndex[i], sColor, cv::FILLED);
-                cv::cvtColor(mContourMask, mContourMaskGray, cv::COLOR_BGR2GRAY);
-                cv::threshold(mContourMaskGray, mContourMaskROI, 25, 255, cv::THRESH_BINARY);
-                cv::erode(mContourMaskROI, mContourMaskROI, cv::getStructuringElement(cv::MORPH_RECT, cv::Size(iKernelSize,iKernelSize)));
-                cv::bitwise_and(mDepthPic2, mDepthPic2, mDepthDistance2, mContourMaskROI);                                 // mDepthDistance1    
-                mDepthDistance2.setTo(10200, mDepthDistance2 < 20);
+            // constexpr int TIME_TO_SLEEP = 500;  //////////////////////////////////////////////////////////Modificar para el tiempo
+            // std::this_thread::sleep_for(std::chrono::milliseconds(TIME_TO_SLEEP));
+            ImageNumber++;
+            bIsProcessing=false;
+            
 
-
-                /* Step 2) Finding the smallest rectangle which fits in the contour */
-                rMinRectangle = cv::boundingRect(vContours[vDetectedObstaclesIndex[i]]);
-                cv::rectangle(mRectanglesPic, rMinRectangle, sColor, cv::FILLED);                                               // TODO: comment this line, it is used to represent in bgr pictures the rectancles of detected obstacles
-                cv::cvtColor(mRectanglesPic, mRectanglesPicGray, cv::COLOR_BGR2GRAY);                                           // TODO: comment this line
-                cv::findContours(mRectanglesPicGray, vContoursRect, vHierarchyRect, cv::RETR_TREE, cv::CHAIN_APPROX_SIMPLE);    // TODO: comment this line
-                cv::drawContours(mColorFiltered, vContoursRect, -1, cv::Scalar(255, 255, 0), 2);                                // TODO: comment this line after debugging
-                cv::drawContours(mDepthColor2, vContoursRect, -1, cv::Scalar(255, 255, 0), 2);                                  // TODO: comment this line after debugging
-                cv::drawContours(mRectanglesPic, vContours, vDetectedObstaclesIndex[i], cv::Scalar(0, 255, 0), 2);              // TODO: check if commenting this line
-                cv::findContours(mContourMaskROI, vContoursReduced, vHierarchyReduced, cv::RETR_TREE, cv::CHAIN_APPROX_SIMPLE); // TODO: check if commenting this line
-                cv::drawContours(mRectanglesPic, vContoursReduced, -1, cv::Scalar(150, 150, 0), 2);                             // TODO: check if commenting this line
-                cv::drawContours(mColorFiltered, vContoursReduced, -1, cv::Scalar(0, 0, 255), 2);                               // TODO: check if commenting this line
-                cv::drawContours(mDepthColor1, vContoursReduced, -1, cv::Scalar(150, 150, 0), 2);                               // TODO: check if commenting this line
-                // auxBox.push_back(rMinRectangle.x);                                                                              // x_pixel_min -> y_world_min -> [0]
-                // auxBox.push_back(rMinRectangle.x + rMinRectangle.width);                                                        // x_pixel_max -> y_world_max -> [1]
-                // auxBox.push_back(rMinRectangle.y);                                                                              // y_pixel_min -> x_world_min -> [2]
-                // auxBox.push_back(rMinRectangle.y + rMinRectangle.height);                                                       // y_pixel_max -> x_world_max -> [3]
-                // box.push_back(auxBox);
-                // // ROS_INFO("Coordinates of the box1.%d in pixels: x_min=%d, x_max=%d, y_min=%d, y_max=%d", i, box[i].data()[2], box[i].data()[3], box[i].data()[0], box[i].data()[1]);
-
-                // /* Step 3) Computation of (y, z) positions for the proyection to the furthest plane */
-                // vAuxPoses.clear();
-                // vAuxPoses.push_back(dFurthestPoint * (auxBox[2] - dCam1_cy) / dCam1_fy);                                        // x1 = x_min -> 0
-                // vAuxPoses.push_back(dFurthestPoint * (auxBox[0] - dCam1_cx) / dCam1_fx);                                        // y1 = y_min -> 1
-                // vAuxPoses.push_back(dFurthestPoint * (auxBox[3] - dCam1_cy) / dCam1_fy);                                        // x2 = x_max -> 2
-                // vAuxPoses.push_back(dFurthestPoint * (auxBox[0] - dCam1_cx) / dCam1_fx);                                        // y2 = y_min -> 3
-                // vAuxPoses.push_back(dFurthestPoint * (auxBox[3] - dCam1_cy) / dCam1_fy);                                        // x3 = x_max -> 4 
-                // vAuxPoses.push_back(dFurthestPoint * (auxBox[1] - dCam1_cx) / dCam1_fx);                                        // y3 = y_max -> 5
-                // vAuxPoses.push_back(dFurthestPoint * (auxBox[2] - dCam1_cy) / dCam1_fy);                                        // x4 = x_min -> 6
-                // vAuxPoses.push_back(dFurthestPoint * (auxBox[1] - dCam1_cx) / dCam1_fx);                                        // y4 = y_max -> 7
-                // // ROS_INFO("Furthest plane positions: x_min=%f, x_max=%f, y_min=%f, y_max=%f, z_min=%f, z_max=%f", vAuxPoses[0], vAuxPoses[2], vAuxPoses[1], vAuxPoses[5], dClosestPoint, dFurthestPoint);
-
-                // /* Step 4) Extracting the charactization of the real world containing box */
-                // // vAuxParams.clear();
-                // opParams.dClosestPoint = dClosestPoint;                                                                         // Closest depth (z_closest)    -> 0
-                // opParams.dFurthestPoint = dFurthestPoint;                                                                       // Furthest_depth (z_furthest)  -> 1
-                // opParams.dWidthCenter = vAuxPoses[1] + (vAuxPoses[5] - vAuxPoses[1]) / 2;                                       // Y center                     -> 2
-                // opParams.dHeightCenter = vAuxPoses[0] + (vAuxPoses[2] - vAuxPoses[0]) / 2;                                      // X center                     -> 3
-                // opParams.dWidthLower = vAuxPoses[1];                                                                            // Y_min                        -> 4
-                // opParams.dWidthHigher = vAuxPoses[5];                                                                           // Y_max                        -> 5
-                // opParams.dHeightLower = vAuxPoses[0];                                                                           // X_min                        -> 6
-                // opParams.dHeightHigher = vAuxPoses[2];                                                                          // X_max                        -> 7
-                // // ROS_INFO("Camera 2: x_closest=%d, x_furthest=%d, Y_center=%d, Z_center=%d", opParams.dClosestPoint, opParams.dFurthestPoint, opParams.dWidthCenter, opParams.dHeightCenter);
-                // odVar.vopObsParam.push_back(opParams);
-                // // printf("The cube paremeters:\n");
-                // // printf("  Closest Z plane: %f\n", odVar.vopObsParam[i].dClosestPoint);
-                // // printf("  Furthest Z plane: %f\n", odVar.vopObsParam[i].dFurthestPoint);
-                // // printf("  Center (X,Y): (%f,%f)\n", odVar.vopObsParam[i].dHeightCenter, odVar.vopObsParam[i].dWidthCenter);
-                // // printf("  First YZ plane (lowest X): %f\n", odVar.vopObsParam[i].dHeightLower);
-                // // printf("  Second YZ plane (highest X): %f\n", odVar.vopObsParam[i].dHeightHigher);
-                // // printf("  First XZ plane (lowest Y): %f\n", odVar.vopObsParam[i].dWidthLower);
-                // // printf("  Second XZ plane (highest Y): %f\n", odVar.vopObsParam[i].dWidthHigher);
             }
-            /* Storing the total amount of obstacles found */
-            odVar.siObsFound = iDetectedObstacles;
-            mColorFiltered.copyTo(mColorProcessed2);    // mColorProcessed2
+        }
 
-            /* Picturing the taken pictures and if there's any obstacle recogniced */ 
-            cv::imshow("Camera 2 - RGB Picture", mColorProcessed2);              // mColorProcessed2  mSceneGreenColor       mContourMaskROI   mContourMask  mContourMaskROI      mContourMaskDistance
-            cv::waitKey(10);
+    }
+
+
+
+
+
+
+    bool image_processing::segmentar ()
+        {
+            cv::Mat ResultDiff,image1grey,ResultDiff_Threshold,kernel,ResultDiff_Mor,image2grey,ResultDiff2,ResultDiff2_Threshold,ResultDiff2_Mor;
+            cv::cvtColor(ImageRGB, image1grey, cv::COLOR_BGR2GRAY);
+            cv::cvtColor(ImageRGB2, image2grey, cv::COLOR_BGR2GRAY);
+            cv::subtract(image1grey, image2grey, ResultDiff);
+            // cv::imshow(" ResultDiff ", ResultDiff );
+            // cv::waitKey(5000);
+            cv::threshold(ResultDiff, ResultDiff_Threshold, 50, 255, cv::THRESH_BINARY);
+            kernel = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(5, 5));
+            cv::erode(ResultDiff_Threshold, ResultDiff_Mor, kernel);
+            kernel = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(10, 10));
+            cv::dilate(ResultDiff_Mor, ResultDiff_Mor, kernel);
+
+            cv::subtract(image2grey, image1grey, ResultDiff2);
+            cv::threshold(ResultDiff2, ResultDiff2_Threshold, 50, 255, cv::THRESH_BINARY);
+            kernel = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(2, 2));
+            cv::erode(ResultDiff2_Threshold, ResultDiff2_Mor, kernel);
+            kernel = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(10, 10));
+            cv::dilate(ResultDiff2_Mor, ResultDiff2_Mor, kernel);
+
+            BlackImage.copyTo(ResFinSeg);
+
+            ResFinSeg=ResultDiff_Mor+ResultDiff2_Mor;
+            // cv::namedWindow("Resultado diferencia de color",cv::WINDOW_AUTOSIZE);
+            // cv::imshow("Resultado diferencia de color", ResFinSeg );
+            // cv::waitKey(5000);
         }
-        else {
-            odVar.siObsFound = 0;
-            cv::imshow("Camera 2 - RGB Picture", mColorPic2);
-            ROS_INFO("No obstacles has been detected");
+
+
+
+    bool image_processing::ObtenerObjetosRGB()
+        {
+            cv::Mat kernel,difRobot1,difRobot2,ImageProf_Threshold,ImageProf2_Threshold,ImageProf_Threshold_grey,ImageProf2_Threshold_grey;
+            // ancient
+            cv::threshold(ImagenProf_U8, ImageProf_Threshold, 2, 255, cv::THRESH_BINARY);
+            cv::cvtColor(ImageProf_Threshold, ImageProf_Threshold_grey, cv::COLOR_BGR2GRAY);
+            cv::threshold(ImageProf_Threshold_grey, ImageProf_Threshold_grey, 2, 255, cv::THRESH_BINARY);
+
+            // now
+            cv::threshold(ImagenProf2_U8, ImageProf2_Threshold, 2, 255, cv::THRESH_BINARY);
+            cv::cvtColor(ImageProf2_Threshold, ImageProf2_Threshold_grey, cv::COLOR_BGR2GRAY);
+            cv::threshold(ImageProf2_Threshold_grey, ImageProf2_Threshold_grey, 2, 255, cv::THRESH_BINARY);
+
+
+            // cv::imshow("ImageProf_Threshold_grey", ImageProf_Threshold_grey );
+            // cv::waitKey(5000);
+
+            //  subtract R1
+            cv::subtract(ResFinSeg, ImageProf_Threshold_grey, difRobot1);
+            cv::subtract(ResFinSeg, difRobot1, difRobot1);
+            // cv::imshow(" robot posición antigua", difRobot1 );
+            // cv::waitKey(5000);
+
+            kernel = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(10, 10));
+            cv::erode(difRobot1, difRobot1, kernel);
+            cv::dilate(difRobot1, difRobot1, kernel);
+            cv::dilate(difRobot1, difRobot1, kernel);
+            cv::dilate(difRobot1, difRobot1, kernel);
+            cv::dilate(difRobot1, difRobot1, kernel);
+            cv::dilate(difRobot1, difRobot1, kernel);
+            cv::threshold(difRobot1, difRobot1, 5, 255, cv::THRESH_BINARY);
+            cv::subtract(ResFinSeg, difRobot1, difRobot1);
+            // cv::namedWindow("Quitar robot posición antigua",cv::WINDOW_AUTOSIZE);
+            // cv::imshow("Quitar robot posición antigua", difRobot1 );
+            // cv::waitKey(5000);
+
+            //  subtract R2
+            cv::subtract(ResFinSeg, ImageProf2_Threshold_grey, difRobot2);
+            cv::subtract(ResFinSeg, difRobot2, difRobot2);
+               
+            // cv::namedWindow("Diferencia de color de imagen actual",cv::WINDOW_AUTOSIZE);
+            // cv::imshow("Diferencia de color de imagen actual", difRobot2 );
+            // cv::waitKey(5000);
+
+            kernel = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(10, 10));
+      
+            cv::threshold(difRobot2, difRobot2, 5, 255, cv::THRESH_BINARY);
+
+            BlackImage.copyTo(SegRobot);
+
+
+            // sumar las 2
+            cv::add(difRobot2, difRobot1, SegRobot);
+            // cv::namedWindow("Segmentación imagen",cv::WINDOW_AUTOSIZE);
+            cv::imshow("Segmentación imagen", SegRobot);
+            cv::waitKey(1);
+
         }
+
 
         
-        return odVar;
-    }
 
-    /* Method for computing xyz obstacle position as well as the minimum radius required */
-    obs_carthesian_position image_processing::compute_xyz_obstacle_position() {
-        obs_carthesian_position ocpVar;
 
-        /* Processing algorithm implementation */
-        if(odZYCam1.siObsFound != 0 || odXYCam2.siObsFound != 0){
-            if (odZYCam1.siObsFound == odXYCam2.siObsFound) {
-                /* Case where the same obstacles has been found in picture 1 and 2. It mean that it might happen occlusion while detecting but there's no case of hard occlusion (when one obstacle is divided or totally ocluded in one view) */
-                // ROS_INFO("The program has entered in regular xyz computation");
-                ocpVar = regular_xyz_computation();
+
+        bool image_processing::entre_articulaciones(float x1_rect,float y1_rect,float x2_rect,float y2_rect,cv::Mat ImagenSolucion )
+        {
+            
+
+                       
+
+
+            float rampa,x_rect,y_rect,x_rect_desp,y_rect_desp;
+            bool direccion=true, direccionX=false,direccionY=false;
+
+            rampa=((y2_rect-y1_rect)/(x2_rect-x1_rect));
+            // std::cout << "rampa " <<  rampa  << '\n'; 
+                
+
+            x_rect_desp= float(x2_rect)-float(x1_rect);
+            y_rect_desp= float(y2_rect)-float(y1_rect);
+
+        
+            if(x_rect_desp>10)
+            {
+                // printf("Derecha\n");
+                // std::cout << "x_rect_desp " <<  x_rect_desp  << '\n'; 
+                x_rect=x_rect_desp;
+                direccion=true;
             }
-            else {
-                /* Case where hard occlusion has happend. One obstacle is completely ocludded from one view or splitted into several parts */
-                // ROS_INFO("The program has entered in hard occlusion xyz computation");
-                ocpVar = hard_occlusion_xyz_computation();
+            else if(x_rect_desp<-10)
+            {
+            // printf("Izquierda\n"); 
+            
+            // std::cout << "x_rect_desp " <<  x_rect_desp  << '\n';
+            x_rect=x_rect_desp;  
+            direccion=false;
             }
-        }
-        else {
-            ocpVar.siNumberObstacles = 0;
-            ocpVar.occObstaclePoses.clear();
-            ocpVar.vsiPublishCamera.clear();
-            // printf ("No obstacles has been found in any of the two pictures");
-        }
-
-        return ocpVar;
-    }
-
-    /* regular_xyz_computation() method for most of the situations of detected obstacles */
-    obs_carthesian_position image_processing::regular_xyz_computation() {
-        obs_carthesian_position ocpVar;
-        obs_cartheseian_components occAux;
-
-        std::vector<std::pair<int, int>> vCoupledIndex;
-        std::vector<int> vMissmatchedIndex;
-
-        bool bSameCenterY, bSameLowY, bSameHighY;
-        int iMissmatchedResults;
-        int iAux = 0;
-
-        double dCam1XDiff = 0.0;
-        double dCam2XDiff = 0.0;
-        double dCam1YDiff = 0.0;
-        double dCam2YDiff = 0.0;
-        double dCam1ZDiff = 0.0;
-        double dCam2ZDiff = 0.0;
-        double dXdiff, dYdiff, dZdiff;
-
-        /* Step 1) Checking the matched and miss-matched obstacles. As the found obstacles are the same in both situations, it doesn't matter the order */
-        for (size_t i = 0; i < odZYCam1.siObsFound; i++) {
-            iMissmatchedResults = 0;
-            for (size_t j = 0; j < odXYCam2.siObsFound; j++) {
-                bSameCenterY = false;
-                bSameLowY = false;
-                bSameHighY = false;
-                if (odZYCam1.vopObsParam[i].dWidthCenter >= odXYCam2.vopObsParam[j].dWidthCenter - dDistanceThreshold && odZYCam1.vopObsParam[i].dWidthCenter <= odXYCam2.vopObsParam[j].dWidthCenter + dDistanceThreshold) {
-                    bSameCenterY = true;
-                }
-                if (odZYCam1.vopObsParam[i].dWidthLower >= odXYCam2.vopObsParam[j].dWidthLower - dDistanceThreshold && odZYCam1.vopObsParam[i].dWidthLower <= odXYCam2.vopObsParam[j].dWidthLower + dDistanceThreshold) {
-                    bSameLowY = true;
-                }
-                if (odZYCam1.vopObsParam[i].dWidthHigher >= odXYCam2.vopObsParam[j].dWidthHigher - dDistanceThreshold && odZYCam1.vopObsParam[i].dWidthHigher <= odXYCam2.vopObsParam[j].dWidthHigher + dDistanceThreshold) {
-                    bSameHighY = true;
-                }
-                if (bSameCenterY || bSameLowY || bSameHighY) {
-                    // ROS_INFO("    Obstacle matched");
-                    vCoupledIndex.push_back(std::make_pair(i, j));
-                }
-                else {
-                    // ROS_INFO("    Obstacle miss-matched");
-                    iMissmatchedResults++;
-                }
-            }
-            if (iMissmatchedResults == odXYCam2.siObsFound) {
-                // ROS_INFO("There's a missmatched element");
-                vMissmatchedIndex.push_back(i);
-            }
-            // else {      // TODO: delete this else or comment it after debbuging, is useles in regular work flow
-            //     ROS_INFO("There's no missmatched elements");
-            // }
-        }
-
-        /* Step 2): Obtaining info of the coupled results ==> CASE A, when the vMissmatchedIndex.size() == 0 */
-        for (size_t i = 0; i < vCoupledIndex.size(); i++) {
-            /* Computing the difference in each axis for each camera and object */
-            dCam1XDiff = abs(odZYCam1.vopObsParam[vCoupledIndex[i].first].dFurthestPoint - odZYCam1.vopObsParam[vCoupledIndex[i].first].dClosestPoint);
-            dCam1YDiff = abs(odZYCam1.vopObsParam[vCoupledIndex[i].first].dWidthHigher - odZYCam1.vopObsParam[vCoupledIndex[i].first].dWidthLower);
-            dCam1ZDiff = abs(odZYCam1.vopObsParam[vCoupledIndex[i].first].dHeightHigher - odZYCam1.vopObsParam[vCoupledIndex[i].first].dHeightLower);;
-            dCam2XDiff = abs(odXYCam2.vopObsParam[vCoupledIndex[i].second].dHeightHigher - odXYCam2.vopObsParam[vCoupledIndex[i].second].dHeightLower);
-            dCam2YDiff = abs(odXYCam2.vopObsParam[vCoupledIndex[i].second].dWidthHigher - odXYCam2.vopObsParam[vCoupledIndex[i].second].dWidthHigher);
-            dCam2ZDiff = abs(odXYCam2.vopObsParam[vCoupledIndex[i].second].dFurthestPoint - odXYCam2.vopObsParam[vCoupledIndex[i].second].dClosestPoint);
-            // ROS_INFO("==> Obstacle number: %d", odZYCam1.siObsFound);
-            // ROS_INFO("  Camera1: x_diff = %f", dCam1XDiff);
-            // ROS_INFO("  Camera2: x_diff = %f", dCam2XDiff);
-            // ROS_INFO("  Camera1: y_diff = %f", dCam1YDiff);
-            // ROS_INFO("  Camera2: y_diff = %f", dCam2YDiff);
-            // ROS_INFO("  Camera1: z_diff = %f", dCam1ZDiff);
-            // ROS_INFO("  Camera2: z_diff = %f", dCam2ZDiff);
-            /* Picking the optimal solution for the paired obstacles */
-            dXdiff = dCam2XDiff;
-            if(dCam1YDiff > dCam2YDiff)
-                dYdiff = dCam1YDiff;
             else
-                dYdiff = dCam2YDiff;
-            dZdiff = dCam1ZDiff;
-            /* Computing the smallest cube that contain each of the paired obstacles */
-            occAux.dXcenter = odZYCam1.vopObsParam[vCoupledIndex[i].first].dClosestPoint + dXdiff / 2;
-            occAux.dYcenter = (odZYCam1.vopObsParam[vCoupledIndex[i].first].dWidthCenter + odXYCam2.vopObsParam[vCoupledIndex[i].second].dWidthCenter) / 2;
-            occAux.dZcenter = odZYCam1.vopObsParam[vCoupledIndex[i].first].dHeightHigher + dZdiff / 2;
-            occAux.dMinCartRadius = sqrt(std::pow(dXdiff/2, 2.0) + std::pow(dYdiff/2, 2.0) + std::pow(dZdiff/2, 2.0));
-            occAux.dXdiff = dXdiff;
-            occAux.dYdiff = dYdiff;
-            occAux.dZdiff = dZdiff;
-            ocpVar.occObstaclePoses.push_back(occAux);
-            ocpVar.vsiPublishCamera.push_back(1);
-            // ROS_INFO("The smallest containing box is at (%f,%f,%f) with a maximum radius of %f", ocpVar.occObstaclePoses[i].dXcenter, ocpVar.occObstaclePoses[i].dYcenter, ocpVar.occObstaclePoses[i].dZcenter, ocpVar.occObstaclePoses[i].dMinCartRadius);
-        }
-
-        ROS_INFO("vMissmatchedIndex Value: %d", vMissmatchedIndex.size());
-        /* Step 3): Working with the miss-matched results. It means a soft occlusion situation ==> CASE B.1. (double Y side occlusion with non-paired centers) and B.2. (double view occlusion), both are treated the same way */
-        if (vMissmatchedIndex.size() != 0){
-            std::vector<std::pair <int, int>> vMissCoupledIndex;
-            /* Find the possible pairs for the cam1 miss-matched results */
-            if (vMissmatchedIndex.size() == 1) {
-                // ROS_INFO("The value of vMissmatchedIndex should be one");
-                bool bMissMatched;
-                /* When there's only one obstacle miss-matched, it must be found the index for cam2 to match this obstacle */
-                for (size_t i = 0; i < odXYCam2.siObsFound; i++) {
-                    bMissMatched = false;
-                    for (size_t j = 0; j < vCoupledIndex.size(); j++) {
-                        if (i = vCoupledIndex[j].second)  {
-                            bMissMatched = true;
-                        }  // It means that that index i is contained in the paired vecto so it has a matched result
-                    }
-                    if (!bMissMatched) {
-                        vMissCoupledIndex.push_back(std::make_pair(vMissmatchedIndex[0], i));
-                    }
-                }
-                // ROS_INFO("Value of vMissCoupledIndex size is: %d", vMissCoupledIndex.size());
+            {
+                // printf("No se desplaza\n");
+                // std::cout << "x_rect_desp " <<  x_rect_desp  << '\n';
+                x_rect=0; 
+                direccionX=true;
             }
-            else {
-                // ROS_INFO("The value of vMissmatchedIndex should be less than one");
-                /* When there's more than only one obstacle miss-matched, it must be found every combination of missmatched obstacles to check which are the closest and more probable */
-                std::vector<int> vMissListIndex1 = vMissmatchedIndex, vMissListIndex2;
-                bool bMissMatched;
-                double dMinDistance, dDistanceComp;
-                int iAuxCam1, iAuxCam2;
-                /* When there's only one obstacle miss-matched, it must be found the index for cam2 to match this obstacle */
-                for (size_t i = 0; i < odXYCam2.siObsFound; i++) {
-                    bMissMatched = false;
-                    for (size_t j = 0; j < vCoupledIndex.size(); j++) {
-                        if (i = vCoupledIndex[j].second)  {
-                            bMissMatched = true;
-                        }  // It means that that index i is contained in the paired vecto so it has a matched result
-                    }
-                    if (!bMissMatched) {
-                        vMissListIndex2.push_back(i);           // Computing the miss-matched results from camera 2
-                    }
-                }
-                /* Checking every possible combination to pick the closest centers on Y coordinate to be the one matched */
-                for (size_t i = 0; i < vMissListIndex1.size(); i++) {
-                    dMinDistance = 1000000000.0;
-                    iAuxCam1 = 0;
-                    iAuxCam2 = 0;
-                    for (size_t j = 0; j < vMissListIndex2.size(); j++) {
-                        dDistanceComp = abs(odZYCam1.vopObsParam[i].dWidthCenter - odXYCam2.vopObsParam[j].dWidthCenter);
-                        if (dMinDistance > dDistanceComp) {
-                            dMinDistance = dDistanceComp;
-                            iAuxCam1 = vMissListIndex1[i];
-                            iAuxCam2 = vMissListIndex2[j];
+
+
+            if(y_rect_desp<-10)
+            {
+                // printf("Arriba\n");
+                // std::cout << "y_rect_desp " <<  y_rect_desp  << '\n'; 
+                y_rect=y_rect_desp;
+            }
+            else if(y_rect_desp>10)
+            {
+            // printf("Abajo\n"); 
+            // std::cout << "y_rect_desp " <<  y_rect_desp  << '\n'; 
+            y_rect=y_rect_desp;
+            }
+            else
+            {
+                // printf("No se desplaza\n");
+                // std::cout << "y_rect_desp " <<  y_rect_desp  << '\n'; 
+                y_rect=0;
+                direccionY=true;
+            }
+
+
+            if (y2_rect<=0)
+            {
+                y2_rect=0;
+            }
+            if (y1_rect<=0)
+            {
+                y1_rect=0;
+            }
+
+            if (x1_rect>640)
+            {
+                x1_rect=640-1;
+            }
+            if (x2_rect>640)
+            {
+                x2_rect=640-1;
+            }
+
+
+
+
+        if (direccion==true and direccionY==false and direccionX==false)
+
+        {
+            // printf("direccion==true and direccionY==false and direccionX==false\n");
+            // std::cout << "x1_rect " <<  x1_rect  << '\n';
+            // std::cout << "x1_rect+x_rect " <<  x1_rect+x_rect  << '\n';
+
+            if(x1_rect+35>640)
+            {
+                x1_rect=x1_rect+(35-x1_rect);
+
+            }
+            if(y1_rect-30<0)
+            {
+                y1_rect=y1_rect+(30-y1_rect);
+
+            }
+
+
+            for (size_t i = int(x1_rect); i <= int(x1_rect+x_rect) ; i++)
+                { //std::cout << "i " <<  i  << '\n'; 
+                    //printf("Calcula\n");
+                    y_rect=rampa*(float(i)-x1_rect)+y1_rect;
+                    
+                //     printf("valor calculo\n");
+                // std::cout << "y_rect " <<  y_rect  << '\n'; 
+                    for (size_t k=i-35; k<i+35;k++)
+                    {
+                        
+                        for (size_t n = int(y_rect)-30; n < int(y_rect+30) ; n++)
+                        {
+                            //  std::cout << "n " <<  n  << '\n';
+                            // std::cout << "k " <<  k  << '\n'; 
+                        
+
+                            ImagenSolucion.at<uint8_t>(cv::Point(k,n))=255;
                         }
                     }
-                    vMissCoupledIndex.push_back(std::make_pair(iAuxCam1, iAuxCam2));
-                }
-            }
 
-            /* After obtainin the couple which presents miss-matching issues, the same algorithm is applied to case B.1. and B.2. */
-            for (size_t i = 0; i < vMissCoupledIndex.size(); i++) {
-                ROS_INFO("Cycle has entered the vMissCoupledIndex algorithm part");
-                /* Computing the difference in each axis for each camera and object */
-                dCam1XDiff = abs(odZYCam1.vopObsParam[vMissCoupledIndex[i].first].dFurthestPoint - odZYCam1.vopObsParam[vMissCoupledIndex[i].first].dClosestPoint);
-                dCam1YDiff = odZYCam1.vopObsParam[vMissCoupledIndex[i].first].dWidthLower - odZYCam1.vopObsParam[vMissCoupledIndex[i].first].dWidthCenter;
-                dCam1ZDiff = abs(odZYCam1.vopObsParam[vMissCoupledIndex[i].first].dHeightHigher - odZYCam1.vopObsParam[vMissCoupledIndex[i].first].dHeightLower);;
-                dCam2XDiff = abs(odXYCam2.vopObsParam[vMissCoupledIndex[i].second].dHeightHigher - odXYCam2.vopObsParam[vMissCoupledIndex[i].second].dHeightLower);
-                dCam2YDiff = odXYCam2.vopObsParam[vMissCoupledIndex[i].second].dWidthCenter - odXYCam2.vopObsParam[vMissCoupledIndex[i].second].dWidthHigher;
-                dCam2ZDiff = abs(odXYCam2.vopObsParam[vMissCoupledIndex[i].second].dFurthestPoint - odXYCam2.vopObsParam[vMissCoupledIndex[i].second].dClosestPoint);
-                // ROS_INFO("==> Obstacle number: %d", odZYCam1.siObsFound);
-                // ROS_INFO("  Camera1: x_diff = %f", dCam1XDiff);
-                // ROS_INFO("  Camera2: x_diff = %f", dCam2XDiff);
-                // ROS_INFO("  Camera1: y_diff = %f", dCam1YDiff);
-                // ROS_INFO("  Camera2: y_diff = %f", dCam2YDiff);
-                // ROS_INFO("  Camera1: z_diff = %f", dCam1ZDiff);
-                // ROS_INFO("  Camera2: z_diff = %f", dCam2ZDiff);
-                /* Picking the optimal solution for the paired obstacles */
-                dXdiff = dCam2XDiff;
-                dYdiff = abs(dCam1YDiff + (odZYCam1.vopObsParam[vMissCoupledIndex[i].first].dWidthCenter - odXYCam2.vopObsParam[vMissCoupledIndex[i].second].dWidthCenter) + dCam2YDiff);
-                dZdiff = dCam1ZDiff;
-                // ROS_INFO("x_diff=%f, y_diff=%f, z_diff=%f", dXdiff, dYdiff, dZdiff);
-                /* Computing the smallest cube that contain each of the paired obstacles */
-                occAux.dXcenter = odZYCam1.vopObsParam[vMissCoupledIndex[i].first].dClosestPoint + dXdiff / 2;
-                occAux.dYcenter = (odZYCam1.vopObsParam[vMissCoupledIndex[i].first].dWidthCenter + odXYCam2.vopObsParam[vMissCoupledIndex[i].second].dWidthCenter) / 2;
-                occAux.dZcenter = odZYCam1.vopObsParam[vMissCoupledIndex[i].first].dHeightHigher + dZdiff / 2;
-                occAux.dMinCartRadius = sqrt(std::pow(dXdiff/2, 2.0) + std::pow(dYdiff/2, 2.0) + std::pow(dZdiff/2, 2.0));
-                occAux.dXdiff = dXdiff;
-                occAux.dYdiff = dYdiff;
-                occAux.dZdiff = dZdiff;
-                ocpVar.occObstaclePoses.push_back(occAux);
-                ocpVar.vsiPublishCamera.push_back(1);
-                // ROS_INFO("The smallest containing box is at (%f,%f,%f) with a maximum radius of %f", ocpVar.occObstaclePoses[i].dXcenter, ocpVar.occObstaclePoses[i].dYcenter, ocpVar.occObstaclePoses[i].dZcenter, ocpVar.occObstaclePoses[i].dMinCartRadius);
-            }
+                }
+
+                
+
         }
+        else if (direccion==false and direccionY==false and direccionX==false)
+        {
+            // printf("direccion==false and direccionY==false and direccionX==false\n");
+            // std::cout << "x1_rect " <<  x1_rect  << '\n'; 
 
-        ocpVar.siNumberObstacles = odZYCam1.siObsFound;
-        return ocpVar;
-    }
 
-    /* hard_occlusion_xyz_computation() method for cases where the number of obstacles detected by the cam1 and the cam2 differs */
-    obs_carthesian_position image_processing::hard_occlusion_xyz_computation() {
-        obs_carthesian_position ocpVar;
-        obs_cartheseian_components occAux;
+                if(x1_rect-35<0)
+            {
+                x1_rect=x1_rect+(35-x1_rect);
 
-        std::vector<std::pair<int, int>> vCoupledIndex;
-        std::vector<int> vMissmatchedIndex;
-
-        bool bSameCenterY, bSameLowY, bSameHighY;
-        int iMissmatchedResults;
-        int iAux = 0;
-
-        double dCam1XDiff = 0.0;
-        double dCam2XDiff = 0.0;
-        double dCam1YDiff = 0.0;
-        double dCam2YDiff = 0.0;
-        double dCam1ZDiff = 0.0;
-        double dCam2ZDiff = 0.0;
-        double dXdiff, dYdiff, dZdiff;
-
-        /* Algorithm for processing obstacles positions when hard occlusion happends */
-        if (odZYCam1.siObsFound > odXYCam2.siObsFound) {
-            /* Case C.1.: Where there're more obstacles found in cam 1 than in cam2 */
-            /* Step 1)  Computing if there are any matched obstacle in both pictures */
-            for (size_t i = 0; i < odZYCam1.siObsFound; i++) {
-                iMissmatchedResults = 0;
-                for (size_t j = 0; j < odXYCam2.siObsFound; j++) {
-                    bSameCenterY = false;
-                    bSameLowY = false;
-                    bSameHighY = false;
-                    if (odZYCam1.vopObsParam[i].dWidthCenter >= odXYCam2.vopObsParam[j].dWidthCenter - dDistanceThreshold && odZYCam1.vopObsParam[i].dWidthCenter <= odXYCam2.vopObsParam[j].dWidthCenter + dDistanceThreshold) {
-                        bSameCenterY = true;
-                    }
-                    if (odZYCam1.vopObsParam[i].dWidthLower >= odXYCam2.vopObsParam[j].dWidthLower - dDistanceThreshold && odZYCam1.vopObsParam[i].dWidthLower <= odXYCam2.vopObsParam[j].dWidthLower + dDistanceThreshold) {
-                        bSameLowY = true;
-                    }
-                    if (odZYCam1.vopObsParam[i].dWidthHigher >= odXYCam2.vopObsParam[j].dWidthHigher - dDistanceThreshold && odZYCam1.vopObsParam[i].dWidthHigher <= odXYCam2.vopObsParam[j].dWidthHigher + dDistanceThreshold) {
-                        bSameHighY = true;
-                    }
-                    if (bSameCenterY || bSameLowY || bSameHighY) {
-                        // ROS_INFO("    Obstacle matched");
-                        vCoupledIndex.push_back(std::make_pair(i, j));
-                    }
-                    else {
-                        // ROS_INFO("    Obstacle miss-matched");
-                        iMissmatchedResults++;
-                    }
-                }
-                if (iMissmatchedResults == odXYCam2.siObsFound) {
-                    // ROS_INFO("There's a missmatched element");
-                    vMissmatchedIndex.push_back(i);
-                }
-                // else {      // TODO: delete this else or comment it after debbuging, is useles in regular work flow
-                //     ROS_INFO("There's no missmatched elements");
-                // }
-            }    
-
-            /* Step 2) Computation of the box for the missmatched elements */
-            /* Working with the paired obstacles for the cam1 */
-            for (size_t i = 0; i < vCoupledIndex.size(); i++) {
-                /* Computing the difference in each axis for each camera and object */
-                dCam1XDiff = abs(odZYCam1.vopObsParam[vCoupledIndex[i].first].dFurthestPoint - odZYCam1.vopObsParam[vCoupledIndex[i].first].dClosestPoint);
-                dCam1YDiff = abs(odZYCam1.vopObsParam[vCoupledIndex[i].first].dWidthHigher - odZYCam1.vopObsParam[vCoupledIndex[i].first].dWidthLower);
-                dCam1ZDiff = abs(odZYCam1.vopObsParam[vCoupledIndex[i].first].dHeightHigher - odZYCam1.vopObsParam[vCoupledIndex[i].first].dHeightLower);;
-                dCam2XDiff = abs(odXYCam2.vopObsParam[vCoupledIndex[i].second].dHeightHigher - odXYCam2.vopObsParam[vCoupledIndex[i].second].dHeightLower);
-                dCam2YDiff = abs(odXYCam2.vopObsParam[vCoupledIndex[i].second].dWidthHigher - odXYCam2.vopObsParam[vCoupledIndex[i].second].dWidthHigher);
-                dCam2ZDiff = abs(odXYCam2.vopObsParam[vCoupledIndex[i].second].dFurthestPoint - odXYCam2.vopObsParam[vCoupledIndex[i].second].dClosestPoint);
-                // ROS_INFO("==> Obstacle number: %d", odZYCam1.siObsFound);
-                // ROS_INFO("  Camera1: x_diff = %f", dCam1XDiff);
-                // ROS_INFO("  Camera2: x_diff = %f", dCam2XDiff);
-                // ROS_INFO("  Camera1: y_diff = %f", dCam1YDiff);
-                // ROS_INFO("  Camera2: y_diff = %f", dCam2YDiff);
-                // ROS_INFO("  Camera1: z_diff = %f", dCam1ZDiff);
-                // ROS_INFO("  Camera2: z_diff = %f", dCam2ZDiff);
-                /* Picking the optimal solution for the paired obstacles */
-                dXdiff = dCam2XDiff;
-                if(dCam1YDiff > dCam2YDiff)                             // This comparisson is for treating the dual-side occlusion or the one-side occlusion on y side.
-                    dYdiff = dCam1YDiff;
-                else
-                    dYdiff = dCam2YDiff;
-                dZdiff = dCam1ZDiff;
-                /* Computing the smallest cube that contain each of the paired obstacles */
-                occAux.dXcenter = odZYCam1.vopObsParam[vCoupledIndex[i].first].dClosestPoint + dXdiff / 2;
-                occAux.dYcenter = (odZYCam1.vopObsParam[vCoupledIndex[i].first].dWidthCenter + odXYCam2.vopObsParam[vCoupledIndex[i].second].dWidthCenter) / 2;
-                occAux.dZcenter = odZYCam1.vopObsParam[vCoupledIndex[i].first].dHeightHigher + dZdiff / 2;
-                occAux.dMinCartRadius = sqrt(std::pow(dXdiff/2, 2.0) + std::pow(dYdiff/2, 2.0) + std::pow(dZdiff/2, 2.0));
-                occAux.dXdiff = dXdiff;
-                occAux.dYdiff = dYdiff;
-                occAux.dZdiff = dZdiff;
-                ocpVar.occObstaclePoses.push_back(occAux);
-                ocpVar.vsiPublishCamera.push_back(1);
-                // ROS_INFO("The smallest containing box is at (%f,%f,%f) with a maximum radius of %f", ocpVar.occObstaclePoses[i].dXcenter, ocpVar.occObstaclePoses[i].dYcenter, ocpVar.occObstaclePoses[i].dZcenter, ocpVar.occObstaclePoses[i].dMinCartRadius);
             }
-            if (ocpVar.occObstaclePoses.size() == 0)
-                iAux = 0;
+            if(y1_rect-20<0)
+            {
+                y1_rect=y1_rect+(20-y1_rect);
+
+            }
+
+            for (size_t i = int(x1_rect); i >= int(x1_rect+x_rect) ; i=i-1)
+                 { 
+                     //std::cout << "i " <<  i  << '\n'; 
+                    //printf("Calcula\n");
+                    y_rect=rampa*(float(i)-x1_rect)+y1_rect;
+                    
+                //     printf("valor calculo\n");
+                // std::cout << "y_rect " <<  y_rect  << '\n'; 
+                    for (size_t k=i-35; k<i+35;k++)
+                    {
+                        
+                        for (size_t n = int(y_rect)-35; n < int(y_rect+35) ; n++)
+                        {
+                            // std::cout << "n " <<  n  << '\n';
+                            // std::cout << "k " <<  k  << '\n'; 
+
+                            ImagenSolucion.at<uint8_t>(cv::Point(k,n))=255;
+                        }
+                    }
+
+
+                }
+
+
+        }
+        else if ( direccionX==true and direccionY==false)
+        {
+            //printf("direccionX==true and direccionY==false\n");
+            if(y1_rect-y2_rect>0)
+            {
+                            // std::cout << "y1_rect " <<  y1_rect  << '\n';
+                            // std::cout << "y2_rect " <<  y2_rect << '\n'; 
+                            // std::cout << "x1_rect " <<  x1_rect  << '\n';
+                            // std::cout << "x2_rect " <<  x2_rect << '\n';
+                        if
+                        (y2_rect-35<0)
+                        {
+                            y2_rect=y2_rect+(35-y2_rect);
+                        } 
+
+
+
+        
+
+                        if(x1_rect-30<0)
+                        {
+                            x1_rect=x1_rect+(30-x1_rect);
+
+                        }
+
+                        
+
+                        
+
+
+                    for (size_t k=x1_rect-30; k<=x1_rect+x_rect+30;k++)
+                    {
+                    
+                        
+                        for (size_t n = int(y2_rect)-35; n < int(y1_rect+35) ; n++)
+                        {
+                            // std::cout << "n " <<  n  << '\n';
+                            // std::cout << "k " <<  k  << '\n'; 
+                            
+                            // std::cout << "n " <<  n  << '\n';
+                            // std::cout << "k " <<  k  << '\n'; 
+
+                        
+
+                            ImagenSolucion.at<uint8_t>(cv::Point(k,n))=255;
+                        }
+                    }
+                
+
+            }
+            
             else
-                iAux = ocpVar.occObstaclePoses.size() - 1;
-            /* Working with the rest and the missmatched results */
-            for (size_t i = 0; i < vMissmatchedIndex.size(); i++) {
-                /* Computing the difference in each axis for each camera and object */
-                dXdiff = abs(odZYCam1.vopObsParam[vMissmatchedIndex[i]].dFurthestPoint - odZYCam1.vopObsParam[vMissmatchedIndex[i]].dClosestPoint);
-                dYdiff = abs(odZYCam1.vopObsParam[vMissmatchedIndex[i]].dWidthHigher - odZYCam1.vopObsParam[vMissmatchedIndex[i]].dWidthLower);
-                dZdiff = abs(odZYCam1.vopObsParam[vMissmatchedIndex[i]].dHeightHigher - odZYCam1.vopObsParam[vMissmatchedIndex[i]].dHeightLower);
-                // ROS_INFO("==> Obstacle number: %d", odZYCam1.siObsFound);
-                // ROS_INFO("  Camera1: x_diff = %f", dXdiff);
-                // ROS_INFO("  Camera1: y_diff = %f", dYdiff);
-                // ROS_INFO("  Camera1: z_diff = %f", dZdiff);
-                /* Computing the smallest cube that contain each of the paired obstacles */
-                occAux.dXcenter = odZYCam1.vopObsParam[vMissmatchedIndex[i]].dClosestPoint + dXdiff / 2;
-                occAux.dYcenter = odZYCam1.vopObsParam[vMissmatchedIndex[i]].dWidthCenter;
-                occAux.dZcenter = odZYCam1.vopObsParam[vMissmatchedIndex[i]].dHeightLower + dZdiff / 2;
-                occAux.dMinCartRadius = sqrt(std::pow(dXdiff/2, 2.0) + std::pow(dYdiff/2, 2.0) + std::pow(dZdiff/2, 2.0));
-                occAux.dXdiff = dXdiff;
-                occAux.dYdiff = dYdiff;
-                occAux.dZdiff = dZdiff;
-                ocpVar.occObstaclePoses.push_back(occAux);
-                ocpVar.vsiPublishCamera.push_back(1);
-                // ROS_INFO("Print the values of i = %d, iAux = %d", i, iAux);
-                // ROS_INFO("The smallest containing box is at (%f,%f,%f) with a maximum radius of %f", ocpVar.occObstaclePoses[i+iAux].dXcenter, ocpVar.occObstaclePoses[i+iAux].dYcenter, ocpVar.occObstaclePoses[i+iAux].dZcenter, ocpVar.occObstaclePoses[i+iAux].dMinCartRadius);
-            }
-            ocpVar.siNumberObstacles = odZYCam1.siObsFound;
-        }
-        else {
-            /* Case C.2.: Where there're more obstacles found in cam2 than in cam 1 */
-            /* Step 1)  Computing if there are any matched obstacle in both pictures */
-            for (size_t i = 0; i < odXYCam2.siObsFound; i++) {
-                iMissmatchedResults = 0;
-                for (size_t j = 0; j < odZYCam1.siObsFound; j++) {
-                    bSameCenterY = false;
-                    bSameLowY = false;
-                    bSameHighY = false;
-                    if (odXYCam2.vopObsParam[i].dWidthCenter >= odZYCam1.vopObsParam[j].dWidthCenter - dDistanceThreshold && odXYCam2.vopObsParam[i].dWidthCenter <= odZYCam1.vopObsParam[j].dWidthCenter + dDistanceThreshold) {
-                        bSameCenterY = true;
-                    }
-                    if (odXYCam2.vopObsParam[i].dWidthLower >= odZYCam1.vopObsParam[j].dWidthLower - dDistanceThreshold && odXYCam2.vopObsParam[i].dWidthLower <= odZYCam1.vopObsParam[j].dWidthLower + dDistanceThreshold) {
-                        bSameLowY = true;
-                    }
-                    if (odXYCam2.vopObsParam[i].dWidthHigher >= odZYCam1.vopObsParam[j].dWidthHigher - dDistanceThreshold && odXYCam2.vopObsParam[i].dWidthHigher <= odZYCam1.vopObsParam[j].dWidthHigher + dDistanceThreshold) {
-                        bSameHighY = true;
-                    }
-                    if (bSameCenterY || bSameLowY || bSameHighY) {
-                        // ROS_INFO("    Obstacle matched");
-                        vCoupledIndex.push_back(std::make_pair(j, i));
-                    }
-                    else {
-                        // ROS_INFO("    Obstacle miss-matched");
-                        iMissmatchedResults++;
-                        // ROS_INFO("Number of missmatched elements: %d", iMissmatchedResults);
-                    }
-                }
-                if (iMissmatchedResults == odZYCam1.siObsFound) {
-                    // ROS_INFO("There's a missmatched element");
-                    vMissmatchedIndex.push_back(i);
-                }
-                // else {      // TODO: delete this else or comment it after debbuging, is useles in regular work flow
-                //     ROS_INFO("There's no missmatched elements");
-                // }
-            }    
+            {
+                            //     std::cout << "y1_rect " <<  y1_rect  << '\n';
+                            // std::cout << "y2_rect " <<  y2_rect << '\n'; 
+                            // std::cout << "x1_rect " <<  x1_rect  << '\n';
+                            // std::cout << "x2_rect " <<  x2_rect << '\n';
+                    if(y1_rect-35<0)
+                        {
+                            y1_rect=y1_rect+(35-y2_rect);
+                        } 
 
-            /* Step 2) Computation of the box for the missmatched elements */
-            /* Working with the paired obstacles for the cam1 */
-            for (size_t i = 0; i < vCoupledIndex.size(); i++) {
-                /* Computing the difference in each axis for each camera and object */
-                dCam1XDiff = abs(odZYCam1.vopObsParam[vCoupledIndex[i].first].dFurthestPoint - odZYCam1.vopObsParam[vCoupledIndex[i].first].dClosestPoint);
-                dCam1YDiff = abs(odZYCam1.vopObsParam[vCoupledIndex[i].first].dWidthHigher - odZYCam1.vopObsParam[vCoupledIndex[i].first].dWidthLower);
-                dCam1ZDiff = abs(odZYCam1.vopObsParam[vCoupledIndex[i].first].dHeightHigher - odZYCam1.vopObsParam[vCoupledIndex[i].first].dHeightLower);;
-                dCam2XDiff = abs(odXYCam2.vopObsParam[vCoupledIndex[i].second].dHeightHigher - odXYCam2.vopObsParam[vCoupledIndex[i].second].dHeightLower);
-                dCam2YDiff = abs(odXYCam2.vopObsParam[vCoupledIndex[i].second].dWidthHigher - odXYCam2.vopObsParam[vCoupledIndex[i].second].dWidthHigher);
-                dCam2ZDiff = abs(odXYCam2.vopObsParam[vCoupledIndex[i].second].dFurthestPoint - odXYCam2.vopObsParam[vCoupledIndex[i].second].dClosestPoint);
-                // ROS_INFO("==> Obstacle number: %d", odXYCam2.siObsFound);
-                // ROS_INFO("  Camera1: x_diff = %f", dCam1XDiff);
-                // ROS_INFO("  Camera2: x_diff = %f", dCam2XDiff);
-                // ROS_INFO("  Camera1: y_diff = %f", dCam1YDiff);
-                // ROS_INFO("  Camera2: y_diff = %f", dCam2YDiff);
-                // ROS_INFO("  Camera1: z_diff = %f", dCam1ZDiff);
-                // ROS_INFO("  Camera2: z_diff = %f", dCam2ZDiff);
-                /* Picking the optimal solution for the paired obstacles */
-                dXdiff = dCam2XDiff;
-                if(dCam1YDiff > dCam2YDiff)
-                    dYdiff = dCam1YDiff;
-                else
-                    dYdiff = dCam2YDiff;
-                dZdiff = dCam1ZDiff;
-                /* Computing the smallest cube that contain each of the paired obstacles */
-                occAux.dXcenter = odZYCam1.vopObsParam[vCoupledIndex[i].first].dClosestPoint + dXdiff / 2;
-                occAux.dYcenter = (odZYCam1.vopObsParam[vCoupledIndex[i].first].dWidthCenter + odXYCam2.vopObsParam[vCoupledIndex[i].second].dWidthCenter) / 2;
-                occAux.dZcenter = odZYCam1.vopObsParam[vCoupledIndex[i].first].dHeightHigher + dZdiff / 2;
-                occAux.dMinCartRadius = sqrt(std::pow(dXdiff/2, 2.0) + std::pow(dYdiff/2, 2.0) + std::pow(dZdiff/2, 2.0));
-                occAux.dXdiff = dXdiff;
-                occAux.dYdiff = dYdiff;
-                occAux.dZdiff = dZdiff;
-                ocpVar.occObstaclePoses.push_back(occAux);
-                ocpVar.vsiPublishCamera.push_back(1);
-                // ROS_INFO("The smallest containing box is at (%f,%f,%f) with a maximum radius of %f", ocpVar.occObstaclePoses[i].dXcenter, ocpVar.occObstaclePoses[i].dYcenter, ocpVar.occObstaclePoses[i].dZcenter, ocpVar.occObstaclePoses[i].dMinCartRadius);
+                    for (size_t k=x1_rect-30; k<=x1_rect+x_rect+30;k++)
+                    {
+                        
+                        for (size_t n = int(y1_rect)-35; n < int(y2_rect+35) ; n++)
+                        {
+                            // std::cout << "n " <<  n  << '\n';
+                            // std::cout << "k " <<  k  << '\n'; 
+                        
+
+                            ImagenSolucion.at<uint8_t>(cv::Point(k,n))=255;
+                        }
+                    }
+
+                }
+        }
+
+
+
+
+
+        else if ( direccionY==true and direccionX==false)
+        {
+            //printf("direccionY==true and direccionX==false\n");
+            if(x1_rect-x2_rect>0)
+            {
+                
+                            //         std::cout << "y1_rect " <<  y1_rect  << '\n';
+                            // std::cout << "y2_rect " <<  y2_rect << '\n'; 
+                            // std::cout << "x1_rect " <<  x1_rect  << '\n';
+                            // std::cout << "x2_rect " <<  x2_rect << '\n';
+                if (x2_rect-20<0)
+                        {
+                            x2_rect=x2_rect+(20-x2_rect);
+                        } 
+
+                    for (size_t k=x2_rect-30; k<=x1_rect+30;k++)
+                    { 
+                        
+                        for (size_t n = int(y2_rect)-20; n < int(y1_rect+20) ; n++)
+                        {
+                            // std::cout << "n " <<  n  << '\n';
+                            // std::cout << "k " <<  k  << '\n'; 
+                        
+
+                            ImagenSolucion.at<uint8_t>(cv::Point(k,n))=255;
+                        }
+                    }
+
             }
-            if (ocpVar.occObstaclePoses.size() == 0)
-                iAux = 0;
+            
             else
-                iAux = ocpVar.occObstaclePoses.size() - 1;
-            /* Working with the rest and the missmatched results */
-            for (size_t i = 0; i < vMissmatchedIndex.size(); i++) {
-                /* Computing the difference in each axis for each camera and object */
-                dXdiff = abs(odXYCam2.vopObsParam[vMissmatchedIndex[i]].dHeightHigher - odXYCam2.vopObsParam[vMissmatchedIndex[i]].dHeightLower);
-                dYdiff = abs(odXYCam2.vopObsParam[vMissmatchedIndex[i]].dWidthHigher - odXYCam2.vopObsParam[vMissmatchedIndex[i]].dWidthHigher);
-                dZdiff = abs(odXYCam2.vopObsParam[vMissmatchedIndex[i]].dFurthestPoint - odXYCam2.vopObsParam[vMissmatchedIndex[i]].dClosestPoint);
-                // ROS_INFO("==> Obstacle number: %d", odZYCam1.siObsFound);
-                // ROS_INFO("  Camera1: x_diff = %f", dXdiff);
-                // ROS_INFO("  Camera1: y_diff = %f", dYdiff);
-                // ROS_INFO("  Camera1: z_diff = %f", dZdiff);
-                /* Computing the smallest cube that contain each of the paired obstacles */
-                occAux.dXcenter = odXYCam2.vopObsParam[vMissmatchedIndex[i]].dHeightLower + dXdiff / 2;
-                occAux.dYcenter = odXYCam2.vopObsParam[vMissmatchedIndex[i]].dWidthCenter;
-                occAux.dZcenter = odXYCam2.vopObsParam[vMissmatchedIndex[i]].dClosestPoint + dZdiff / 2;
-                occAux.dMinCartRadius = sqrt(std::pow(dXdiff/2, 2.0) + std::pow(dYdiff/2, 2.0) + std::pow(dZdiff/2, 2.0));
-                occAux.dXdiff = dXdiff;
-                occAux.dYdiff = dYdiff;
-                occAux.dZdiff = dZdiff;
-                ocpVar.occObstaclePoses.push_back(occAux);
-                ocpVar.vsiPublishCamera.push_back(2);
-                // ROS_INFO("Print the values of i = %d, iAux = %d", i, iAux);
-                // ROS_INFO("The smallest containing box is at (%f,%f,%f) with a maximum radius of %f", ocpVar.occObstaclePoses[i+iAux].dXcenter, ocpVar.occObstaclePoses[i+iAux].dYcenter, ocpVar.occObstaclePoses[i+iAux].dZcenter, ocpVar.occObstaclePoses[i+iAux].dMinCartRadius);
-            }
-            ocpVar.siNumberObstacles = odXYCam2.siObsFound;
+            {
+                        if (x1_rect-20<0)
+                        {
+                            x1_rect=x1_rect+(20-x1_rect);
+                        } 
+
+            
+                    for (size_t k=x1_rect-30; k<x2_rect+30;k++)
+                    {
+                    
+                        
+                        for (size_t n = int(y1_rect)-20; n <= int(y2_rect+20) ; n++)
+                        {
+                            // std::cout << "n " <<  n  << '\n';
+                            // std::cout << "k " <<  k  << '\n'; 
+                        
+                        
+
+                            ImagenSolucion.at<uint8_t>(cv::Point(k,n))=255;
+                        }
+
+
+                    }
+
+                }
         }
 
-        return ocpVar;
-    }
+        
+        }
 
-    /* Obstacle tf2 stamped position publishing method */
-    bool image_processing::publish_stamped_obs_poses(obs_carthesian_position ocpVar) {
-        static tf2_ros::TransformBroadcaster tbBroadcaster;
-        geometry_msgs::TransformStamped tsMessage;
-        tf2::Quaternion q;
 
-        try {
-            if (ocpVar.siNumberObstacles != 0){
-                ros::Time tTime = ros::Time::now();
-                for (size_t i = 0; i < ocpVar.siNumberObstacles; i++)
+
+
+
+    bool image_processing:: Calculate_Tf()
+
+        {
+            
+            // Nuevos
+
+            Eigen::Matrix3f R2,R3;
+            Eigen:: Matrix<float, 3, 1> Pc2,Pc3,d2,d3,shoulder_Vect,forearm_Vect;
+
+            double ValueX3_real; 
+            double ValueY3_real;
+            double ValueZ3_real;
+
+            double ValueX2_real;
+            double ValueY2_real;
+            double ValueZ2_real;
+
+            
+
+        
+            z_imageBase=base_0.getOrigin().z()/0.001;
+            x_imageBase=((base_0.getOrigin().x()*dCam1_fx)/base_0.getOrigin().z())+ dCam1_cx;
+            y_imageBase=((base_0.getOrigin().y()*dCam1_fy)/base_0.getOrigin().z())+dCam1_cy; 
+
+            z_imageforearm=forearm.getOrigin().z()/0.001;
+            x_imageforearm=((forearm.getOrigin().x()*dCam1_fx)/forearm.getOrigin().z())+ dCam1_cx;
+            y_imageforearm=((forearm.getOrigin().y()*dCam1_fy)/forearm.getOrigin().z())+dCam1_cy;
+
+            z_imageshoulder=shoulder.getOrigin().z()/0.001;
+            x_imageshoulder=((shoulder.getOrigin().x()*dCam1_fx)/shoulder.getOrigin().z())+ dCam1_cx;
+            y_imageshoulder=((shoulder.getOrigin().y()*dCam1_fy)/shoulder.getOrigin().z())+dCam1_cy; 
+
+            z_imagewrist_1=wrist_1.getOrigin().z()/0.001;
+            x_imagewrist_1=((wrist_1.getOrigin().x()*dCam1_fx)/wrist_1.getOrigin().z())+ dCam1_cx;
+            y_imagewrist_1=((wrist_1.getOrigin().y()*dCam1_fy)/wrist_1.getOrigin().z())+dCam1_cy; 
+
+            z_imagewrist_2=wrist_2.getOrigin().z()/0.001;
+            x_imagewrist_2=((wrist_2.getOrigin().x()*dCam1_fx)/wrist_2.getOrigin().z())+ dCam1_cx;
+            y_imagewrist_2=((wrist_2.getOrigin().y()*dCam1_fy)/wrist_2.getOrigin().z())+dCam1_cy;
+
+            z_imagewrist_3=wrist_3.getOrigin().z()/0.001;
+            x_imagewrist_3=((wrist_3.getOrigin().x()*dCam1_fx)/wrist_3.getOrigin().z())+ dCam1_cx;
+            y_imagewrist_3=((wrist_3.getOrigin().y()*dCam1_fy)/wrist_3.getOrigin().z())+dCam1_cy;
+
+            z_imagetool_center_point=tool_center_point.getOrigin().z()/0.001;
+            x_imagetool_center_point=((tool_center_point.getOrigin().x()*dCam1_fx)/tool_center_point.getOrigin().z())+ dCam1_cx;
+            y_imagetool_center_point=((tool_center_point.getOrigin().y()*dCam1_fy)/tool_center_point.getOrigin().z())+dCam1_cy;
+            
+
+            R2 = Eigen::Quaternionf(shoulder.getRotation().w(), shoulder.getRotation().x(), shoulder.getRotation().y(), shoulder.getRotation().z()).toRotationMatrix();
+            Pc2 <<  shoulder.getOrigin().x(),
+                    shoulder.getOrigin().y(),
+                    shoulder.getOrigin().z();
+
+            R3 = Eigen::Quaternionf(forearm.getRotation().w(), forearm.getRotation().x(), forearm.getRotation().y(), forearm.getRotation().z()).toRotationMatrix();
+            // printf("R3");
+            // std::cout << R3 << '\n';
+
+            Pc3 <<  forearm.getOrigin().x(),
+                    forearm.getOrigin().y(),
+                    forearm.getOrigin().z();
+
+            // printf("Pc3");
+            // std::cout << Pc3 << '\n';
+
+            d2 <<  0,
+                    -0.176,
+                    0;
+
+            d3 <<  0,
+                    0,
+                    0.137;
+
+            shoulder_Vect=Pc2+(R2*d2);
+            forearm_Vect=Pc3+(R3*d3);
+            // printf("shoulder_Vect");
+            // std::cout << shoulder_Vect << '\n';
+            // printf("forearm_Vect");
+            //std::cout << forearm_Vect << '\n';
+            ValueX3_real = double(shoulder_Vect.coeff(0, 0));
+            ValueY3_real= double(shoulder_Vect.coeff(1, 0));
+            ValueZ3_real= double(shoulder_Vect.coeff(2, 0));
+
+            // printf("ValorX3_real");
+            // std::cout << ValueX3_real << '\n';
+            // printf("ValorY3_real");
+            // std::cout << ValueY3_real << '\n';
+            // printf("ValorZ3_real");
+            // std::cout << ValueZ3_real << '\n';
+            ValueX2_real = double(forearm_Vect.coeff(0, 0));
+            ValueY2_real= double(forearm_Vect.coeff(1, 0));
+            ValueZ2_real= double(forearm_Vect.coeff(2, 0));
+
+
+        //
+
+
+            //Calculo de los calculados
+
+            z_imageforearm_real=ValueZ2_real/0.001;
+            x_imageforearm_real=((ValueX2_real*dCam1_fx)/ValueZ2_real)+ dCam1_cx;
+            y_imageforearm_real=((ValueY2_real*dCam1_fy)/ValueZ2_real)+dCam1_cy;
+
+
+
+            z_imageshoulder_real=ValueZ3_real/0.001;
+            x_imageshoulder_real=((ValueX3_real*dCam1_fx)/ValueZ3_real)+ dCam1_cx;
+            y_imageshoulder_real=((ValueY3_real*dCam1_fy)/ValueZ3_real)+dCam1_cy; 
+
+        }
+
+
+
+
+
+        bool image_processing::RemoveRobot()
+
+        {
+            cv::Mat mDepthDistance = cv::Mat::zeros(cv::Size(ImageRGB2.rows, ImageRGB2.cols), CV_16UC1);
+            ImageProf2.copyTo(mDepthDistance);
+            
+            BlackImage.copyTo(Prof_No_Robot);
+            BlackImage.copyTo(SegNoRobot);
+            BlackImage.copyTo(Objects);
+
+            //    cv::imshow("Prof_No_Robot", Prof_No_Robot); /// antes ImagenNegro11
+            //         cv::waitKey(10000);
+
+           
+
+           
+            
+
+
+                    for (size_t i = 0; i < mDepthDistance.size().width; i++)
+            {
+                 
+            
+                
+                    for(size_t j=0; j < mDepthDistance.size().height; j++) 
                 {
-                    tsMessage.header.stamp = tTime;
-                    if (ocpVar.vsiPublishCamera[i] == 1) {
-                        tsMessage.header.frame_id = "rs_d435_cam_color_optical_frame";
-                        tsMessage.transform.translation.x = ocpVar.occObstaclePoses[i].dZcenter;
-                        tsMessage.transform.translation.y = ocpVar.occObstaclePoses[i].dYcenter;
-                        tsMessage.transform.translation.z = ocpVar.occObstaclePoses[i].dXcenter;
-                        q.setRPY(0, 0, 0);
-                        tsMessage.transform.rotation.x = q.x();
-                        tsMessage.transform.rotation.y = q.y();
-                        tsMessage.transform.rotation.z = q.z();
-                        tsMessage.transform.rotation.w = q.w();
-                    }
-                    else {
-                        tsMessage.header.frame_id = "rs_d435_cam2_color_optical_frame";
-                        tsMessage.transform.translation.x = ocpVar.occObstaclePoses[i].dYcenter;
-                        tsMessage.transform.translation.y = ocpVar.occObstaclePoses[i].dXcenter;
-                        tsMessage.transform.translation.z = ocpVar.occObstaclePoses[i].dZcenter;
-                        q.setRPY(0, 0, 0);
-                        tsMessage.transform.rotation.x = q.x();
-                        tsMessage.transform.rotation.y = q.y();
-                        tsMessage.transform.rotation.z = q.z();
-                        tsMessage.transform.rotation.w = q.w();
-                    }   
-                    tsMessage.child_frame_id = "obstacle_frame_" + std::to_string(i);
+                    // printf("\nvalor:");
+                    // std:: cout <<mDepthDistance.at<uint16_t>(cv::Point(i,j));
+            
+
+                        if (mDepthDistance.at<uint16_t>(cv::Point(i,j))>z_imageforearm-70 and mDepthDistance.at<uint16_t>(cv::Point(i,j))<z_imageforearm+70) 
+                        {
+
+                             if((i>x_imageforearm and i<x_imageforearm+70 and y_imageforearm+30>j and y_imageforearm-30<j) or (i<x_imageforearm and i>x_imageforearm-70 and  y_imageforearm+30>j and y_imageforearm-30<j))
+                            {
+
+                                Prof_No_Robot.at<uint8_t>(cv::Point(i,j))=255;
+
+                            }
+
+
+                            
+                        }
+                        
+                        if (mDepthDistance.at<uint16_t>(cv::Point(i,j))>z_imageshoulder-70 and mDepthDistance.at<uint16_t>(cv::Point(i,j))<z_imageshoulder+70) 
+                        {
+
+
+
+                            if((i>x_imageshoulder and i<x_imageshoulder+70 and y_imageshoulder+50>j and y_imageshoulder-50<j) or (i<x_imageshoulder+70 and i>x_imageshoulder-70 and  y_imageshoulder+50>j and y_imageshoulder-50<j))
+                                 {
+
+                                    
+
+                                     Prof_No_Robot.at<uint8_t>(cv::Point(i,j))=255;
+                                }
+           
+                        }
+
+
+                        /////////////////////// añadida
+                        if (mDepthDistance.at<uint16_t>(cv::Point(i,j))>z_imageshoulder_real-150 and mDepthDistance.at<uint16_t>(cv::Point(i,j))<z_imageshoulder_real+150) 
+                        {
+
+
+                            if((i>x_imageshoulder_real and i<x_imageshoulder_real+70 and y_imageshoulder_real+50>j and y_imageshoulder_real-50<j) or (i<x_imageshoulder_real+70 and i>x_imageshoulder_real-70 and  y_imageshoulder_real+50>j and y_imageshoulder_real-50<j))
+                                 {
+
+                                    
+
+                                     Prof_No_Robot.at<uint8_t>(cv::Point(i,j))=255;
+                                }
+           
+                        }
+
+                        if (mDepthDistance.at<uint16_t>(cv::Point(i,j))>z_imageforearm_real-140 and mDepthDistance.at<uint16_t>(cv::Point(i,j))<z_imageforearm_real+140) 
+                        {
+
+
+                            if((i>x_imageforearm_real and i<x_imageforearm_real+70 and y_imageforearm_real+50>j and y_imageforearm_real-50<j) or (i<x_imageforearm_real+70 and i>x_imageforearm_real-70 and  y_imageforearm_real+50>j and y_imageforearm_real-50<j))
+                                 {
+
+                                    
+
+                                     Prof_No_Robot.at<uint8_t>(cv::Point(i,j))=255;
+                                }
+           
+                        }
+
+                        ////////////
+
+                        if (mDepthDistance.at<uint16_t>(cv::Point(i,j))>z_imagewrist_1-100 and mDepthDistance.at<uint16_t>(cv::Point(i,j))<z_imagewrist_1+100) 
+                        {
+
+                            if((i>x_imagewrist_1 and i<x_imagewrist_1+70 and y_imagewrist_1+30> j and y_imagewrist_1-30<j) or (i<x_imagewrist_1 and i>x_imagewrist_1-70 and  y_imagewrist_1+30>j and y_imagewrist_1-30<j))
+                                 {
+
+        
+
+                                Prof_No_Robot.at<uint8_t>(cv::Point(i,j))=255;
+
+                                }
+
+
+
+                            
+                        }
+
+                        if (mDepthDistance.at<uint16_t>(cv::Point(i,j))>z_imagewrist_2-120 and mDepthDistance.at<uint16_t>(cv::Point(i,j))<z_imagewrist_2+120) 
+                        {
+
+                                if((i>x_imagewrist_2 and i<x_imagewrist_2+70 and y_imagewrist_2+50>j and y_imagewrist_2-40<j) or (i<x_imagewrist_2 and i>x_imagewrist_2-70 and  y_imagewrist_2+50>j and y_imagewrist_2-40<j))
+                                 {
+                                    
+
+                                Prof_No_Robot.at<uint8_t>(cv::Point(i,j))=255;
+
+                                }
+                            
+                        }
+
+                        if (mDepthDistance.at<uint16_t>(cv::Point(i,j))>z_imagewrist_3-120 and mDepthDistance.at<uint16_t>(cv::Point(i,j))<z_imagewrist_3+120) 
+                        {
+
+                                if((i>x_imagewrist_3 and i<x_imagewrist_3+70 and y_imagewrist_3+30>j and y_imagewrist_3-30<j) or (i<x_imagewrist_3 and i>x_imagewrist_3-70 and  y_imagewrist_3+30>j and y_imagewrist_3-30<j))
+                                 {
+                                    
+
+                                     Prof_No_Robot.at<uint8_t>(cv::Point(i,j))=255;
+                                }
+
+
+
+
+                           
+                        }
+
+                        if (mDepthDistance.at<uint16_t>(cv::Point(i,j))>z_imagetool_center_point-150 and mDepthDistance.at<uint16_t>(cv::Point(i,j))<z_imagetool_center_point+150) 
+                        {
+                                                    
+                                if((i>x_imagetool_center_point and i<x_imagetool_center_point+70 and y_imagetool_center_point+50>j and y_imagetool_center_point-30<j) or (i<x_imagetool_center_point and i>x_imagetool_center_point-70 and  y_imagetool_center_point+50>j and y_imagetool_center_point-30<j))
+                                 {
+                                     
+                                    
+                                    Prof_No_Robot.at<uint8_t>(cv::Point(i,j))=255;
+        
+
+                                }
+                            
+                         }
+                         ////////////////////////////////Metidad entre articulaciones
+
+        
+
+                         /// shoulder -forearm
+                         if ((mDepthDistance.at<uint16_t>(cv::Point(i,j))>z_imageforearm_real-120 and mDepthDistance.at<uint16_t>(cv::Point(i,j))<z_imageshoulder_real+120) or (mDepthDistance.at<uint16_t>(cv::Point(i,j))<z_imageforearm_real+120 and mDepthDistance.at<uint16_t>(cv::Point(i,j))>z_imageshoulder_real-120))                                                  
+                          {
+                                         if (shoulder_forearm_real.at<uint8_t>(cv::Point(i,j))==255)
+                                                    {
+                                                        Prof_No_Robot.at<uint8_t>(cv::Point(i,j))=255;
+                                                    }
+                        }
+
+
+
+
+
+                                 /// forearm-wrist_1
+                        if ((mDepthDistance.at<uint16_t>(cv::Point(i,j))>z_imageforearm-90 and mDepthDistance.at<uint16_t>(cv::Point(i,j))<z_imagewrist_1+100) or (mDepthDistance.at<uint16_t>(cv::Point(i,j))<z_imageforearm+90 and mDepthDistance.at<uint16_t>(cv::Point(i,j))>z_imagewrist_1-100))                                                   
+                        {
+                            if (forearm_wrist_1.at<uint8_t>(cv::Point(i,j))==255)
+                                                    {
+                                                        Prof_No_Robot.at<uint8_t>(cv::Point(i,j))=255;
+                                                    }
+                        }
+                        
+                        
+
+                            /// wrist_1-wrist_2
+                         if ((mDepthDistance.at<uint16_t>(cv::Point(i,j))>z_imagewrist_2-120 and mDepthDistance.at<uint16_t>(cv::Point(i,j))<z_imagewrist_1+120) or (mDepthDistance.at<uint16_t>(cv::Point(i,j))<z_imagewrist_2+120 and mDepthDistance.at<uint16_t>(cv::Point(i,j))>z_imagewrist_1-120))                                                   
+                        {
+                                      if (wrist_1_wrist_2.at<uint8_t>(cv::Point(i,j))==255)
+                                                    {
+                                                        Prof_No_Robot.at<uint8_t>(cv::Point(i,j))=255;
+                                                    }
+
+                                                    
+
+                        }
+
+
+
+
+                                                    /// wrist_2-wrist_3
+                         if ((mDepthDistance.at<uint16_t>(cv::Point(i,j))>z_imagewrist_2-140 and mDepthDistance.at<uint16_t>(cv::Point(i,j))<z_imagewrist_3+140) or (mDepthDistance.at<uint16_t>(cv::Point(i,j))<z_imagewrist_2+140 and mDepthDistance.at<uint16_t>(cv::Point(i,j))>z_imagewrist_3-140))                                                   
+                        {
+                                        if (wrist_2_wrist_3.at<uint8_t>(cv::Point(i,j))==255)
+                                                    {
+                                                        Prof_No_Robot.at<uint8_t>(cv::Point(i,j))=255;
+                                                    }
+                        }
+
+
+                            /// wrist_3-tool_center_point
+                         if ((mDepthDistance.at<uint16_t>(cv::Point(i,j))>z_imagetool_center_point-120 and mDepthDistance.at<uint16_t>(cv::Point(i,j))<z_imagewrist_3+130) or (mDepthDistance.at<uint16_t>(cv::Point(i,j))<z_imagetool_center_point+120 and mDepthDistance.at<uint16_t>(cv::Point(i,j))>z_imagewrist_3-130))                                                   
+                        {
+                                                    if (wrist_3_tool_center_point.at<uint8_t>(cv::Point(i,j))==255)
+                                                        {
+                                                            Prof_No_Robot.at<uint8_t>(cv::Point(i,j))=255;
+                                                        }
+                        }
+
+
+                                 if (mDepthDistance.at<uint16_t>(cv::Point(i,j))<=300)
+                                {
+                                   Prof_No_Robot.at<uint8_t>(cv::Point(i,j))=255;
+
+                                 }
+
+
+
+                         
+                        
+
+
+
+
+
+                        
+        
+                }
+            }
+
+            
+
+
+                    cv::Mat kernel;
+                    // cv::imshow("Quitar Robot de la imagen de profundidad", Prof_No_Robot); /// antes ImagenNegro11
+                    // cv::waitKey(10000);
+                    kernel = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(15, 15));
+                    cv::dilate(Prof_No_Robot, Prof_No_Robot, kernel);
+                    cv::erode(Prof_No_Robot, Prof_No_Robot, kernel);
+
+                    cv::imshow("Quitar Robot de la imagen de profundidad erode-dilate", Prof_No_Robot); /// antes ImagenNegro11
+                    cv::waitKey(1);
+
+
+
+                    cv::subtract(SegRobot,Prof_No_Robot,SegNoRobot);// imagennegro2
+                    // cv::imshow("Quitar robot de la imagen segmentada ", SegNoRobot);
+                    // cv::waitKey(10000);
+
+
+                    ImageProf2.copyTo(mDepthDistance);
+                    std:: vector<double> v = { z_imageBase, z_imageforearm, z_imageshoulder, z_imagewrist_1, z_imagewrist_2, z_imagewrist_3, z_imagetool_center_point};  
+                    auto result = minmax_element(v.begin(), v.end()); 
+                    bool RobotFlag=false;
+
+
+
+                    for (size_t i = 0; i < mDepthDistance.size().width; i++)
+        {
+                    for(size_t j=0; j < mDepthDistance.size().height; j++) 
+        {
+                        if (SegNoRobot.at<uint8_t>(cv::Point(i,j))==255)
+                        {
+
+                            if (mDepthDistance.at<uint16_t>(cv::Point(i,j))<*result.first-70 and mDepthDistance.at<uint16_t>(cv::Point(i,j))>20 )
+                            {
+
                     
 
-                    tbBroadcaster.sendTransform(tsMessage);
-                }
-            }
-        } catch (ros::Exception &re) {
-            ROS_ERROR_STREAM("[Exception Catched While Publishing Obs. Pose] - " << re.what());
-            return false;
-        }
-        return true;
-    }
-
-    /* Method to publish the point cloud of the obstacles found by each of the cameras */
-    bool image_processing::publish_obs_point_cloud() {
-        PointCloud::Ptr pcl_msg1 (new PointCloud);
-        PointCloud::Ptr pcl_msg2 (new PointCloud);
-        sensor_msgs::PointCloud2 pcCloudOut1, pcCloudOut2;
-        pcl::PCLPointCloud2::Ptr pcl_aux_msg (new pcl::PCLPointCloud2);
-
-        double x, y, z;
-
-        int counter;
-
-        tf2_ros::Buffer tfBuffer;
-        tf2_ros::TransformListener tfListener(tfBuffer);
-        geometry_msgs::TransformStamped transformStamped;
-
-        /* Initilization of the headers of both point cloud messages */
-        pcl_msg1->header.frame_id = sPubFrame1; 
-        pcl_msg2->header.frame_id = sPubFrame2; 
-
-        /* Trying to publish te point cloud obstacles */
-        try {
-            pcl_msg1->points.clear();
-            pcl_msg2->points.clear();
-            pcl_msg1->height = 1;
-            pcl_msg2->height = 1;
-            pcObsPointCloud.data.clear();
-            pcCloudOut1.data.clear();
-            pcCloudOut2.data.clear();
 
 
-            if (odZYCam1.siObsFound != 0 || odXYCam2.siObsFound != 0) {
-                /* Obtaining the point clouds of the filtered obstacles for each of the cameras */
-                counter = 0;
-                for (size_t i = 0; i < mDepthDistance1.size().width; i++){
-                    for(size_t j=0; j < mDepthDistance1.size().height; j++) {
-                        if (mDepthDistance1.at<uint16_t>(cv::Point(i,j)) > iSceneMin && mDepthDistance1.at<uint16_t>(cv::Point(i,j)) < iSceneMax) {
-                            z = mDepthDistance1.at<uint16_t>(cv::Point(i,j)) * 0.001;
-                            x = (i - dCam1_cx)*z / dCam1_fx;
-                            y = (j - dCam1_cy)*z / dCam1_fy;
-                            pcl_msg1->points.push_back(pcl::PointXYZ(x,y,z));
-                            counter++;
-                        }
-                    }
-                }
-                pcl_msg1->width = counter;            
-                pcl::toPCLPointCloud2(*pcl_msg1, *pcl_aux_msg);
-                pcl_conversions::fromPCL(*pcl_aux_msg, pcCloudOut1);
 
-                counter = 0;
-                for (size_t i = 0; i < mDepthDistance2.size().width; i++){
-                    for(size_t j=0; j < mDepthDistance2.size().height; j++) {
-                        if (mDepthDistance2.at<uint16_t>(cv::Point(i,j)) > iSceneMin && mDepthDistance2.at<uint16_t>(cv::Point(i,j)) < iSceneMax) {
-                            z = mDepthDistance2.at<uint16_t>(cv::Point(i,j)) * 0.001;
-                            x = (i - dCam1_cx)*z / dCam1_fx;
-                            y = (j - dCam1_cy)*z / dCam1_fy;
-                            pcl_msg2->points.push_back(pcl::PointXYZ(x,y,z));
-                            counter++;
-                        }
-                    }
-                }
-                pcl_msg2->width = counter;   
-                pcl::toPCLPointCloud2(*pcl_msg2, *pcl_aux_msg);
-                pcl_conversions::fromPCL(*pcl_aux_msg, pcCloudOut2); 
+                                Objects.at<uint8_t>(cv::Point(i,j))=255;
+                                //  z = ImagenProf.at<uint16_t>(cv::Point(i,j));
+                                //             printf("Valor de pixel:");
+                                //             std::cout << z << '\n';
 
 
-                /* Transforming the point cloud of camera 2 to the reference frame of camera 1 */
-                try{
-                    transformStamped = tfBuffer.lookupTransform("rs_d435_cam_color_optical_frame", "rs_d435_cam2_color_optical_frame", pcCloudOut2.header.stamp, ros::Duration(3.0));
-                    tf2::doTransform(pcCloudOut2, pcCloudOut2, transformStamped);
-                }
-                catch (tf2::TransformException &ex) {
-                    ROS_WARN("%s",ex.what());
-                    ros::Duration(1.0).sleep();
-                    return false;
-                }
+                            }
+                            else
+                            
+                            {
+                                //Objetos.at<uint8_t>(cv::Point(i,j))=255;
+
+                                if (mDepthDistance.at<uint16_t>(cv::Point(i,j))>z_imageBase and mDepthDistance.at<uint16_t>(cv::Point(i,j))<z_imageBase) 
+                                {
+
+                                // RobotFlag=true;
+                                // printf("1\n");
+                                // 19
+
+                                    
+        
+                                }
+
+                                if (mDepthDistance.at<uint16_t>(cv::Point(i,j))>z_imageforearm-120 and mDepthDistance.at<uint16_t>(cv::Point(i,j))<z_imageforearm+120) 
+                                {
+
+                                    if((i>x_imageforearm and i<x_imageforearm+50 and y_imageforearm+30>j and y_imageforearm-30<j) or (i<x_imageforearm and i>x_imageforearm-50 and  y_imageforearm+30>j and y_imageforearm-30<j))
+                                    {
+
+                                        RobotFlag=true;
+                                        printf("2");
+
+                                        //17cm
+                                        
+
+                                    }
+
+
+
+                                    
+                                }
+
+
+                                /////////////////////// añadida
+                                if (mDepthDistance.at<uint16_t>(cv::Point(i,j))>z_imageshoulder_real-125 and mDepthDistance.at<uint16_t>(cv::Point(i,j))<z_imageshoulder_real+125) 
+                                {
+
+
+                                    if((i>x_imageshoulder_real and i<x_imageshoulder_real+70 and y_imageshoulder_real+50>j and y_imageshoulder_real-50<j) or (i<x_imageshoulder_real+70 and i>x_imageshoulder_real-70 and  y_imageshoulder_real+50>j and y_imageshoulder_real-50<j))
+                                        {
+
+                                            RobotFlag=true;
+
+                                            
+                                        }
+                
+                                }
+
+
+
+                                ////
+                                
+                                if (mDepthDistance.at<uint16_t>(cv::Point(i,j))>z_imageshoulder-100 and mDepthDistance.at<uint16_t>(cv::Point(i,j))<z_imageshoulder+100) 
+                                {
+
+
+                                    if((i>x_imageshoulder and i<x_imageshoulder+60 and y_imageshoulder+30>j and y_imageshoulder-30<j) or (i<x_imageshoulder and i>x_imageshoulder-60 and  y_imageshoulder+30>j and y_imageshoulder-30<j))
+                                        {
+                                            // Si esta del todo girado 27 cm de profundidad menos
+
+                                            
+
+                                            RobotFlag=true;
+                                            printf("3\n");
+                                        }
+
+
+
+                                    
+                                }
+
+                                if (mDepthDistance.at<uint16_t>(cv::Point(i,j))>z_imagewrist_1-70 and mDepthDistance.at<uint16_t>(cv::Point(i,j))<z_imagewrist_1+70) 
+                                {
+
+                                    if((i>x_imagewrist_1 and i<x_imagewrist_1+60 and y_imagewrist_1+30> j and y_imagewrist_1-30<j) or (i<x_imagewrist_1 and i>x_imagewrist_1-60 and  y_imagewrist_1+30>j and y_imagewrist_1-30<j))
+                                        {
+
+
+                                            //18cm hasta la otra parte
 
                 
-                /* Concatenating the point clouds and publishing the result into the desired ROS topic */
-                pcl::concatenatePointCloud(pcCloudOut1, pcCloudOut2, pcObsPointCloud);
-                pcObsPointCloud.header.frame_id = sPubFrame1;
-                pcObsPointCloud.header.stamp = ros::Time::now();
-                ROS_DEBUG("Which is of the composed... : %d", pcObsPointCloud.data.size() );
-                pcl_conversions::toPCL(pcObsPointCloud, *pcl_aux_msg);
-                ROS_INFO("Original number of points: %d", pcl_aux_msg->data.size());
-                // pcl_pub.publish(pcObsPointCloud);
-            }
-            else {
-                pcObsPointCloud.header.stamp = ros::Time::now();
-                pcObsPointCloud.data.clear();
-                pcl_msg1->points.clear();
-                pcl_msg1->height = 1;
-                pcl_msg1->width = 1;
-                pcl_msg1->points.push_back(pcl::PointXYZ(0.0, 0.0, 10.2));
-                pcl::toPCLPointCloud2(*pcl_msg1, *pcl_aux_msg);
-                // pcl_conversions::fromPCL(*pcl_aux_msg, pcObsPointCloud);
-                // pcl_pub.publish(pcObsPointCloud);
-            }
-            // sensor_msgs::Image imgMessage;
-            // pcl::toROSMsg(pcObsPointCloud, imgMessage);
-            // pcl_img_pub.publish(imgMessage);
-            /* Voxel grid filter */
-            // PointCloud::Ptr cloudFiltered;
-            // ROS_INFO("It has arrived pre voxel grid filtering");
-            pcl::PCLPointCloud2::Ptr cloudFiltered (new pcl::PCLPointCloud2());
 
-            pcl::VoxelGrid<pcl::PCLPointCloud2> sor;
-            sor.setInputCloud(pcl_aux_msg);
-            sor.setLeafSize(0.02f, 0.02f, 0.02f);
-            sor.filter(*cloudFiltered);
-            // ROS_INFO("It has finished voxel grid image filtering");
-            pcl_conversions::fromPCL(*cloudFiltered, pcObsPointCloud);
-            // ROS_INFO("There's no problem while converting to PCL ROS Message");
-            pcl_pub.publish(pcObsPointCloud);
-            ROS_INFO("Number of filtered points are: %d", pcObsPointCloud.data.size());
-            // ROS_INFO("The voxel grid should be properly published");
-            
+                                        RobotFlag=true;
+                                        printf("4");
 
-        } catch (ros::Exception &re) {
-            ROS_ERROR_STREAM("[Exception catched shile publishing obstacles point clouds - " << re.what());
-            return false;
+                                        }
+
+
+
+                                    
+                                }
+
+                                if (mDepthDistance.at<uint16_t>(cv::Point(i,j))>z_imagewrist_2-70 and mDepthDistance.at<uint16_t>(cv::Point(i,j))<z_imagewrist_2+70) 
+                                {
+
+                                        if((i>x_imagewrist_2 and i<x_imagewrist_2+40 and y_imagewrist_2+30>j and y_imagewrist_2-30<j) or (i<x_imagewrist_2 and i>x_imagewrist_2-40 and  y_imagewrist_2+30>j and y_imagewrist_2-30<j))
+                                        {
+                                            
+
+                                RobotFlag=true;
+                                printf("5\n");
+
+                                        }
+                                    
+                                }
+
+                                if (mDepthDistance.at<uint16_t>(cv::Point(i,j))>z_imagewrist_3-70 and mDepthDistance.at<uint16_t>(cv::Point(i,j))<z_imagewrist_3+70) 
+                                {
+
+                                        if((i>x_imagewrist_3 and i<x_imagewrist_3+50 and y_imagewrist_3+30>j and y_imagewrist_3-30<j) or (i<x_imagewrist_3 and i>x_imagewrist_3-50 and  y_imagewrist_3+30>j and y_imagewrist_3-30<j))
+                                        {
+                                            
+
+                                            RobotFlag=true;
+                                            printf("6\n");
+
+                                        }
+
+
+
+
+                                
+                                }
+
+                                if (mDepthDistance.at<uint16_t>(cv::Point(i,j))>z_imagetool_center_point-120 and mDepthDistance.at<uint16_t>(cv::Point(i,j))<z_imagetool_center_point+120) 
+                                {
+                                                            
+                                        if((i>x_imagetool_center_point and i<x_imagetool_center_point+50 and y_imagetool_center_point+50>j and y_imagetool_center_point-30<j) or (i<x_imagetool_center_point and i>x_imagetool_center_point-50 and  y_imagetool_center_point+50>j and y_imagetool_center_point-30<j))
+                                        {
+                                            
+                                            
+                                            RobotFlag=true;
+                                            printf("7\n");
+                
+
+                                        }
+                                    
+                                }
+                                ////////////////////////////////Metidad entre articulaciones
+        
+
+                                /// shoulder -forearm
+                                if ((mDepthDistance.at<uint16_t>(cv::Point(i,j))>z_imageforearm_real-170 and mDepthDistance.at<uint16_t>(cv::Point(i,j))<z_imageshoulder_real+170) or (mDepthDistance.at<uint16_t>(cv::Point(i,j))<z_imageforearm_real+170 and mDepthDistance.at<uint16_t>(cv::Point(i,j))>z_imageshoulder_real-170))                                                  
+                                {
+                                                if (shoulder_forearm_real.at<uint8_t>(cv::Point(i,j))==255)
+                                                            {
+                                                                RobotFlag=true;
+                                                                printf("11\n");
+                                                            }
+                                }
+
+
+
+
+        /////
+
+
+
+                                        /// forearm-wrist_1
+                                if ((mDepthDistance.at<uint16_t>(cv::Point(i,j))>z_imageforearm-70 and mDepthDistance.at<uint16_t>(cv::Point(i,j))<z_imagewrist_1+70) or (mDepthDistance.at<uint16_t>(cv::Point(i,j))<z_imageforearm+70 and mDepthDistance.at<uint16_t>(cv::Point(i,j))>z_imagewrist_1-70))                                                   
+                                {
+                                    if (forearm_wrist_1.at<uint8_t>(cv::Point(i,j))==255)
+                                                            {
+                                                            RobotFlag=true;
+                                                            }
+                                }
+                                
+
+
+                                
+
+                                    /// wrist_1-wrist_2
+                                if ((mDepthDistance.at<uint16_t>(cv::Point(i,j))>z_imagewrist_2-70 and mDepthDistance.at<uint16_t>(cv::Point(i,j))<z_imagewrist_1+70) or (mDepthDistance.at<uint16_t>(cv::Point(i,j))<z_imagewrist_2+70 and mDepthDistance.at<uint16_t>(cv::Point(i,j))>z_imagewrist_1-70))                                                   
+                                {
+                                            if (wrist_1_wrist_2.at<uint8_t>(cv::Point(i,j))==255)
+                                                            {
+                                                                RobotFlag=true;
+                                                            }
+
+                                                            
+
+                                }
+
+
+
+
+                                                            /// wrist_2-wrist_3
+                                if ((mDepthDistance.at<uint16_t>(cv::Point(i,j))>z_imagewrist_2-70 and mDepthDistance.at<uint16_t>(cv::Point(i,j))<z_imagewrist_3+70) or (mDepthDistance.at<uint16_t>(cv::Point(i,j))<z_imagewrist_2+70 and mDepthDistance.at<uint16_t>(cv::Point(i,j))>z_imagewrist_3-70))                                                   
+                                {
+                                                if (wrist_2_wrist_3.at<uint8_t>(cv::Point(i,j))==255)
+                                                            {
+                                                            RobotFlag=true;
+                                                            }
+                                }
+
+
+
+                                /// wrist_3-tool_center_point
+                                if ((mDepthDistance.at<uint16_t>(cv::Point(i,j))>z_imagetool_center_point-120 and mDepthDistance.at<uint16_t>(cv::Point(i,j))<z_imagewrist_3+70) or (mDepthDistance.at<uint16_t>(cv::Point(i,j))<z_imagetool_center_point+120 and mDepthDistance.at<uint16_t>(cv::Point(i,j))>z_imagewrist_3-70))                                                   
+                                {
+                                                if (wrist_3_tool_center_point.at<uint8_t>(cv::Point(i,j))==255)
+                                                            {
+                                                            RobotFlag=true;
+                                                            }
+                                }
+
+
+                                
+
+                                        
+                                        if (mDepthDistance.at<uint16_t>(cv::Point(i,j))<=300)
+                                        {
+                                            RobotFlag=true;
+                                            printf("28\n");
+
+                                        }
+                        
+                                        if (RobotFlag==false)
+                                        {
+                                            Objects.at<uint8_t>(cv::Point(i,j))=255;
+                                            //                                                  printf("\nValor de pixel es:");
+                                            //                           z = ImagenProf2.at<uint16_t>(cv::Point(i,j));
+                                            // std::cout << z << '\n';
+                                    
+
+                                            //                          z = ImagenProf.at<uint16_t>(cv::Point(i,j));
+                                            // printf("Valor de pixel es:");
+                                            // std::cout << z << '\n';
+
+
+                                        }
+                                        // else
+                                        // {
+                                        //     gris2.at<uint8_t>(cv::Point(i,j))=255;
+                                        // }
+                                    
+
+
+                            
+                                RobotFlag=false;
+
+                            }
+
+
+
+                    
+                        }
+                        
         }
-        return true;
+        }
+
+            // cv::imshow("Quitando 2 vez robot objetos", Objects);
+            // cv::waitKey(10000);
+
+            kernel = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(10, 10));
+            cv::erode(Objects, Objects, kernel);
+
+            // cv::imshow("Objetos erosión ", Objects);
+            // cv::waitKey(10000);
+            cv::dilate(Objects, Objects, kernel);
+
+            cv::imshow("Objects 1 ", Objects);
+            cv::waitKey(1);
+
+
+
+
     }
 
-    /***********************************************************
+
+    bool image_processing::shadow()
+    {
+
+        BlackImage.copyTo(Shadow_Image);
+
+
+
+
+            for (size_t i = 0; i < Objects.size().width; i++)
+            {
+                for(size_t j=0; j < Objects.size().height; j++) 
+                {
+                        if (Objects.at<uint8_t>(cv::Point(i,j))==255)
+                        {
+            
+        
+                       
+                               if ((ImageProf.at<uint16_t>(cv::Point(i,j))>=((ImageProf2.at<uint16_t>(cv::Point(i,j)))-100)) and (ImageProf.at<uint16_t>(cv::Point(i,j))<=((ImageProf2.at<uint16_t>(cv::Point(i,j)))+100)))
+                           {
+                               
+
+                                           
+               
+                                    Shadow_Image.at<uint8_t>(cv::Point(i,j))=255;
+                                    
+                                    
+                             }
+                                    
+
+                        }
+
+
+            
+                }
+            }
+
+        //     cv::imshow("Shadow_Image", Shadow_Image);
+        // cv::waitKey(10000);
+
+        cv:: subtract(Objects,Shadow_Image,Objects);
+        // cv::imshow("Objects", Objects);
+        // cv::waitKey(10000);
+
+
+
+    }
+
+    bool image_processing::Prof_background()
+   {
+       BlackImage.copyTo(Image_Prof_Background);
+
+        for (size_t i = 0; i < ImageProf.size().width; i++)
+        {
+            for(size_t j=0; j < ImageProf.size().height; j++) 
+            {
+                if (ImageProf.at<uint16_t>(cv::Point(i,j))<300)
+                {
+
+                    Image_Prof_Background.at<uint8_t>(cv::Point(i,j))=255;
+                }
+            }
+        }
+
+        // cv::imshow("Image_Prof_Background", Image_Prof_Background);
+        // cv::waitKey(10000);    
+
+
+
+   } 
+
+
+        bool image_processing:: Prof_segmentation()
+
+    {
+        cv::Mat kernel;
+        BlackImage.copyTo(Objects_scene);
+        //    cv::imshow("Prof_No_Robot_Old", Prof_No_Robot_Old);
+        // cv::waitKey(10000);
+        //    cv::imshow("Prof_No_Robot", Prof_No_Robot);
+        // cv::waitKey(10000);
+       
+
+        cv::subtract(Prof_No_Robot_Old,Prof_No_Robot,Prof_seg_Image);
+        // cv::imshow("Prof_segmentation", Prof_seg_Image);
+        // cv::waitKey(10000);
+
+
+        kernel = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(20, 20));
+        cv::erode(Prof_seg_Image, Prof_seg_Image, kernel);
+        cv::dilate(Prof_seg_Image, Prof_seg_Image, kernel);
+        // cv::imshow("Prof_seg_Image", Prof_seg_Image);
+        // cv::waitKey(10000);
+        cv:: add(Prof_seg_Image,Objects,Objects_scene);
+        // cv::imshow("Objects_scene", Objects_scene);
+        // cv::waitKey(10000);
+
+    }
+
+
+
+    bool image_processing:: diff_static_dynamic()
+
+    {
+       
+        BlackImage.copyTo(static_object);
+        BlackImage.copyTo(dynamic_object);
+        cv::bitwise_and(Objects_scene, Objects_scene2, static_object, Objects_scene3); 
+        cv::bitwise_and(static_object, static_object, static_object, Objects_scene4); 
+        // cv::imshow("static_object", static_object);
+        // cv::waitKey(10000);
+        cv::subtract(Objects_scene,static_object,dynamic_object);
+        // cv::imshow("dynamic_object", dynamic_object);
+        // cv::waitKey(10000);
+
+
+
+    }
+
+
+    bool image_processing:: object_contour(int cont)
+    {
+        cv::Mat canny_Objects_scene,canny_static_object,canny_dynamic_object ;
+        std::vector<std::vector<cv::Point> > contours;
+        std::vector<cv::Vec4i> hierarchy;
+        cv::Mat Objects_scene_RGB = ImageRGB2.clone();
+        cv::Mat static_object_RGB = ImageRGB2.clone();
+        cv::Mat dynamic_object_RGB = ImageRGB2.clone();
+
+        cv::Canny( Objects_scene, canny_Objects_scene, 100, 200 );
+        cv::findContours( canny_Objects_scene, contours, hierarchy, cv::RETR_TREE, cv::CHAIN_APPROX_SIMPLE );
+        cv::drawContours(Objects_scene_RGB, contours, -1, cv::Scalar(0, 255, 0), 2);
+        cv::imshow("Objects_scene_RGB", Objects_scene_RGB);
+        cv::waitKey(1);
+
+
+        if (cont>=3)
+        {
+            cv::Canny( static_object, canny_static_object, 100, 200 );
+            cv::findContours( canny_static_object, contours, hierarchy, cv::RETR_TREE, cv::CHAIN_APPROX_SIMPLE );
+            cv::drawContours(static_object_RGB, contours, -1, cv::Scalar(0, 255, 0), 2);
+            cv::imshow("static_object_RGB", static_object_RGB);
+            cv::waitKey(1);
+
+            cv::Canny( dynamic_object, canny_dynamic_object, 100, 200 );
+            cv::findContours( canny_dynamic_object, contours, hierarchy, cv::RETR_TREE, cv::CHAIN_APPROX_SIMPLE );
+            cv::drawContours(dynamic_object_RGB, contours, -1, cv::Scalar(0, 255, 0), 2);
+            cv::imshow("dynamic_object_RGB", dynamic_object_RGB);
+            cv::waitKey(1);
+
+
+
+        }
+
+
+
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+    // def Diferenciar(Resultado1, Resultado2,ImagenActual):
+    // Mov=False
+    // movimiento=cv2.subtract(Resultado2,Resultado1)
+    // # cv2.imshow('Dinamico',movi
+    // # 
+    // # 
+    // # miento)
+    // # cv2.waitKey(5000)
+    // estatico=cv2.subtract(Resultado2,movimiento)
+    // # cv2.imshow('Estatico',estatico)
+    // # cv2.waitKey(5000)
+    // bordesCanny_diff = cv2.Canny(movimiento,70,200)
+    // (_,contornos,_) = cv2.findContours(bordesCanny_diff.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    // print('Objetos en movimineto')
+    // # print("He encontrado {} objetos".format(len(contornos)))
+    // cv2.drawContours (bordesCanny_diff, contornos, -1, (0,0,255), 3)
+    // cv2.imshow('contornos',bordesCanny_diff)
+    // #cv2.waitKey(5000)
+    // listas=[]
+    // for i in contornos:
+    //     area = cv2.contourArea(i)
+    //     x,y,w,h = cv2.boundingRect(i)
+    //     cv2.rectangle(ImagenActual, (x,y), (x+w, y+h), (0,255,0), 2)
+    //     cv2.imshow('Calculo de Area y Reconocimiento de imagen', ImagenActual)
+    //     #cv2.waitKey(500)
+    //     if area>25:
+    //         #print('alguna')
+    //         Mov=True
+    //     else:
+    //         #print('Ninguna')
+    //         pass
+    //     #print(area)
+    // if Mov:
+    //     print('Se ha movido')
+    //     movimiento=movimiento
+    //     # cv2.imshow('movimiento', movimiento)
+    //     # cv2.waitKey(5000)
+    // else:
+    //     print('No se ha movido')
+    //     movimiento[:,:]=0
+    //     # cv2.imshow('movimiento', movimiento)
+    //     # cv2.waitKey(5000)
+    // cv2.destroyAllWindows()
+    // return(movimiento,estatico)
+
+
+
+
+    
+
+
+
+
+
+
+
+
+        /***********************************************************
      * ROS CALLBACK MEHTODS OF THE CLASS
      **********************************************************/ 
 
@@ -1023,10 +1973,40 @@ namespace pic_handling
             cv::destroyAllWindows();
         }
     }
+    
 
-    /***********************************************************
-     *  PUBLIC METHODS OF THE CLASS
-     **********************************************************/ 
+    /* main run() function */
+    void image_processing::run() 
+    {
+        /* Checking if the application is already running - TODO: check if this step is really neccesary */
+        if (bImageProcessingAppRunning) {
+            ROS_ERROR("Image distance processing application is already running");
+            return;
+        }
+        bImageProcessingAppRunning = true;
+
+        /* Launching the main application loop */
+        try {
+            main_loop();
+        }
+        catch(const std::runtime_error &re) {
+            ROS_ERROR_STREAM("Runtime error: " << re.what());
+        }
+        catch(const std::exception &ex) {
+            ROS_ERROR_STREAM("Error occurred: " << ex.what());
+        }
+        catch(...) {
+            ROS_ERROR("Unknown error occurred. Please check connections");
+        }
+
+        bImageProcessingAppRunning = false;
+    }
+
+
+
+
+
+
     /* init() */
     bool image_processing::init() {
         ROS_INFO("Initializing the applications");
@@ -1066,52 +2046,16 @@ namespace pic_handling
                 dCamD1_cy = ciDepthInfo1.K[5];
                 ROS_INFO("Storage of the depth camera 1 parameters done cx=%f, fx=%f, cy=%f and fy=%f...", dCamD1_cx, dCamD1_fx, dCamD1_cy, dCamD1_fy);
             }
-            if (icCamGrabber2.isAlignedDepthOn()) {
-                // Read the "/camera2/aligned_depth_to_color/camera_info" topic
-                ciDepthInfoPtr2 = ros::topic::waitForMessage<sensor_msgs::CameraInfo>("/camera2/aligned_depth_to_color/camera_info", _nh);
-                ciDepthInfo2 = * ciDepthInfoPtr2;
-                dCamD2_fx = ciDepthInfo2.K[0];
-                dCamD2_cx = ciDepthInfo2.K[2];
-                dCamD2_fy = ciDepthInfo2.K[4];
-                dCamD2_cy = ciDepthInfo2.K[5];
-                ROS_INFO("Storage of the depth camera 1 parameters done cx=%f, fx=%f, cy=%f and fy=%f...", dCamD2_cx, dCamD2_fx, dCamD2_cy, dCamD2_fy);
-            }
-            else {
-                // Read the "/camera2/depth/camera_info" topic
-                ciDepthInfoPtr2 = ros::topic::waitForMessage<sensor_msgs::CameraInfo>("/camera2/depth/camera_info", _nh);
-                ciDepthInfo2 = * ciDepthInfoPtr2;
-                dCamD2_fx = ciDepthInfo2.K[0];
-                dCamD2_cx = ciDepthInfo2.K[2];
-                dCamD2_fy = ciDepthInfo2.K[4];
-                dCamD2_cy = ciDepthInfo2.K[5];
-                ROS_INFO("Storage of the depth camera 1 parameters done cx=%f, fx=%f, cy=%f and fy=%f...", dCamD2_cx, dCamD2_fx, dCamD2_cy, dCamD2_fy);
-            }
-
             /* TODO: Propper initilization of the processing pictures and auxiliar images */
             
             /* Initiliazation of boolean flags for image processing */
             bColorStored1 = false;
-            bColorStored2 = false;
             bDepthStored1 = false;
-            bDepthStored2 = false;
             bIsProcessing = false;
 
-            /* Initialization of the cv::Scalar threshold values */
-            sLowerThreshold = cv::Scalar(38, 65,65);
-            sUpperThreshold = cv::Scalar(87, 255, 255);
-            dAreaThreshold = 600;
-            dDistanceThreshold = 0.05;
-            iKernelSize = 4;
+        
 
-            /* Starting ros_publishing publisher for the Point Cloud publication */
-            pcl_pub = _nh.advertise<sensor_msgs::PointCloud2>("/filtered_aligned_depth_cam1",5);
-            pcl_img_pub = _nh.advertise<sensor_msgs::Image>("/camera1/depth_registered_filtered/image_raw",5);
-            pcl_info_pub = _nh.advertise<sensor_msgs::CameraInfo>("/camera1/depth_registered_filtered/camera_info",5);
-            sPubFrame1 = "rs_d435_cam_color_optical_frame";
-            sPubFrame2 = "rs_d435_cam2_color_optical_frame";
-            pcObsPointCloud.header.frame_id = sPubFrame1;
-            iSceneMin = 20;
-            iSceneMax = 4500;
+
         }
         catch (...) {
             ROS_ERROR("The image processing application cannot be initialized...");
@@ -1120,158 +2064,5 @@ namespace pic_handling
         return true;
     }
 
-    /* main run() function */
-    void image_processing::run() {
-        /* Checking if the application is already running - TODO: check if this step is really neccesary */
-        if (bImageProcessingAppRunning) {
-            ROS_ERROR("Image distance processing application is already running");
-            return;
-        }
-        bImageProcessingAppRunning = true;
-
-        /* Launching the main application loop */
-        try {
-            main_loop();
-        }
-        catch(const std::runtime_error &re) {
-            ROS_ERROR_STREAM("Runtime error: " << re.what());
-        }
-        catch(const std::exception &ex) {
-            ROS_ERROR_STREAM("Error occurred: " << ex.what());
-        }
-        catch(...) {
-            ROS_ERROR("Unknown error occurred. Please check connections");
-        }
-
-        bImageProcessingAppRunning = false;
-    }
-
-
-    /***********************************************************
-     * SETTERS AND GETTERS OF THE CLASS
-     **********************************************************/ 
-    /* Getters */
-    bool image_processing::getbIsProcessing() {
-        return bIsProcessing;
-    }
-    
-    void image_processing::showCam1ColorPic() {
-        icCamGrabber1.displayImage(1);
-    }
-
-    void image_processing::showCam2ColorPic() {
-        icCamGrabber2.displayImage(1);
-    }
-
-    void image_processing::showCam1DepthPic()  {
-        icCamGrabber1.displayImage(4);
-    }
-
-    void image_processing::showCam2DepthPic() {
-        icCamGrabber1.displayImage(4);
-    }
-
-    void image_processing::showCam1ColorProcessedPic() {
-        cv::imshow("Camera 1 - RGB Picture", mColorProcessed1);
-        // cv::waitKey();
-        // cv::destroyAllWindows();
-    }
-
-    void image_processing::showCam2ColorProcessedPic() {
-        cv::imshow("Camera 2 - RGB Picture", mColorProcessed2);
-        // cv::waitKey();
-        // cv::destroyAllWindows();
-    }
-
-    cv::Scalar image_processing::getsLowerThreshold() {
-        return sLowerThreshold;
-    }
-
-    cv::Scalar image_processing::getsUpperThreshold() {
-        return sUpperThreshold;
-    }
-
-    double image_processing::getdAreaThreshold() {
-        return dAreaThreshold;
-    }
-
-    double image_processing::getdDistanceThreshold() {
-        return dDistanceThreshold;
-    }
-
-    int image_processing::getErosioniKernelSize() {
-        return iKernelSize;
-    }
-
-    sensor_msgs::CameraInfo image_processing::getCam1ColorInfo() {
-        return ciColorInfo1;
-    }
-
-    sensor_msgs::CameraInfo image_processing::getCam2ColorInfo() {
-        return ciColorInfo2;
-    }
-
-    sensor_msgs::CameraInfo image_processing::getCam1DepthInfo() {
-        return ciDepthInfo1;
-    }
-
-    sensor_msgs::CameraInfo image_processing::getCam2DepthInfo() {
-        return ciDepthInfo2;
-    }
-
-    obs_carthesian_position image_processing::getObstaclesXYZPositions() {
-        return ocpXYZPositions;
-    }
-
-    /* Setters */
-    bool image_processing::setsLowerThreshold(cv::Scalar sThreshValue) {
-        try {
-            sLowerThreshold = sThreshValue;
-        } catch (...) {
-            return false;
-        }
-        return true;
-    }
-
-    bool image_processing::setsUpperThreshold(cv::Scalar sThreshValue) {
-        try {
-            sUpperThreshold = sThreshValue;
-        } catch (...) {
-            return false;
-        }
-        return true;
-    }
-
-    bool image_processing::setdAreaThreshold(double dAreaValue) {
-        try {
-            dAreaThreshold = dAreaValue;
-        } catch (...) {
-            return false;
-        }
-        return true;
-    }
-
-    bool image_processing::setdDistanceThreshold(double dDistanceValue) {
-        try {
-            dDistanceThreshold = dDistanceValue;
-        } catch (...) {
-            return false;
-        }
-        return true;
-    }
-
-    bool image_processing::setErosioniKernelSize(int iKernelValue) {
-        try {
-            iKernelSize = iKernelValue;
-        } catch (...) {
-            return false;
-        }
-        return true;
-    }
-
-
-    /***********************************************************
-     * PROTECTED METHODS OF THE CLASS
-     **********************************************************/ 
 
 }

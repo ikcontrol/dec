@@ -172,6 +172,7 @@ target_link_libraries(image_processing_class ${catkin_LIBRARIES}
 # add_executable(${PROJECT_NAME}_node src/ca_apf_scene_segmentation_node.cpp)
 add_executable(dual_camera_test_node src/dual_camera_test_node.cpp)
 add_executable(image_processing_node src/image_processing_node.cpp)
+add_executable(ObtenerImagensyTf src/ObtenerImagensyTf.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -184,6 +185,7 @@ add_executable(image_processing_node src/image_processing_node.cpp)
 # add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 add_dependencies(dual_camera_test_node  ${catkin_EXPORTED_TARGETS})
 add_dependencies(image_processing_node  ${catkin_EXPORTED_TARGETS})
+add_dependencies(ObtenerImagensyTf  ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
 # target_link_libraries(${PROJECT_NAME}_node
@@ -195,6 +197,14 @@ target_link_libraries(dual_camera_test_node ${catkin_LIBRARIES}
 target_link_libraries(image_processing_node ${catkin_LIBRARIES}
                                             ${OpenCV_LIBRARIES}
                                             image_processing_class)
+                      
+target_link_libraries(ObtenerImagensyTf ${catkin_LIBRARIES}
+                                            ${OpenCV_LIBRARIES}
+                                            image_processing_class)
+
+
+                                         
+                                                                             
 
 #############
 ## Install ##

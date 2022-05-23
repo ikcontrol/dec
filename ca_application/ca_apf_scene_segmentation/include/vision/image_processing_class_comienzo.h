@@ -43,26 +43,12 @@
 #include <tf2/LinearMath/Quaternion.h>                  // ROS Library: to use quaternion type messages in ROS environment
 #include <geometry_msgs/TransformStamped.h>             // ROS Library: to loead message type to use transformed stamped ROS messages
 
-#include <sensor_msgs/PointCloud2.h>  
-#include <tf/transform_listener.h>                  // ROS Library; for loading and using PointCloud 2 to publish the obstacles information
-// #include <pcl_ros/point_cloud.h>                        // ROS Library: for PCL libraries usage
-// #include <pcl_ros/transforms.h>                         // ROS Library: for transforms coordination between point clouds and ROS
-// // #include <pcl/point_types.h>                            // ROS Library: for loading the different point clouds types avialables
-// #include <pcl_conversions/pcl_conversions.h>            // ROS Library: for allowing conversions between ROS messages PointCloud types and the standard ones
-// #include <pcl/filters/voxel_grid.h>                     // PCL Library: to load voxel grid filtering methods
-
-
-
-#include <string>
-#include <boost/lexical_cast.hpp>
-#include <iostream>
-#include <fstream>
-#include <thread>
-#include <chrono>
-
-
-
-
+#include <sensor_msgs/PointCloud2.h>                    // ROS Library; for loading and using PointCloud 2 to publish the obstacles information
+#include <pcl_ros/point_cloud.h>                        // ROS Library: for PCL libraries usage
+#include <pcl_ros/transforms.h>                         // ROS Library: for transforms coordination between point clouds and ROS
+#include <pcl/point_types.h>                            // ROS Library: for loading the different point clouds types avialables
+#include <pcl_conversions/pcl_conversions.h>            // ROS Library: for allowing conversions between ROS messages PointCloud types and the standard ones
+#include <pcl/filters/voxel_grid.h>                     // PCL Library: to load voxel grid filtering methods
 
 /////////////////////////////////////////////////////////////////////////////////////
 //////////////// SELF-DEFINED STRUCTS IMPLEMENTATION ////////////////////////////////
@@ -99,7 +85,7 @@ struct obs_carthesian_position {
     std::vector<obs_cartheseian_components> occObstaclePoses;
 };
 
-// typedef pcl::PointCloud<pcl::PointXYZ> PointCloud;
+typedef pcl::PointCloud<pcl::PointXYZ> PointCloud;
 
 
 /////////////////////////////////////////////////////////////////////////////////////
@@ -109,69 +95,10 @@ namespace pic_handling
 {
     class image_processing {
         private:
-            tf::TransformListener listener;                                                         // Instantiation of TF listener
-            tf::StampedTransform base_0;                                                            // Instantiation of Base TF
-            tf::StampedTransform forearm;                                                           // Instantiation of Forearm TF
-            tf::StampedTransform shoulder;                                                          // Instantiation of shoulder TF
-            tf::StampedTransform wrist_1;                                                           // Instantiation of wrist_1 TF
-            tf::StampedTransform wrist_2;                                                           // Instantiation of wrist_2 TF
-            tf::StampedTransform wrist_3;                                                           // Instantiation of wrist_3 TF
-            tf::StampedTransform tool_center_point;                                                 // Instantiation of tool_center_point TF
-            int ImageNumber;                                                                        // Instantiation of the number of image 
-            double z_imageBase,x_imageBase,y_imageBase;                                             // Instantiation of the position of the Base
-            double z_imageforearm,x_imageforearm,y_imageforearm;                                    // Instantiation of the position of the Forearm
-            double z_imageshoulder,x_imageshoulder,y_imageshoulder;                                 // Instantiation of the position of the Shoulder
-            double z_imagewrist_1,x_imagewrist_1,y_imagewrist_1;                                    // Instantiation of the position of the Wrist_1
-            double z_imagewrist_2,x_imagewrist_2,y_imagewrist_2 ;                                   // Instantiation of the position of the Wrist_2
-            double z_imagewrist_3,x_imagewrist_3,y_imagewrist_3;                                    // Instantiation of the position of the Wrist_3
-            double z_imagetool_center_point,x_imagetool_center_point,y_imagetool_center_point;      // Instantiation of the position of the Tool_center_point
-            double z_imageforearm_real,x_imageforearm_real,y_imageforearm_real;                     // Instantiation of the position of the other side of the Forearm
-            double z_imageshoulder_real,x_imageshoulder_real,y_imageshoulder_real;                  // Instantiation of the position of the other side of the Shoulder
-            cv::Mat ImageProf,ImageProf2;                                                           // Instantiation of the U16 depth image (2->new, _->old)
-            cv::Mat ImagenProf_U8,ImagenProf2_U8;                                                   // Instantiation of the U8 depth image
-            cv::Mat ImageRGB,ImageRGB2;                                                             // Instantiation of RGB image (2->new, _->old)
-            cv::Mat SegRobot;                                                                       // Instantiation of the segmentation of the robot
-            cv::Mat BlackImage;                                                                     // Instantiation of a Black image
-            cv::Mat ResFinSeg;                                                                      // Instantiation of the colour difference (ImageRGB,ImageRGB2)
-            cv::Mat forearm_wrist_1;                                                                // Instantiation of supposed forearm_wrist_1 image
-            cv::Mat shoulder_forearm_real;                                                          // Instantiation of supposed shoulder_forearm_real image
-            cv::Mat wrist_1_wrist_2;                                                                // Instantiation of supposed wrist_1_wrist_2 image
-            cv::Mat wrist_2_wrist_3;                                                                // Instantiation of supposed wrist_2_wrist_3 image
-            cv::Mat wrist_3_tool_center_point;                                                      // Instantiation of supposed wrist_3_tool_center_point image
-            cv::Mat Prof_No_Robot;                                                                  // Instantiation of depth image without robot
-            cv::Mat Prof_No_Robot_Old;                                                              // Instantiation of old depth image without robot
-            cv::Mat Image_Prof_Background;                                                          // Instantiation of depth image Background
-            cv::Mat SegNoRobot;                                                                     // Instantiation of segmentation without robot
-            cv::Mat Objects;                                                                        // Instantiation of Objects detected
-            cv::Mat Shadow_Image;                                                                   // Instantiation of Shadow detected
-            cv::Mat Prof_seg_Image;                                                                 // Instantiation of depth segmentation
-            cv::Mat Objects_scene,Objects_scene2,Objects_scene3,Objects_scene4;                     // Instantiation of the last 4 Object scene detected
-            cv::Mat static_object;                                                                  // Instantiation of static objects
-            cv::Mat dynamic_object;                                                                 // Instantiation of dynamic objects
-            
-
-
-            
-            bool segmentar ();
-            bool ObtenerObjetosRGB();
-            bool entre_articulaciones(float x1_rect,float y1_rect,float x2_rect,float y2_rect,cv::Mat ImagenSolucion );
-            bool Calculate_Tf();
-            bool RemoveRobot();
-            bool shadow();
-            bool Prof_background();
-            bool Prof_segmentation();
-            bool diff_static_dynamic();
-            bool object_contour(int cont);
-            
-            
-
-
-
-
-
-
             /* Useful private attributes of the class */
             ros::NodeHandle _nh;                                                // ROS node handler
+            ros::Publisher pcl_pub;                                             // ROS publisher object to publish in the filtered point cloud topic
+            ros::Publisher pcl_img_pub, pcl_info_pub;                           // TODO: delete or check accuracy
 
             bool bImageProcessingAppRunning = false;                            // Attribute to store wheter the image_processing class is running or not
             bool bColorStored1, bColorStored2, bDepthStored1, bDepthStored2;    // Attributes to store whether or not the camera received images has been stored
@@ -185,6 +112,14 @@ namespace pic_handling
             cv::Mat mDepthColor1, mDepthColor2;                                 // Instantiation of the objects to store the colour_jet distance pictures.
             cv::Mat mColorProcessed1, mColorProcessed2;                         // Instantiation of the objects to store the processed image of color cameras
 
+            cv::Scalar sLowerThreshold, sUpperThreshold;                        // Instantiation of the cv::Scalar threshold for filtering only green obstacles
+
+            double dAreaThreshold;                                              // Area threshold attribute 
+            double dDistanceThreshold;                                          // Distance thresholde in [m] for computing the obstacles matching between cam1 and cam2
+            int iKernelSize;                                                    // Kernel size for eroding the pictures. Another allowed value might be 18
+            int iSceneMin, iSceneMax;                                           // Minimum threshold and maximum threshold for point cloud processing
+            std::string sPubFrame1, sPubFrame2;                                 // Strings that contain the frame name of the publishing where the PointCloud is being published
+
 
             sensor_msgs::CameraInfoConstPtr ciColorInfoPtr1, ciColorInfoPtr2;   // Instantiation of sensor_msgs::CameraInfoConstPtr attributes to check wheter the topics are being published or not.
             sensor_msgs::CameraInfo ciColorInfo1, ciColorInfo2;                 // Instantiation of sensor_msgs::CameraInfo attributes to store the calibration parameters of the camera.
@@ -195,11 +130,21 @@ namespace pic_handling
             double dCamD1_cx, dCamD1_fx, dCamD1_cy, dCamD1_fy;                  // Instantiation of the attributes to store the extrinsics of the depth camera 1 calibration
             double dCamD2_cx, dCamD2_fx, dCamD2_cy, dCamD2_fy;                  // Instantiation of the attributes to store the extrinsics of the depth camera 2 calibration 
 
+            obstacle_data odZYCam1;                                             // Attribute to store the number of obstacles found in camera 1 picture
+            obstacle_data odXYCam2;                                             // Attribute to store the number of obstacles found in camera 2 picture
+            obs_carthesian_position ocpXYZPositions;                            // Attribute to store the XYZ positions of the detected obstacles
 
+            sensor_msgs::PointCloud2 pcObsPointCloud;                           // Attribute to store an unique point cloud to store the different filtered point clouds by each camera
 
             /* Useful private methods of the class */
             void main_loop();                                                   // Private method to encapsulate the cyclic functionalities of the image processing algorithm
-            
+            obstacle_data process_obstacles_zy_plane();                         // Method to process the given cv::Mat from camera 1 and return the number of detected obstacles as well as the positioning box, if any.
+            obstacle_data process_obstacles_xy_plane();                         // Method to process the given cv::Mat from camera 2 and return the number of detected obstacles as well as their position, if any. 
+            obs_carthesian_position compute_xyz_obstacle_position();            // Method to compute the xyz position and minimum safety radius for each detected obstacle       
+            obs_carthesian_position regular_xyz_computation();                  // Auxiliar method to compute obs_carthesian_position of all obstacles when the number of detected obstacles in camera 1 matches with the ones detected in camera 2
+            obs_carthesian_position hard_occlusion_xyz_computation();           // Auxiliar method to compute obs_carthesian position of all obstacles when a case of hard occlusion is detected (one view completelly occlusioned or obstacle split)
+            bool publish_stamped_obs_poses(obs_carthesian_position ocpVar);     // Auxiliar method for debugging and publishing the obstacle stamped position into ROS environment
+            bool publish_obs_point_cloud();                                     // Method to publish the general computed point cloud that mixes both camera filtered depth images
 
             /* ROS callback methods */
 
