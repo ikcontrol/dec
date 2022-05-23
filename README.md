@@ -53,3 +53,4 @@ There is still no official original release for the actual packages distribuitio
 The repo is currently mantained by:
 * **Diego Rodríguez (KAU)**: diego.rodriguez@ikerlan.es
 * **Ander González (KAU)**: ander.gonzalez@ikerlan.es
+* **Josu Sinovas (KAU)**: jsinovas@ikerlan.es
