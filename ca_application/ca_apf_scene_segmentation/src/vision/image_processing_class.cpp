@@ -15,6 +15,7 @@ namespace pic_handling
         bool First_Image_Prof=false;
         bool First_Image_RGB=false;
         bool First_Prof_No_Robot=false;
+        
           printf("Comienza\n\n\n");
         printf("*****\n\n\n");
       
@@ -309,14 +310,16 @@ namespace pic_handling
 
                 using boost::lexical_cast;
                 using std::string;
-                string finish_nameProf=".tiff";
+                string finish_nameProf=".jpg";
                 string numstring;
                 numstring = lexical_cast<string>(ImageNumber);
                 numstring += finish_nameProf;
                 // string nombreArchivo = "/home/ikerlan/camera_localization_ws/src/camera_localization/scripts/folder_save/Valores64.txt";
-                string nameFileProf = "/home/ikerlan/ros_wss/ws_ca_apf/src/ca_application/ca_apf_scene_segmentation/scripts/folder_save/Prof.tiff";
-                //nameFileProf += numstring;
+                string nameFileProf = "/home/ikerlan/ros_wss/ws_ca_apf/src/ca_application/ca_apf_scene_segmentation/scripts/Prof.tiff";
+                string nameFileProf_2 = "/home/ikerlan/ros_wss/ws_ca_apf/src/ca_application/ca_apf_scene_segmentation/scripts/folder_save/Prof";
                 cv::imwrite(nameFileProf, mDepthPic1);
+                nameFileProf_2 += numstring;
+                
                 ImagenProf2_U8 = cv::imread(nameFileProf);
 
                 mDepthPic1.copyTo(ImageProf2);
@@ -336,6 +339,7 @@ namespace pic_handling
                 // cv::minMaxLoc(mDepthColor1, &minValue, &maxValue);
                 cv::convertScaleAbs(mDepthColor1, mDepthColor1, 0.03);
                 cv::applyColorMap(mDepthColor1, mDepthColor1, cv::COLORMAP_JET);
+                //cv::imwrite(nameFileProf_2, mDepthColor1);
                 bDepthStored1 = true;
                 icCamGrabber1.clearbDepthReceived();
         
@@ -578,37 +582,43 @@ namespace pic_handling
     if (First_Prof_No_Robot==false)
     {
         Prof_No_Robot.copyTo(Prof_No_Robot_Old);
-        Prof_background();
+        //Prof_background();
         First_Prof_No_Robot=true;
     }
     shadow();
     Prof_segmentation();
+    diff_static_dynamic(ImageNumber);
+    publish_objects(ImageNumber);
+
+
+        
+        
     
 
 
-    if (ImageNumber==0)
-    {
-       Objects_scene.copyTo(Objects_scene2); 
-    }
-    if (ImageNumber==1)
-    {
-       Objects_scene2.copyTo(Objects_scene3); 
-       Objects_scene.copyTo(Objects_scene2); 
-    }
-        if (ImageNumber==2)
-    {
-        Objects_scene3.copyTo(Objects_scene4); 
-        Objects_scene2.copyTo(Objects_scene3); 
-        Objects_scene.copyTo(Objects_scene2); 
-    }
-    if (ImageNumber>=3)
-    {
-        diff_static_dynamic();
-        Objects_scene3.copyTo(Objects_scene4); 
-        Objects_scene2.copyTo(Objects_scene3); 
-        Objects_scene.copyTo(Objects_scene2); 
+    // if (ImageNumber==0)
+    // {
+    //    Objects_scene.copyTo(Objects_scene2); 
+    // }
+    // if (ImageNumber==1)
+    // {
+    //    Objects_scene2.copyTo(Objects_scene3); 
+    //    Objects_scene.copyTo(Objects_scene2); 
+    // }
+    //     if (ImageNumber==2)
+    // {
+    //     Objects_scene3.copyTo(Objects_scene4); 
+    //     Objects_scene2.copyTo(Objects_scene3); 
+    //     Objects_scene.copyTo(Objects_scene2); 
+    // }
+    // if (ImageNumber>=3)
+    // {
+    //     diff_static_dynamic();
+    //     Objects_scene3.copyTo(Objects_scene4); 
+    //     Objects_scene2.copyTo(Objects_scene3); 
+    //     Objects_scene.copyTo(Objects_scene2); 
 
-    }
+    // }
     object_contour(ImageNumber);
 
     dTime = ((double)cv::getTickCount() - dTime)/cv::getTickFrequency();
@@ -646,8 +656,24 @@ namespace pic_handling
 
 
 
-    bool image_processing::segmentar ()
+    void image_processing::segmentar ()
         {
+
+        using boost::lexical_cast;
+        using std::string;
+        string finish_nameRGB=".jpg";
+        string numstring;
+        numstring = lexical_cast<string>(ImageNumber);
+        numstring += finish_nameRGB;
+                // string nombreArchivo = "/home/ikerlan/camera_localization_ws/src/camera_localization/scripts/folder_save/Valores64.txt";
+        
+        string nameFileResFinSeg= "/home/ikerlan/ros_wss/ws_ca_apf/src/ca_application/ca_apf_scene_segmentation/scripts/folder_save/ResFinSeg";
+        nameFileResFinSeg += numstring;
+
+
+
+
+
             cv::Mat ResultDiff,image1grey,ResultDiff_Threshold,kernel,ResultDiff_Mor,image2grey,ResultDiff2,ResultDiff2_Threshold,ResultDiff2_Mor;
             cv::cvtColor(ImageRGB, image1grey, cv::COLOR_BGR2GRAY);
             cv::cvtColor(ImageRGB2, image2grey, cv::COLOR_BGR2GRAY);
@@ -673,12 +699,28 @@ namespace pic_handling
             // cv::namedWindow("Resultado diferencia de color",cv::WINDOW_AUTOSIZE);
             // cv::imshow("Resultado diferencia de color", ResFinSeg );
             // cv::waitKey(5000);
+            //cv::imwrite(nameFileResFinSeg, ResFinSeg);
         }
 
 
 
-    bool image_processing::ObtenerObjetosRGB()
+    void image_processing::ObtenerObjetosRGB()
         {
+              using boost::lexical_cast;
+        using std::string;
+        string finish_nameRGB=".jpg";
+        string numstring;
+        numstring = lexical_cast<string>(ImageNumber);
+        numstring += finish_nameRGB;
+                // string nombreArchivo = "/home/ikerlan/camera_localization_ws/src/camera_localization/scripts/folder_save/Valores64.txt";
+        
+        string nameFileSegRobot= "/home/ikerlan/ros_wss/ws_ca_apf/src/ca_application/ca_apf_scene_segmentation/scripts/folder_save/SegRobot";
+        nameFileSegRobot+= numstring;
+         //cv::imwrite(nameFileSegRobot, SegRobot);
+
+
+
+
             cv::Mat kernel,difRobot1,difRobot2,ImageProf_Threshold,ImageProf2_Threshold,ImageProf_Threshold_grey,ImageProf2_Threshold_grey;
             // ancient
             cv::threshold(ImagenProf_U8, ImageProf_Threshold, 2, 255, cv::THRESH_BINARY);
@@ -731,8 +773,9 @@ namespace pic_handling
             // sumar las 2
             cv::add(difRobot2, difRobot1, SegRobot);
             // cv::namedWindow("Segmentación imagen",cv::WINDOW_AUTOSIZE);
-            cv::imshow("Segmentación imagen", SegRobot);
-            cv::waitKey(1);
+            // cv::imshow("Segmentación imagen", SegRobot);
+            // cv::waitKey(1);
+            //cv::imwrite(nameFileSegRobot, SegRobot);
 
         }
 
@@ -741,7 +784,7 @@ namespace pic_handling
 
 
 
-        bool image_processing::entre_articulaciones(float x1_rect,float y1_rect,float x2_rect,float y2_rect,cv::Mat ImagenSolucion )
+        void image_processing::entre_articulaciones(float x1_rect,float y1_rect,float x2_rect,float y2_rect,cv::Mat ImagenSolucion )
         {
             
 
@@ -1058,14 +1101,14 @@ namespace pic_handling
 
 
 
-    bool image_processing:: Calculate_Tf()
+    void image_processing:: Calculate_Tf()
 
         {
             
             // Nuevos
 
-            Eigen::Matrix3f R2,R3;
-            Eigen:: Matrix<float, 3, 1> Pc2,Pc3,d2,d3,shoulder_Vect,forearm_Vect;
+            Eigen::Matrix3f R2,R3,R4;
+            Eigen:: Matrix<float, 3, 1> Pc2,Pc3,Pc4,d2,d3,d4,shoulder_Vect,forearm_Vect,wrist_1_Vect;
 
             double ValueX3_real; 
             double ValueY3_real;
@@ -1074,6 +1117,10 @@ namespace pic_handling
             double ValueX2_real;
             double ValueY2_real;
             double ValueZ2_real;
+
+            double ValueX4_real; 
+            double ValueY4_real;
+            double ValueZ4_real;
 
             
 
@@ -1123,6 +1170,15 @@ namespace pic_handling
             // printf("Pc3");
             // std::cout << Pc3 << '\n';
 
+            R4 = Eigen::Quaternionf(wrist_1.getRotation().w(), wrist_1.getRotation().x(), wrist_1.getRotation().y(), wrist_1.getRotation().z()).toRotationMatrix();
+            // printf("R3");
+            // std::cout << R3 << '\n';
+
+            Pc4 <<  wrist_1.getOrigin().x(),
+                    wrist_1.getOrigin().y(),
+                    wrist_1.getOrigin().z();
+
+
             d2 <<  0,
                     -0.176,
                     0;
@@ -1130,9 +1186,14 @@ namespace pic_handling
             d3 <<  0,
                     0,
                     0.137;
+            
+            d4 <<  0,
+                    0,
+                    -0.135;
 
             shoulder_Vect=Pc2+(R2*d2);
             forearm_Vect=Pc3+(R3*d3);
+            wrist_1_Vect=Pc4+(R4*d4);
             // printf("shoulder_Vect");
             // std::cout << shoulder_Vect << '\n';
             // printf("forearm_Vect");
@@ -1151,6 +1212,10 @@ namespace pic_handling
             ValueY2_real= double(forearm_Vect.coeff(1, 0));
             ValueZ2_real= double(forearm_Vect.coeff(2, 0));
 
+            ValueX4_real = double(wrist_1_Vect.coeff(0, 0));
+            ValueY4_real= double(wrist_1_Vect.coeff(1, 0));
+            ValueZ4_real= double(wrist_1_Vect.coeff(2, 0));
+
 
         //
 
@@ -1167,13 +1232,17 @@ namespace pic_handling
             x_imageshoulder_real=((ValueX3_real*dCam1_fx)/ValueZ3_real)+ dCam1_cx;
             y_imageshoulder_real=((ValueY3_real*dCam1_fy)/ValueZ3_real)+dCam1_cy; 
 
+            z_imagewrist_1_real=ValueZ4_real/0.001;
+            x_imagewrist_1_real=((ValueX4_real*dCam1_fx)/ValueZ4_real)+ dCam1_cx;
+            y_imagewrist_1_real=((ValueY4_real*dCam1_fy)/ValueZ4_real)+dCam1_cy; 
+
         }
 
 
 
 
 
-        bool image_processing::RemoveRobot()
+        void image_processing::RemoveRobot()
 
         {
             cv::Mat mDepthDistance = cv::Mat::zeros(cv::Size(ImageRGB2.rows, ImageRGB2.cols), CV_16UC1);
@@ -1262,6 +1331,22 @@ namespace pic_handling
            
                         }
 
+                          if (mDepthDistance.at<uint16_t>(cv::Point(i,j))>z_imagewrist_1_real-120 and mDepthDistance.at<uint16_t>(cv::Point(i,j))<z_imagewrist_1_real+120) 
+                        {
+
+
+                            if((i>x_imagewrist_1_real and i<x_imagewrist_1_real+70 and y_imagewrist_1_real+50>j and y_imagewrist_1_real-50<j) or (i<x_imagewrist_1_real+70 and i>x_imagewrist_1_real-70 and  y_imagewrist_1_real+50>j and y_imagewrist_1_real-50<j))
+                                 {
+
+                                    
+
+                                     Prof_No_Robot.at<uint8_t>(cv::Point(i,j))=255;
+                                }
+           
+                        }
+
+
+
                         ////////////
 
                         if (mDepthDistance.at<uint16_t>(cv::Point(i,j))>z_imagewrist_1-100 and mDepthDistance.at<uint16_t>(cv::Point(i,j))<z_imagewrist_1+100) 
@@ -1328,7 +1413,7 @@ namespace pic_handling
         
 
                          /// shoulder -forearm
-                         if ((mDepthDistance.at<uint16_t>(cv::Point(i,j))>z_imageforearm_real-120 and mDepthDistance.at<uint16_t>(cv::Point(i,j))<z_imageshoulder_real+120) or (mDepthDistance.at<uint16_t>(cv::Point(i,j))<z_imageforearm_real+120 and mDepthDistance.at<uint16_t>(cv::Point(i,j))>z_imageshoulder_real-120))                                                  
+                         if ((mDepthDistance.at<uint16_t>(cv::Point(i,j))>z_imageforearm_real-130 and mDepthDistance.at<uint16_t>(cv::Point(i,j))<z_imageshoulder_real+120) or (mDepthDistance.at<uint16_t>(cv::Point(i,j))<z_imageforearm_real+130 and mDepthDistance.at<uint16_t>(cv::Point(i,j))>z_imageshoulder_real-120))                                                  
                           {
                                          if (shoulder_forearm_real.at<uint8_t>(cv::Point(i,j))==255)
                                                     {
@@ -1341,7 +1426,7 @@ namespace pic_handling
 
 
                                  /// forearm-wrist_1
-                        if ((mDepthDistance.at<uint16_t>(cv::Point(i,j))>z_imageforearm-90 and mDepthDistance.at<uint16_t>(cv::Point(i,j))<z_imagewrist_1+100) or (mDepthDistance.at<uint16_t>(cv::Point(i,j))<z_imageforearm+90 and mDepthDistance.at<uint16_t>(cv::Point(i,j))>z_imagewrist_1-100))                                                   
+                        if ((mDepthDistance.at<uint16_t>(cv::Point(i,j))>z_imageforearm-120 and mDepthDistance.at<uint16_t>(cv::Point(i,j))<z_imagewrist_1+100) or (mDepthDistance.at<uint16_t>(cv::Point(i,j))<z_imageforearm+120 and mDepthDistance.at<uint16_t>(cv::Point(i,j))>z_imagewrist_1-100))                                                   
                         {
                             if (forearm_wrist_1.at<uint8_t>(cv::Point(i,j))==255)
                                                     {
@@ -1406,24 +1491,41 @@ namespace pic_handling
                 }
             }
 
+
+               using boost::lexical_cast;
+        using std::string;
+        string finish_nameRGB=".jpg";
+        string numstring;
+        numstring = lexical_cast<string>(ImageNumber);
+        numstring += finish_nameRGB;
+                // string nombreArchivo = "/home/ikerlan/camera_localization_ws/src/camera_localization/scripts/folder_save/Valores64.txt";
+        
+        string nameFileProf_No_Robot= "/home/ikerlan/ros_wss/ws_ca_apf/src/ca_application/ca_apf_scene_segmentation/scripts/folder_save/Prof_No_Robot";
+        string nameFileProf_No_Robot_mor= "/home/ikerlan/ros_wss/ws_ca_apf/src/ca_application/ca_apf_scene_segmentation/scripts/folder_save/Prof_No_Robotmor";
+        nameFileProf_No_Robot+= numstring;
+        nameFileProf_No_Robot_mor+= numstring;
+         
+
             
 
 
                     cv::Mat kernel;
                     // cv::imshow("Quitar Robot de la imagen de profundidad", Prof_No_Robot); /// antes ImagenNegro11
-                    // cv::waitKey(10000);
+                    // cv::waitKey(1);
                     kernel = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(15, 15));
                     cv::dilate(Prof_No_Robot, Prof_No_Robot, kernel);
                     cv::erode(Prof_No_Robot, Prof_No_Robot, kernel);
 
-                    cv::imshow("Quitar Robot de la imagen de profundidad erode-dilate", Prof_No_Robot); /// antes ImagenNegro11
-                    cv::waitKey(1);
+                    // cv::imshow("Quitar Robot de la imagen de profundidad erode-dilate", Prof_No_Robot); /// antes ImagenNegro11
+                    // cv::waitKey(1);
+                    //cv::imwrite(nameFileProf_No_Robot, Prof_No_Robot);
 
 
 
                     cv::subtract(SegRobot,Prof_No_Robot,SegNoRobot);// imagennegro2
                     // cv::imshow("Quitar robot de la imagen segmentada ", SegNoRobot);
                     // cv::waitKey(10000);
+                    //cv::imwrite(nameFileProf_No_Robot_mor, Prof_No_Robot);
 
 
                     ImageProf2.copyTo(mDepthDistance);
@@ -1478,7 +1580,7 @@ namespace pic_handling
                                     {
 
                                         RobotFlag=true;
-                                        printf("2");
+                                        //printf("2");
 
                                         //17cm
                                         
@@ -1521,7 +1623,7 @@ namespace pic_handling
                                             
 
                                             RobotFlag=true;
-                                            printf("3\n");
+                                            //printf("3\n");
                                         }
 
 
@@ -1541,7 +1643,7 @@ namespace pic_handling
                 
 
                                         RobotFlag=true;
-                                        printf("4");
+                                        //printf("4");
 
                                         }
 
@@ -1558,7 +1660,7 @@ namespace pic_handling
                                             
 
                                 RobotFlag=true;
-                                printf("5\n");
+                                //printf("5\n");
 
                                         }
                                     
@@ -1572,7 +1674,7 @@ namespace pic_handling
                                             
 
                                             RobotFlag=true;
-                                            printf("6\n");
+                                            //printf("6\n");
 
                                         }
 
@@ -1590,7 +1692,7 @@ namespace pic_handling
                                             
                                             
                                             RobotFlag=true;
-                                            printf("7\n");
+                                            //printf("7\n");
                 
 
                                         }
@@ -1605,7 +1707,7 @@ namespace pic_handling
                                                 if (shoulder_forearm_real.at<uint8_t>(cv::Point(i,j))==255)
                                                             {
                                                                 RobotFlag=true;
-                                                                printf("11\n");
+                                                                //printf("11\n");
                                                             }
                                 }
 
@@ -1671,7 +1773,7 @@ namespace pic_handling
                                         if (mDepthDistance.at<uint16_t>(cv::Point(i,j))<=300)
                                         {
                                             RobotFlag=true;
-                                            printf("28\n");
+                                            //printf("28\n");
 
                                         }
                         
@@ -1719,8 +1821,8 @@ namespace pic_handling
             // cv::waitKey(10000);
             cv::dilate(Objects, Objects, kernel);
 
-            cv::imshow("Objects 1 ", Objects);
-            cv::waitKey(1);
+            // cv::imshow("Objects 1 ", Objects);
+            // cv::waitKey(1);
 
 
 
@@ -1728,7 +1830,7 @@ namespace pic_handling
     }
 
 
-    bool image_processing::shadow()
+    void image_processing::shadow()
     {
 
         BlackImage.copyTo(Shadow_Image);
@@ -1775,7 +1877,7 @@ namespace pic_handling
 
     }
 
-    bool image_processing::Prof_background()
+    void image_processing::Prof_background()
    {
        BlackImage.copyTo(Image_Prof_Background);
 
@@ -1799,7 +1901,7 @@ namespace pic_handling
    } 
 
 
-        bool image_processing:: Prof_segmentation()
+        void image_processing:: Prof_segmentation()
 
     {
         cv::Mat kernel;
@@ -1824,30 +1926,44 @@ namespace pic_handling
         // cv::imshow("Objects_scene", Objects_scene);
         // cv::waitKey(10000);
 
+
+          using boost::lexical_cast;
+        using std::string;
+        string finish_nameRGB=".jpg";
+        string numstring;
+        numstring = lexical_cast<string>(ImageNumber);
+        numstring += finish_nameRGB;
+                // string nombreArchivo = "/home/ikerlan/camera_localization_ws/src/camera_localization/scripts/folder_save/Valores64.txt";
+        string nameFileObjects_scene= "/home/ikerlan/ros_wss/ws_ca_apf/src/ca_application/ca_apf_scene_segmentation/scripts/folder_save/Objects_scene";
+    
+        nameFileObjects_scene += numstring;
+
+        //cv::imwrite(nameFileObjects_scene, Objects_scene);
+
     }
 
 
 
-    bool image_processing:: diff_static_dynamic()
+    // bool image_processing:: diff_static_dynamic()
 
-    {
+    // {
        
-        BlackImage.copyTo(static_object);
-        BlackImage.copyTo(dynamic_object);
-        cv::bitwise_and(Objects_scene, Objects_scene2, static_object, Objects_scene3); 
-        cv::bitwise_and(static_object, static_object, static_object, Objects_scene4); 
-        // cv::imshow("static_object", static_object);
-        // cv::waitKey(10000);
-        cv::subtract(Objects_scene,static_object,dynamic_object);
-        // cv::imshow("dynamic_object", dynamic_object);
-        // cv::waitKey(10000);
+    //     BlackImage.copyTo(static_object);
+    //     BlackImage.copyTo(dynamic_object);
+    //     cv::bitwise_and(Objects_scene, Objects_scene2, static_object, Objects_scene3); 
+    //     cv::bitwise_and(static_object, static_object, static_object, Objects_scene4); 
+    //     // cv::imshow("static_object", static_object);
+    //     // cv::waitKey(10000);
+    //     cv::subtract(Objects_scene,static_object,dynamic_object);
+    //     // cv::imshow("dynamic_object", dynamic_object);
+    //     // cv::waitKey(10000);
 
 
 
-    }
+    // }
 
 
-    bool image_processing:: object_contour(int cont)
+    void image_processing:: object_contour(int cont)
     {
         cv::Mat canny_Objects_scene,canny_static_object,canny_dynamic_object ;
         std::vector<std::vector<cv::Point> > contours;
@@ -1856,26 +1972,47 @@ namespace pic_handling
         cv::Mat static_object_RGB = ImageRGB2.clone();
         cv::Mat dynamic_object_RGB = ImageRGB2.clone();
 
+
+        using boost::lexical_cast;
+        using std::string;
+        string finish_nameRGB=".jpg";
+        string numstring;
+        numstring = lexical_cast<string>(ImageNumber);
+        numstring += finish_nameRGB;
+                // string nombreArchivo = "/home/ikerlan/camera_localization_ws/src/camera_localization/scripts/folder_save/Valores64.txt";
+        string nameFilestatic_object_RGB= "/home/ikerlan/ros_wss/ws_ca_apf/src/ca_application/ca_apf_scene_segmentation/scripts/folder_save/static_object_RGB";
+        string nameFiledynamic_object_RGB= "/home/ikerlan/ros_wss/ws_ca_apf/src/ca_application/ca_apf_scene_segmentation/scripts/folder_save/dynamic_object_RGB";
+        nameFilestatic_object_RGB += numstring;
+        nameFiledynamic_object_RGB+= numstring;
+               
+
+
+
+
+
+
         cv::Canny( Objects_scene, canny_Objects_scene, 100, 200 );
         cv::findContours( canny_Objects_scene, contours, hierarchy, cv::RETR_TREE, cv::CHAIN_APPROX_SIMPLE );
         cv::drawContours(Objects_scene_RGB, contours, -1, cv::Scalar(0, 255, 0), 2);
-        cv::imshow("Objects_scene_RGB", Objects_scene_RGB);
-        cv::waitKey(1);
+        // cv::imshow("Objects_scene_RGB", Objects_scene_RGB);
+        // cv::waitKey(1);
 
 
         if (cont>=3)
         {
             cv::Canny( static_object, canny_static_object, 100, 200 );
             cv::findContours( canny_static_object, contours, hierarchy, cv::RETR_TREE, cv::CHAIN_APPROX_SIMPLE );
-            cv::drawContours(static_object_RGB, contours, -1, cv::Scalar(0, 255, 0), 2);
+            cv::drawContours(static_object_RGB, contours, -1, cv::Scalar(255, 0, 0), 2);
             cv::imshow("static_object_RGB", static_object_RGB);
             cv::waitKey(1);
+            //cv::imwrite(nameFilestatic_object_RGB, static_object_RGB);
 
             cv::Canny( dynamic_object, canny_dynamic_object, 100, 200 );
             cv::findContours( canny_dynamic_object, contours, hierarchy, cv::RETR_TREE, cv::CHAIN_APPROX_SIMPLE );
-            cv::drawContours(dynamic_object_RGB, contours, -1, cv::Scalar(0, 255, 0), 2);
+            cv::drawContours(dynamic_object_RGB, contours, -1, cv::Scalar(0, 0, 255), 2);
             cv::imshow("dynamic_object_RGB", dynamic_object_RGB);
             cv::waitKey(1);
+            //cv::imwrite(nameFiledynamic_object_RGB, dynamic_object_RGB);
 
 
 
@@ -1887,61 +2024,261 @@ namespace pic_handling
 
     }
 
+    
+    void image_processing:: diff_static_dynamic(int cont)
+
+    {
+         cv::Mat image_Buffer, image_buffer_res,imageMoment;
+        bool First_Flag=false;
+
+        int Buf_num=0;
+
+
+        using boost::lexical_cast;
+        using std::string;
+        string finish_nameProf=".jpg";
+        string numstring;
+        numstring = lexical_cast<string>(ImageNumber);
+        numstring += finish_nameProf;
+        
+        string nameFileProf = "/home/ikerlan/ros_wss/ws_ca_apf/src/ca_apf_application/ca_application/ca_apf_scene_segmentation/scripts/folder_save/static";
+        nameFileProf += numstring;
+        Objects_scene.copyTo(imageMoment);
+        
+
+        if(cont>=BufferSize)
+        {
+           
+            // for (const cv::Mat& i :ObjectsSceneBuffer) 
+            //     {
+            //         cv::imshow(" imagenes que se quedan", i);
+            //         cv::waitKey(5000);
+            //         std::cout<<Buf_num;
+            //         printf("\n");
+            //         Buf_num++;
+
+                        
+                    
+
+                
+            //     }
+
+            Buf_num=0;
+
+            for (const cv::Mat& i :ObjectsSceneBuffer) 
+            {
+
+                if (First_Flag==false)
+                {
+                   
+                    cv::bitwise_and(imageMoment,i,image_buffer_res,imageMoment);
+                    // cv::imshow("image_buffer_res 1", image_buffer_res );
+                    // cv::waitKey(5000);
+                    
+                
+                    First_Flag=true;
+
+                }
+                else
+                {
+                    // cv::imshow("imagen i", i);
+                    // cv::waitKey(10000);
+
+                    // cv::imshow("imagen imp", image_buffer_res);
+                    // cv::waitKey(10000);
+
+                    cv::bitwise_and(i,image_buffer_res,image_Buffer,i);
+                    // cv::imshow("imp 3", image_Buffer );
+                    // cv::waitKey(5000);
+                    image_Buffer.copyTo(image_buffer_res);
+                    BlackImage.copyTo(image_Buffer);
+
+
+                }
+                // cv::imshow(" image_buffer_res for", image_buffer_res);
+                // cv::waitKey(5000);
+                // std::cout<<Buf_num;
+                // printf("\n");
+                
+                Buf_num++;
+           
+           
+
+    
+            }
+
+            // cv::imshow(" image_buffer_res", image_buffer_res);
+            // cv::waitKey(10000);
+            ObjectsSceneBuffer.assign (ObjectsSceneBuffer.begin()+1,ObjectsSceneBuffer.end());
+            ObjectsSceneBuffer.push_back(imageMoment); 
+            //cv::imwrite(nameFileProf, image_buffer_res); 
+
+            Buf_num=0;
 
 
 
 
+            // for (const cv::Mat& i :ObjectsSceneBuffer) 
+            //     {
+            //         cv::imshow(" imagenes que se quedan para la siguiente", i);
+            //         cv::waitKey(5000);
+            //         std::cout<<Buf_num;
+            //         printf("\n");
+            //         Buf_num++;
+                
+            //     }
+
+            
+            image_buffer_res.copyTo(static_object);
+            cv::subtract(Objects_scene,static_object,dynamic_object);
+            // cv::imshow("dynamic_object", dynamic_object);
+            // cv::waitKey(1);
+            // cv::imshow("static_object", static_object);
+            // cv::waitKey(1);
+
+        }
+    
+        if(cont<BufferSize)
+        {
+            printf("guarda imagen menor de buff\n");
+            ObjectsSceneBuffer.push_back(imageMoment); 
+        }
 
 
 
+    }
+
+
+   
+    void image_processing::publish_objects(int cont)
+
+    {
+        cv::Mat prof_image,scene_image,static_prof,dynamic_prof,scene_prof,image_static_prof,image_dynamic_prof,image_scene_prof,scene_static,scene_static_prof,copyDynamic,kernel;
+        sensor_msgs::Image img_msg_scene,img_msg_static,img_msg_dynamic;
+        std_msgs::Header Header; // empty header
+        sensor_msgs::CameraInfo all_camera_info;
+
+        all_camera_info=ciDepthInfo1;
+
+        using boost::lexical_cast;
+        using std::string;
+        string finish_nameProf=".jpg";
+        string numstring;
+        numstring = lexical_cast<string>(ImageNumber);
+        numstring += finish_nameProf;
+        
+        string nameFileStatic = "/home/ikerlan/ros_wss/ws_ca_apf/src/ca_application/ca_apf_scene_segmentation/scripts/folder_save/static_env";
+        nameFileStatic += numstring;
+
+        string nameFileDynamic = "/home/ikerlan/ros_wss/ws_ca_apf/src/ca_application/ca_apf_scene_segmentation/scripts/folder_save/dynamic_env";
+        nameFileDynamic += numstring;
+
+        string nameFileScene = "/home/ikerlan/ros_wss/ws_ca_apf/src/ca_application/ca_apf_scene_segmentation/scripts/folder_save/scene_env";
+        nameFileScene += numstring;
+
+
+        
+       
+      
+
+
+        // header.seq=counter;
+        Header.stamp=ros::Time::now();
+        Header.frame_id = "/rs_d435_cam_color_optical_frame";
+        ImageProf2.copyTo(prof_image);
+        Prof_No_Robot.copyTo(scene_image);
+        
+        
+
+
+        
+
+        
+
+
+        
+        cv::threshold(scene_image, scene_image, 40, 255, cv::THRESH_BINARY_INV);
+
+        cv::bitwise_and(prof_image,prof_image,scene_prof,scene_image);
+
+
+        cv_bridge::CvImage img_bridge;
+
+        if (cont<BufferSize)
+        {
+            img_bridge = cv_bridge::CvImage(Header, sensor_msgs::image_encodings::TYPE_16UC1, scene_prof);
+            img_bridge.toImageMsg(img_msg_scene);
+
+            scene_pub.publish(img_msg_scene);
+            scene_pub_info.publish(all_camera_info);
+            cv::convertScaleAbs(scene_prof, image_scene_prof, 0.03);
+            cv::applyColorMap(image_scene_prof, image_scene_prof, cv::COLORMAP_JET);
+            cv::namedWindow("scene_prof",cv::WINDOW_AUTOSIZE);
+            cv::imshow("scene_prof", image_scene_prof );
+            cv::waitKey(1);
+        }
 
 
 
+        if(cont>BufferSize)
+        {
+            // static_object
+                cv::bitwise_and(prof_image,prof_image,static_prof,static_object);
+                img_bridge = cv_bridge::CvImage(Header, sensor_msgs::image_encodings::TYPE_16UC1, static_prof);
+                img_bridge.toImageMsg(img_msg_static);
 
-    // def Diferenciar(Resultado1, Resultado2,ImagenActual):
-    // Mov=False
-    // movimiento=cv2.subtract(Resultado2,Resultado1)
-    // # cv2.imshow('Dinamico',movi
-    // # 
-    // # 
-    // # miento)
-    // # cv2.waitKey(5000)
-    // estatico=cv2.subtract(Resultado2,movimiento)
-    // # cv2.imshow('Estatico',estatico)
-    // # cv2.waitKey(5000)
-    // bordesCanny_diff = cv2.Canny(movimiento,70,200)
-    // (_,contornos,_) = cv2.findContours(bordesCanny_diff.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-    // print('Objetos en movimineto')
-    // # print("He encontrado {} objetos".format(len(contornos)))
-    // cv2.drawContours (bordesCanny_diff, contornos, -1, (0,0,255), 3)
-    // cv2.imshow('contornos',bordesCanny_diff)
-    // #cv2.waitKey(5000)
-    // listas=[]
-    // for i in contornos:
-    //     area = cv2.contourArea(i)
-    //     x,y,w,h = cv2.boundingRect(i)
-    //     cv2.rectangle(ImagenActual, (x,y), (x+w, y+h), (0,255,0), 2)
-    //     cv2.imshow('Calculo de Area y Reconocimiento de imagen', ImagenActual)
-    //     #cv2.waitKey(500)
-    //     if area>25:
-    //         #print('alguna')
-    //         Mov=True
-    //     else:
-    //         #print('Ninguna')
-    //         pass
-    //     #print(area)
-    // if Mov:
-    //     print('Se ha movido')
-    //     movimiento=movimiento
-    //     # cv2.imshow('movimiento', movimiento)
-    //     # cv2.waitKey(5000)
-    // else:
-    //     print('No se ha movido')
-    //     movimiento[:,:]=0
-    //     # cv2.imshow('movimiento', movimiento)
-    //     # cv2.waitKey(5000)
-    // cv2.destroyAllWindows()
-    // return(movimiento,estatico)
+                static_pub.publish(img_msg_static);
+                static_pub_info.publish(all_camera_info);
+                cv::convertScaleAbs(static_prof, image_static_prof, 0.03);
+                cv::applyColorMap(image_static_prof, image_static_prof, cv::COLORMAP_JET);
+                cv::namedWindow("static_prof",cv::WINDOW_AUTOSIZE);
+                cv::imshow("static_prof", image_static_prof );
+                cv::waitKey(1);
+                //cv::imwrite(nameFileStatic, image_static_prof); 
+
+            // dynamic_object
+                cv::bitwise_and(prof_image,prof_image,dynamic_prof,dynamic_object);
+                img_bridge = cv_bridge::CvImage(Header, sensor_msgs::image_encodings::TYPE_16UC1, dynamic_prof);
+                img_bridge.toImageMsg(img_msg_dynamic);
+                dynamic_pub.publish(img_msg_dynamic);
+                dynamic_pub_info.publish(all_camera_info);
+                cv::convertScaleAbs(dynamic_prof, image_dynamic_prof, 0.03);
+                cv::applyColorMap(image_dynamic_prof, image_dynamic_prof, cv::COLORMAP_JET);
+                cv::namedWindow("dynamic_object",cv::WINDOW_AUTOSIZE);
+                cv::imshow("dynamic_object", image_dynamic_prof );
+                cv::waitKey(1);
+                //cv::imwrite(nameFileDynamic, image_dynamic_prof); 
+
+
+            //scene
+                Prof_No_Robot.copyTo(scene_image);
+                dynamic_object.copyTo(copyDynamic);
+                kernel = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(7, 7));
+                cv::dilate(copyDynamic, copyDynamic, kernel);
+                cv::threshold(scene_image, scene_image, 40, 255, cv::THRESH_BINARY_INV);
+                cv::subtract(scene_image,copyDynamic,scene_static);
+                // cv::imshow("scene_static", scene_static );
+                // cv::waitKey(1);
+                cv::bitwise_and(prof_image,prof_image,scene_static_prof,scene_static);
+                img_bridge = cv_bridge::CvImage(Header, sensor_msgs::image_encodings::TYPE_16UC1, scene_static_prof);
+                img_bridge.toImageMsg(img_msg_scene);
+
+                scene_pub.publish(img_msg_scene);
+                scene_pub_info.publish(all_camera_info);
+                cv::convertScaleAbs(scene_static_prof, image_scene_prof, 0.03);
+                cv::applyColorMap(image_scene_prof, image_scene_prof, cv::COLORMAP_JET);
+                cv::namedWindow("scene_prof",cv::WINDOW_AUTOSIZE);
+                cv::imshow("scene_prof", image_scene_prof );
+                cv::waitKey(1);
+                //cv::imwrite(nameFileScene, image_scene_prof); 
+
+             
+
+        }
+        
+    }
+
+
 
 
 
@@ -2052,6 +2389,19 @@ namespace pic_handling
             bColorStored1 = false;
             bDepthStored1 = false;
             bIsProcessing = false;
+
+            // Buffer for static objects
+            BufferSize=10;
+
+            /* Starting ros_publishing publisher for the Point Cloud publication */
+           static_pub = _nh.advertise<sensor_msgs::Image>("/camera1/depth_workpieces/image",5);
+           dynamic_pub = _nh.advertise<sensor_msgs::Image>("/camera1/depth_obstacles/image",5);
+           scene_pub = _nh.advertise<sensor_msgs::Image>("/camera1/depth_scene/image",5);
+           static_pub_info=_nh.advertise<sensor_msgs::CameraInfo>("/camera1/depth_workpieces/camera_info",5);
+           dynamic_pub_info = _nh.advertise<sensor_msgs::CameraInfo>("/camera1/depth_obstacles/camera_info",5);
+           scene_pub_info = _nh.advertise<sensor_msgs::CameraInfo>("/camera1/depth_scene/camera_info",5);
+
+
 
         
 

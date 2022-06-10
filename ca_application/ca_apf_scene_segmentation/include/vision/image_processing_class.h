@@ -60,6 +60,9 @@
 #include <thread>
 #include <chrono>
 
+#include <sensor_msgs/CameraInfo.h>    
+
+
 
 
 
@@ -127,6 +130,11 @@ namespace pic_handling
             double z_imagetool_center_point,x_imagetool_center_point,y_imagetool_center_point;      // Instantiation of the position of the Tool_center_point
             double z_imageforearm_real,x_imageforearm_real,y_imageforearm_real;                     // Instantiation of the position of the other side of the Forearm
             double z_imageshoulder_real,x_imageshoulder_real,y_imageshoulder_real;                  // Instantiation of the position of the other side of the Shoulder
+            double z_imagewrist_1_real;
+            double x_imagewrist_1_real;
+            double y_imagewrist_1_real;
+            
+            
             cv::Mat ImageProf,ImageProf2;                                                           // Instantiation of the U16 depth image (2->new, _->old)
             cv::Mat ImagenProf_U8,ImagenProf2_U8;                                                   // Instantiation of the U8 depth image
             cv::Mat ImageRGB,ImageRGB2;                                                             // Instantiation of RGB image (2->new, _->old)
@@ -148,20 +156,30 @@ namespace pic_handling
             cv::Mat Objects_scene,Objects_scene2,Objects_scene3,Objects_scene4;                     // Instantiation of the last 4 Object scene detected
             cv::Mat static_object;                                                                  // Instantiation of static objects
             cv::Mat dynamic_object;                                                                 // Instantiation of dynamic objects
+
+            std::vector<cv::Mat> ObjectsSceneBuffer;
+            int BufferSize;
+            
             
 
 
             
-            bool segmentar ();
-            bool ObtenerObjetosRGB();
-            bool entre_articulaciones(float x1_rect,float y1_rect,float x2_rect,float y2_rect,cv::Mat ImagenSolucion );
-            bool Calculate_Tf();
-            bool RemoveRobot();
-            bool shadow();
-            bool Prof_background();
-            bool Prof_segmentation();
-            bool diff_static_dynamic();
-            bool object_contour(int cont);
+            void segmentar ();
+            void ObtenerObjetosRGB();
+            void entre_articulaciones(float x1_rect,float y1_rect,float x2_rect,float y2_rect,cv::Mat ImagenSolucion );
+            void Calculate_Tf();
+            void RemoveRobot();
+            void shadow();
+            void Prof_background();
+            void Prof_segmentation();
+            
+            void object_contour(int cont);
+            void diff_static_dynamic(int cont);
+
+            void publish_objects(int cont);
+
+            
+
             
             
 
@@ -172,6 +190,14 @@ namespace pic_handling
 
             /* Useful private attributes of the class */
             ros::NodeHandle _nh;                                                // ROS node handler
+
+            ros::Publisher static_pub;
+            ros::Publisher dynamic_pub;
+            ros::Publisher scene_pub;
+            ros::Publisher static_pub_info;
+            ros::Publisher dynamic_pub_info;
+            ros::Publisher scene_pub_info;
+
 
             bool bImageProcessingAppRunning = false;                            // Attribute to store wheter the image_processing class is running or not
             bool bColorStored1, bColorStored2, bDepthStored1, bDepthStored2;    // Attributes to store whether or not the camera received images has been stored

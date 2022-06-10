@@ -26,9 +26,7 @@ int main(int argc, char** argv)
     ros::Duration(35).sleep();           //35 //// TODO: Hablar de cómo hacer esta espera elegante
     pic_handling::image_processing imApp(nh);
     ROS_INFO("inicializacion fina");
-
-
-    
+  
     
 
     if(imApp.init()){
