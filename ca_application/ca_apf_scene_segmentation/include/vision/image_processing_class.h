@@ -1,7 +1,10 @@
 /* 
- * DATE: 21/12/2020
+ * DATE: 15/06/2022
  * 
  * AUTHOR: Diego Rodríguez <diego.rodriguez@ikerlan.es>
+ * 
+ * MANTAINER: Diego Rodríguez <diego.rodriguez@ikerlan.es>
+ *            Josu Sinovas <jsinovas@ikerlan.es>
  * 
  * DESCRIPTION:
  * A derived class definition from image conversion class. The goal of this new class is to use the information received from ROS images transformed into OpenCV format. Thus,
