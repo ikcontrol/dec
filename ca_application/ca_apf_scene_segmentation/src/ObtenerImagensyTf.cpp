@@ -35,8 +35,8 @@ int main(int argc, char** argv)
     /* Instantiation of the ROS spinner to attend the call of ROS functions */
     ros::AsyncSpinner spinner(4);
     spinner.start();
-    ROS_INFO("Waiting 35 seconds until the system is started...");
-    ros::Duration(35).sleep();           //35 //// TODO: Hablar de cómo hacer esta espera elegante. Answer: Wait for a required topic in order to launch the application
+    ROS_INFO("Waiting for topic /camera1/color/image_raw to come up..");
+    ros::topic::waitForMessage<sensor_msgs::Image>("/camera1/color/image_raw");
     pic_handling::image_processing imApp(nh);
     ROS_INFO("The image proccesing node has been finally started...");
   
