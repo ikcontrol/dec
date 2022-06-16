@@ -164,7 +164,7 @@ namespace pic_handling
             int BufferSize;
             
             
-
+            std::string sHomeDir;                                                                   // It stores the value of $HOME environment variable
 
             
             void segmentar ();
