@@ -49,6 +49,14 @@ There is still no official original release for the actual packages distribuitio
     * *Package n*:
 
 
+## Development status
+Major code updates:
+* The scene_segmentation_node filter has been synchronized with the simulation
+Pending tasks:
+* Automated Gazebo obstacles movement simulation nodes.
+* Automated static objects RViZ publisher node.
+* Auotopositioning node for the RealSense D435 Cameras.
+
 ## Mantainers
 The repo is currently mantained by:
 * **Diego Rodríguez (KAU)**: diego.rodriguez@ikerlan.es
