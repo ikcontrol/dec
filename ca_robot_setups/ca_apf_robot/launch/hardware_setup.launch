@@ -8,7 +8,7 @@ xsi:noNamespaceSchemaLocation="https://gist.githubusercontent.com/nalt/dfa2abc9d
   <arg name="debug" default="false" />
   <arg name="gui" default="true" />
   <arg name="control_machine" default=""/>
-  <arg name="align_depth" default="false"/>
+  <arg name="align_depth" default="true"/>
 
   <!-- Loading ROS Controllers and ROS robot, camera, and gripper models and controllers -->
   <rosparam file="$(find ca_apf_robot)/config/rtt_apf_controllers.yaml"/>
