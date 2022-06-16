@@ -54,6 +54,7 @@ Major code updates:
 * The scene_segmentation_node filter has been synchronized with the simulation
 
 Pending tasks:
+* Synchronization and testing with the real robot hardware setup.
 * Automated Gazebo obstacles movement simulation nodes.
 * Automated static objects RViZ publisher node.
 * Auotopositioning node for the RealSense D435 Cameras.

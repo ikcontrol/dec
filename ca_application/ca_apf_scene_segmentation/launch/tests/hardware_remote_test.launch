@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+
+<launch>
+  <!-- Launch the hardware environment (in simulation) -->
+  <include file="$(find ca_apf_robot)/launch/hardware_remote_setup.launch" pass_all_args="true" />
+  
+  <!-- Launch the realsense vision pipeline -->
+  <node name="image_processing_node" pkg="ca_apf_scene_segmentation" type="ObtenerImagensyTf" output="screen" required="true"/>
+</launch>

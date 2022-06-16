@@ -51,8 +51,8 @@ namespace pic_handling
                 // numstring += finish_name;
 
 
-                // // string nombreArchivo = "/home/dr-mel/camera_localization_ws/src/camera_localization/scripts/folder_save/Valores64.txt";
-                // string nameFile = "/home/dr-mel/ros_wss/ws_ca_apf/src/ca_apf_application/ca_application/ca_apf_scene_segmentation/scripts/folder_save/Valores";
+                // // string nombreArchivo = sHomeDir + "/camera_localization_ws/src/camera_localization/scripts/folder_save/Valores64.txt";
+                // string nameFile = sHomeDir + "/ros_wss/ws_ca_apf/src/ca_apf_application/ca_application/ca_apf_scene_segmentation/scripts/folder_save/Valores";
 
                 // nameFile += numstring;
 
@@ -267,8 +267,8 @@ namespace pic_handling
                 string numstring;
                 numstring = lexical_cast<string>(ImageNumber);
                 numstring += finish_nameRGB;
-                // string nombreArchivo = "/home/dr-mel/camera_localization_ws/src/camera_localization/scripts/folder_save/Valores64.txt";
-                string nameFileRGB = "/home/dr-mel/ros_wss/ws_ca_apf/src/ca_apf_application/ca_application/ca_apf_scene_segmentation/scripts/folder_save/RGB";
+                // string nombreArchivo = sHomeDir + "/camera_localization_ws/src/camera_localization/scripts/folder_save/Valores64.txt";
+                string nameFileRGB = sHomeDir + "/ros_wss/ws_ca_apf/src/ca_apf_application/ca_application/ca_apf_scene_segmentation/scripts/folder_save/RGB";
                 nameFileRGB += numstring;
                 //cv::imwrite(nameFileRGB, mColorPic1);
     
@@ -308,9 +308,9 @@ namespace pic_handling
                 string numstring;
                 numstring = lexical_cast<string>(ImageNumber);
                 numstring += finish_nameProf;
-                // string nombreArchivo = "/home/dr-mel/camera_localization_ws/src/camera_localization/scripts/folder_save/Valores64.txt";
-                string nameFileProf = "/home/dr-mel/ros_wss/ws_ca_apf/src/ca_apf_application/ca_application/ca_apf_scene_segmentation/scripts/Prof.tiff";
-                string nameFileProf_2 = "/home/dr-mel/ros_wss/ws_ca_apf/src/ca_apf_application/ca_application/ca_apf_scene_segmentation/scripts/folder_save/Prof.tiff";
+                // string nombreArchivo = sHomeDir + "/camera_localization_ws/src/camera_localization/scripts/folder_save/Valores64.txt";
+                string nameFileProf = sHomeDir + "/ros_wss/ws_ca_apf/src/ca_apf_application/ca_application/ca_apf_scene_segmentation/scripts/Prof.tiff";
+                string nameFileProf_2 = sHomeDir + "/ros_wss/ws_ca_apf/src/ca_apf_application/ca_application/ca_apf_scene_segmentation/scripts/folder_save/Prof.tiff";
                 cv::imwrite(nameFileProf, mDepthPic1);
                 nameFileProf_2 += numstring;
                 
@@ -617,10 +617,10 @@ namespace pic_handling
         string numstring;
         numstring = lexical_cast<string>(ImageNumber);
         numstring += finish_nameRGB;
-        // string nombreArchivo = "/home/dr-mel/camera_localization_ws/src/camera_localization/scripts/folder_save/Valores64.txt";
+        // string nombreArchivo = sHomeDir + "/camera_localization_ws/src/camera_localization/scripts/folder_save/Valores64.txt";
         
 
-        string nameFileResFinSeg= "/home/dr-mel/ros_wss/ws_ca_apf/src/ca_apf_application/ca_application/ca_apf_scene_segmentation/scripts/folder_save/ResFinSeg";
+        string nameFileResFinSeg= sHomeDir + "/ros_wss/ws_ca_apf/src/ca_apf_application/ca_application/ca_apf_scene_segmentation/scripts/folder_save/ResFinSeg";
         nameFileResFinSeg += numstring;
 
 
@@ -662,10 +662,10 @@ namespace pic_handling
         string numstring;
         numstring = lexical_cast<string>(ImageNumber);
         numstring += finish_nameRGB;
-        // string nombreArchivo = "/home/dr-mel/camera_localization_ws/src/camera_localization/scripts/folder_save/Valores64.txt";
+        // string nombreArchivo = sHomeDir + "/camera_localization_ws/src/camera_localization/scripts/folder_save/Valores64.txt";
         
 
-        string nameFileSegRobot= "/home/dr-mel/ros_wss/ws_ca_apf/src/ca_apf_application/ca_application/ca_apf_scene_segmentation/scripts/folder_save/SegRobot";
+        string nameFileSegRobot= sHomeDir + "/ros_wss/ws_ca_apf/src/ca_apf_application/ca_application/ca_apf_scene_segmentation/scripts/folder_save/SegRobot";
         nameFileSegRobot+= numstring;
         //cv::imwrite(nameFileSegRobot, SegRobot);
 
@@ -1277,10 +1277,10 @@ namespace pic_handling
         string numstring;
         numstring = lexical_cast<string>(ImageNumber);
         numstring += finish_nameRGB;
-        // string nombreArchivo = "/home/dr-mel/camera_localization_ws/src/camera_localization/scripts/folder_save/Valores64.txt";
+        // string nombreArchivo = sHomeDir + "/camera_localization_ws/src/camera_localization/scripts/folder_save/Valores64.txt";
         
-        string nameFileProf_No_Robot= "/home/dr-mel/ros_wss/ws_ca_apf/src/ca_apf_application/ca_application/ca_apf_scene_segmentation/scripts/folder_save/Prof_No_Robot";
-        string nameFileProf_No_Robot_mor= "/home/dr-mel/ros_wss/ws_ca_apf/src/ca_apf_application/ca_application/ca_apf_scene_segmentation/scripts/folder_save/Prof_No_Robotmor";
+        string nameFileProf_No_Robot= sHomeDir + "/ros_wss/ws_ca_apf/src/ca_apf_application/ca_application/ca_apf_scene_segmentation/scripts/folder_save/Prof_No_Robot";
+        string nameFileProf_No_Robot_mor= sHomeDir + "/ros_wss/ws_ca_apf/src/ca_apf_application/ca_application/ca_apf_scene_segmentation/scripts/folder_save/Prof_No_Robotmor";
         nameFileProf_No_Robot+= numstring;
         nameFileProf_No_Robot_mor+= numstring;
 
@@ -1580,8 +1580,8 @@ namespace pic_handling
         string numstring;
         numstring = lexical_cast<string>(ImageNumber);
         numstring += finish_nameRGB;
-                // string nombreArchivo = "/home/dr-mel/camera_localization_ws/src/camera_localization/scripts/folder_save/Valores64.txt";
-        string nameFileObjects_scene= "/home/dr-mel/ros_wss/ws_ca_apf/src/ca_apf_application/ca_application/ca_apf_scene_segmentation/scripts/folder_save/Objects_scene";
+                // string nombreArchivo = sHomeDir + "/camera_localization_ws/src/camera_localization/scripts/folder_save/Valores64.txt";
+        string nameFileObjects_scene= sHomeDir + "/ros_wss/ws_ca_apf/src/ca_apf_application/ca_application/ca_apf_scene_segmentation/scripts/folder_save/Objects_scene";
     
         nameFileObjects_scene += numstring;
 
@@ -1620,9 +1620,9 @@ namespace pic_handling
         string numstring;
         numstring = lexical_cast<string>(ImageNumber);
         numstring += finish_nameRGB;
-        // string nombreArchivo = "/home/dr-mel/camera_localization_ws/src/camera_localization/scripts/folder_save/Valores64.txt";
-        string nameFilestatic_object_RGB= "/home/dr-mel/ros_wss/ws_ca_apf/src/ca_apf_application/ca_application/ca_apf_scene_segmentation/scripts/folder_save/static_object_RGB";
-        string nameFiledynamic_object_RGB= "/home/dr-mel/ros_wss/ws_ca_apf/src/ca_apf_application/ca_application/ca_apf_scene_segmentation/scripts/folder_save/dynamic_object_RGB";
+        // string nombreArchivo = sHomeDir + "/camera_localization_ws/src/camera_localization/scripts/folder_save/Valores64.txt";
+        string nameFilestatic_object_RGB= sHomeDir + "/ros_wss/ws_ca_apf/src/ca_apf_application/ca_application/ca_apf_scene_segmentation/scripts/folder_save/static_object_RGB";
+        string nameFiledynamic_object_RGB= sHomeDir + "/ros_wss/ws_ca_apf/src/ca_apf_application/ca_application/ca_apf_scene_segmentation/scripts/folder_save/dynamic_object_RGB";
         nameFilestatic_object_RGB += numstring;
         nameFiledynamic_object_RGB+= numstring;
 
@@ -1668,7 +1668,7 @@ namespace pic_handling
         numstring += finish_nameProf;
         
 
-        string nameFileProf = "/home/dr-mel/ros_wss/ws_ca_apf/src/ca_apf_application/ca_application/ca_apf_scene_segmentation/scripts/folder_save/static";
+        string nameFileProf = sHomeDir + "/ros_wss/ws_ca_apf/src/ca_apf_application/ca_application/ca_apf_scene_segmentation/scripts/folder_save/static";
         nameFileProf += numstring;
         Objects_scene.copyTo(imageMoment);
         
@@ -1768,11 +1768,11 @@ namespace pic_handling
         numstring = lexical_cast<string>(ImageNumber);
         numstring += finish_nameProf;
         
-        string nameFileStatic = "/home/dr-mel/ros_wss/ws_ca_apf/src/ca_apf_application/ca_application/ca_apf_scene_segmentation/scripts/folder_save/static_env";
+        string nameFileStatic = sHomeDir + "/ros_wss/ws_ca_apf/src/ca_apf_application/ca_application/ca_apf_scene_segmentation/scripts/folder_save/static_env";
         nameFileStatic += numstring;
-        string nameFileDynamic = "/home/dr-mel/ros_wss/ws_ca_apf/src/ca_apf_application/ca_application/ca_apf_scene_segmentation/scripts/folder_save/dynamic_env";
+        string nameFileDynamic = sHomeDir + "/ros_wss/ws_ca_apf/src/ca_apf_application/ca_application/ca_apf_scene_segmentation/scripts/folder_save/dynamic_env";
         nameFileDynamic += numstring;
-        string nameFileScene = "/home/dr-mel/ros_wss/ws_ca_apf/src/ca_apf_application/ca_application/ca_apf_scene_segmentation/scripts/folder_save/scene_env";
+        string nameFileScene = sHomeDir + "/ros_wss/ws_ca_apf/src/ca_apf_application/ca_application/ca_apf_scene_segmentation/scripts/folder_save/scene_env";
         nameFileScene += numstring;
 
 
@@ -1986,6 +1986,12 @@ namespace pic_handling
            static_pub_info=_nh.advertise<sensor_msgs::CameraInfo>("/camera1/depth_workpieces/camera_info",5);
            dynamic_pub_info = _nh.advertise<sensor_msgs::CameraInfo>("/camera1/depth_obstacles/camera_info",5);
            scene_pub_info = _nh.advertise<sensor_msgs::CameraInfo>("/camera1/depth_scene/camera_info",5);
+
+
+           /* Reading environment variables to be used for automatic pathing */
+           sHomeDir.clear();
+           sHomeDir = std::getenv("HOME");
+           ROS_ERROR("Printing read $HOME directory: %s", sHomeDir.c_str());
         }
         catch (...) {
             ROS_ERROR("The image processing application cannot be initialized...");
