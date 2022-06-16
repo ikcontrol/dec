@@ -1,7 +1,10 @@
 /* 
- * DATE: 09/11/2020
+ * DATE: 15/06/2022
  * 
  * AUTHOR: Diego Rodríguez <diego.rodriguez@ikerlan.es>
+ * 
+ * MANTAINER: Diego Rodríguez <diego.rodriguez@ikerlan.es>
+ *            Josu Sinovas <jsinovas@ikerlan.es>
  * 
  * DESCRIPTION:
  * A class package for developing format conversion between ros and openCV. This class is used for grabbing images with RS D435 from ROS format and converting it

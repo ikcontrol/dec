@@ -10,8 +10,8 @@ control_points:
    - apf_cp_wrist_3_link
    - apf_cp_tool_center_point
 ro: 0.45 # Search radius
-depth_image_topic: "/camera1/depth_registered_filtered/image_rect"    # /filtered_cloud_image_cam1        /filtered_aligned_depth_cam1             /camera1/depth_registered_filtered/image_raw
-camera_info_topic: "/camera1/aligned_depth_to_color/camera_info" # "/camera1/aligned_depth_to_color/camera_info"                    /camera1/depth_registered_filtered/camera_info
+depth_image_topic: "/camera1/depth_obstacles/image" #"/camera1/depth_registered_filtered/image_rect"    # /filtered_cloud_image_cam1        /filtered_aligned_depth_cam1             /camera1/depth_registered_filtered/image_raw
+camera_info_topic: "/camera1/depth_obstacles/camera_info" # "/camera1/aligned_depth_to_color/camera_info" # "/camera1/aligned_depth_to_color/camera_info"                    /camera1/depth_registered_filtered/camera_info
 fixed_frame: "base_link"
 legacy_dist_calc: False
 loose_timing: True

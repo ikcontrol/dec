@@ -21,16 +21,16 @@ xsi:noNamespaceSchemaLocation="https://gist.githubusercontent.com/nalt/dfa2abc9d
   </node>
   
   <!-- URDF FILTER: Setup -->
-  <param name="gripper_model" command="$(find xacro)/xacro '$(find ca_apf_robot)/urdf/gripper.xacro'" />
+  <!-- <param name="gripper_model" command="$(find xacro)/xacro '$(find ca_apf_robot)/urdf/gripper.xacro'" />
   <param name="robot_model" textfile="$(find ca_apf_robot)/urdf/ur10e.urdf" />
   <node pkg="realtime_urdf_filter" type="realtime_urdf_filter" name="d345_urdf_filter" output="screen">
     <remap from="~input_depth" to="/camera1/aligned_depth_to_color/image_raw" />
     <remap from="~output_depth" to="/camera1/depth_registered_filtered/image_rect" />
     <remap from="~output_mask" to="/urdf_filtered_mask" />
     <rosparam command="load" file="$(find ca_apf_robot)/config/filter_parameters.yaml"/>
-  </node>
+  </node> -->
 
   <include file="$(find ca_apf_simulation)/launch/spawn_obstacle.launch"/>
 
-  <!-- <node pkg="rqt_graph" type="rqt_graph" name="rqt_auxiliar_node" output="screen"/> -->
+  <node pkg="rqt_graph" type="rqt_graph" name="rqt_auxiliar_node" output="screen"/>
 </launch>
