@@ -159,27 +159,21 @@ namespace pic_handling
             cv::Mat Objects_scene,Objects_scene2,Objects_scene3,Objects_scene4;                     // Instantiation of the last 4 Object scene detected
             cv::Mat static_object;                                                                  // Instantiation of static objects
             cv::Mat dynamic_object;                                                                 // Instantiation of dynamic objects
-
-            std::vector<cv::Mat> ObjectsSceneBuffer;
-            int BufferSize;
-            
-            
+            std::vector<cv::Mat> ObjectsSceneBuffer;                                                // Instantiation of the buffer for identify static objects
+            int BufferSize;                                                                         // Instantiation of the size of the ObjectsSceneBuffer
             std::string sHomeDir;                                                                   // It stores the value of $HOME environment variable
 
             
-            void segmentar ();
-            void ObtenerObjetosRGB();
-            void entre_articulaciones(float x1_rect,float y1_rect,float x2_rect,float y2_rect,cv::Mat ImagenSolucion );
-            void Calculate_Tf();
-            void RemoveRobot();
-            void shadow();
-            void Prof_background();
-            void Prof_segmentation();
-            
-            void object_contour(int cont);
-            void diff_static_dynamic(int cont);
-
-            void publish_objects(int cont);
+            void segmentation ();                                                                      // obtain RGB frame difference  (ResFinSeg)
+            void obtain_objects_RGB();                                                               // substract reference robot position from ResFinSeg (SegRobot)  
+            void link_space(float x1_rect,float y1_rect,float x2_rect,float y2_rect,cv::Mat ImagenSolucion ); // obtain link space
+            void Calculate_Tf();                                                                    // Calculate the joints position
+            void RemoveRobot();                                                                     // get the depth filter pic(SegNoRobot) and obtain the objects (Objects)  
+            void shadow();                                                                          // substract shadow from objects (Objects)
+            void Prof_segmentation();                                                               // obtain frame difference depth filter pic and add to Objects (Objects_scene)  
+            void object_contour(int cont);                                                          //draw the contour of dynamic and static objects in RGB pic
+            void diff_static_dynamic(int cont);                                                     // identify static and dynamic objets 
+            void publish_objects(int cont);                                                         // publish static, dynamic and scene segmentation
 
             
 
@@ -194,12 +188,12 @@ namespace pic_handling
             /* Useful private attributes of the class */
             ros::NodeHandle _nh;                                                // ROS node handler
 
-            ros::Publisher static_pub;
-            ros::Publisher dynamic_pub;
-            ros::Publisher scene_pub;
-            ros::Publisher static_pub_info;
-            ros::Publisher dynamic_pub_info;
-            ros::Publisher scene_pub_info;
+            ros::Publisher static_pub;                                          // published static objects pic 
+            ros::Publisher dynamic_pub;                                         // published dynamic objects pic 
+            ros::Publisher scene_pub;                                           // published scene segmentation pic (all static objects in the scene)
+            ros::Publisher static_pub_info;                                     // published static objects pic info 
+            ros::Publisher dynamic_pub_info;                                    // published dynamic objects pic info
+            ros::Publisher scene_pub_info;                                      // published scene segmentation pic info
 
 
             bool bImageProcessingAppRunning = false;                            // Attribute to store wheter the image_processing class is running or not
