@@ -30,7 +30,5 @@ xsi:noNamespaceSchemaLocation="https://gist.githubusercontent.com/nalt/dfa2abc9d
     <rosparam command="load" file="$(find ca_apf_robot)/config/filter_parameters.yaml"/>
   </node> -->
 
-  <include file="$(find ca_apf_simulation)/launch/spawn_obstacle.launch"/>
-
   <node pkg="rqt_graph" type="rqt_graph" name="rqt_auxiliar_node" output="screen"/>
 </launch>

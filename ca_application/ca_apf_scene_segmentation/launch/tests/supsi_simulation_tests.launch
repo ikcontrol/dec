@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<launch>
+  <!-- Arguments of the launch file -->
+  <arg name="display_traj" default="true" />
+
+  <!-- Launch the hardware environment (in simulation) -->
+  <include file="$(find ca_apf_robot)/launch/sim_setup.launch" pass_all_args="true" />
+  
+  <!-- Launch the realsense vision pipeline -->
+  <!-- <node name="image_processing_node" pkg="ca_apf_scene_segmentation" type="ObtenerImagensyTf" output="screen" required="true"/> -->
+
+  <!-- Spawning the simulated Gazebo Controller -->
+  <!-- <include file="$(find movement_commander)/launch/app_launcher.launch"/> -->
+  <include file="$(find simu_helpers)/launch/spawn_obstacle.launch"/>
+  <!-- Launch the realsense vision pipeline -->
+  <node name="simu_scene_filter_node" pkg="simu_helpers" type="simu_scene_filter_node" output="screen" required="true"/>
+
+  <!-- Instantiation of the Trajectory Publisher Node -->
+  <group if="$(arg display_traj)" >
+    <node name="trajectory_pub_node" pkg="movement_commander" type="apf_trajectory_pub_node" output="screen" />
+  </group>
+</launch>
