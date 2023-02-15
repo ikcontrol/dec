@@ -8,7 +8,7 @@ Panels:
         - /DepthCloud1/Auto Size1
         - /DepthCloud1/Occlusion Compensation1
       Splitter Ratio: 0.7425600290298462
-    Tree Height: 245
+    Tree Height: 211
   - Class: rviz/Help
     Name: Help
   - Class: rviz/Views
@@ -173,11 +173,6 @@ Visualization Manager:
             Show Axes: false
             Show Trail: false
             Value: true
-          camera_stand:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
           ceiling:
             Alpha: 1
             Show Axes: false
@@ -188,11 +183,15 @@ Visualization Manager:
             Show Axes: false
             Show Trail: false
             Value: true
-          ee_link:
+          ee_collision_link:
             Alpha: 1
             Show Axes: false
             Show Trail: false
             Value: true
+          ee_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
           forearm_link:
             Alpha: 1
             Show Axes: false
@@ -267,55 +266,10 @@ Visualization Manager:
             Show Axes: false
             Show Trail: false
             Value: true
-          rs_d435_2_base_link:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
           rs_d435_base_link:
             Alpha: 1
             Show Axes: false
             Show Trail: false
-          rs_d435_cam2_bottom_screw_frame:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-          rs_d435_cam2_color_frame:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-          rs_d435_cam2_color_optical_frame:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-          rs_d435_cam2_depth_frame:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-          rs_d435_cam2_depth_optical_frame:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-          rs_d435_cam2_infra1_frame:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-          rs_d435_cam2_infra1_optical_frame:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-          rs_d435_cam2_infra2_frame:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-          rs_d435_cam2_infra2_optical_frame:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-          rs_d435_cam2_link:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
           rs_d435_cam_bottom_screw_frame:
             Alpha: 1
             Show Axes: false
@@ -375,7 +329,7 @@ Visualization Manager:
             Show Axes: false
             Show Trail: false
             Value: true
-          stand_top_left_corner:
+          stand_marker_pos:
             Alpha: 1
             Show Axes: false
             Show Trail: false
@@ -430,7 +384,6 @@ Visualization Manager:
             Alpha: 1
             Show Axes: false
             Show Trail: false
-            Value: true
           yellow_box:
             Alpha: 1
             Show Axes: false
@@ -593,11 +546,6 @@ Visualization Manager:
             Show Axes: false
             Show Trail: false
             Value: true
-          camera_stand:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
           ceiling:
             Alpha: 1
             Show Axes: false
@@ -608,11 +556,15 @@ Visualization Manager:
             Show Axes: false
             Show Trail: false
             Value: true
-          ee_link:
+          ee_collision_link:
             Alpha: 1
             Show Axes: false
             Show Trail: false
             Value: true
+          ee_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
           forearm_link:
             Alpha: 1
             Show Axes: false
@@ -687,55 +639,10 @@ Visualization Manager:
             Show Axes: false
             Show Trail: false
             Value: true
-          rs_d435_2_base_link:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
           rs_d435_base_link:
             Alpha: 1
             Show Axes: false
             Show Trail: false
-          rs_d435_cam2_bottom_screw_frame:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-          rs_d435_cam2_color_frame:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-          rs_d435_cam2_color_optical_frame:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-          rs_d435_cam2_depth_frame:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-          rs_d435_cam2_depth_optical_frame:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-          rs_d435_cam2_infra1_frame:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-          rs_d435_cam2_infra1_optical_frame:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-          rs_d435_cam2_infra2_frame:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-          rs_d435_cam2_infra2_optical_frame:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-          rs_d435_cam2_link:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
           rs_d435_cam_bottom_screw_frame:
             Alpha: 1
             Show Axes: false
@@ -795,7 +702,7 @@ Visualization Manager:
             Show Axes: false
             Show Trail: false
             Value: true
-          stand_top_left_corner:
+          stand_marker_pos:
             Alpha: 1
             Show Axes: false
             Show Trail: false
@@ -850,7 +757,6 @@ Visualization Manager:
             Alpha: 1
             Show Axes: false
             Show Trail: false
-            Value: true
           yellow_box:
             Alpha: 1
             Show Axes: false
@@ -909,7 +815,7 @@ Visualization Manager:
       Marker Topic: /repulsive_vector_viz
       Name: Repulsive Vector
       Namespaces:
-        {}
+        apf_component: true
       Queue Size: 100
       Value: true
     - Class: rviz/MarkerArray
@@ -917,7 +823,16 @@ Visualization Manager:
       Marker Topic: /collision_risk_viz
       Name: CollisionRisk
       Namespaces:
-        {}
+        apf_cp_forearm_link_0: true
+        apf_cp_forearm_link_1: true
+        apf_cp_forearm_link_2: true
+        apf_cp_forearm_link_3: true
+        apf_cp_tool_center_point: true
+        apf_cp_upper_arm_link_0: true
+        apf_cp_upper_arm_link_1: true
+        apf_cp_wrist_1_link: true
+        apf_cp_wrist_2_link: true
+        apf_cp_wrist_3_link: true
       Queue Size: 100
       Value: true
     - Class: rviz/Camera
@@ -931,6 +846,7 @@ Visualization Manager:
       Unreliable: false
       Value: false
       Visibility:
+        "": true
         CollisionRisk: true
         DepthCloud: true
         Grid: true
@@ -1005,6 +921,31 @@ Visualization Manager:
       Use Fixed Frame: true
       Use rainbow: true
       Value: false
+    - Class: rviz/Marker
+      Enabled: true
+      Marker Topic: /repulsive_sing_vector_viz
+      Name: Repulsive Vector
+      Namespaces:
+        apf_component: true
+      Queue Size: 100
+      Value: true
+    - Class: rviz/MarkerArray
+      Enabled: true
+      Marker Topic: /sing_risk_viz
+      Name: CollisionRisk
+      Namespaces:
+        apf_cp_forearm_link_0: true
+        apf_cp_forearm_link_1: true
+        apf_cp_forearm_link_2: true
+        apf_cp_forearm_link_3: true
+        apf_cp_tool_center_point: true
+        apf_cp_upper_arm_link_0: true
+        apf_cp_upper_arm_link_1: true
+        apf_cp_wrist_1_link: true
+        apf_cp_wrist_2_link: true
+        apf_cp_wrist_3_link: true
+      Queue Size: 100
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -1046,7 +987,7 @@ Window Geometry:
     collapsed: false
   Displays:
     collapsed: false
-  Height: 1025
+  Height: 921
   Help:
     collapsed: false
   Hide Left Dock: false
@@ -1055,7 +996,7 @@ Window Geometry:
     collapsed: false
   MotionPlanning - Trajectory Slider:
     collapsed: false
-  QMainWindow State: 000000ff00000000fd0000000200000000000001f3000003a7fc020000000dfb000000100044006900730070006c006100790073010000003d00000132000000c900fffffffc000001750000026f0000019a0100001cfa000000010100000002fb0000000c00430061006d0065007200610100000000ffffffff0000006900fffffffb0000001c004d006f00740069006f006e0050006c0061006e006e0069006e00670100000000000002ad000001f300fffffffb00000024005200760069007a00560069007300750061006c0054006f006f006c0073004700750069000000012e0000005b0000004100fffffffb0000000800480065006c00700000000342000000bb0000006e00fffffffb0000000a0056006900650077007300000003b0000000b0000000a400fffffffb0000000c00430061006d00650072006100000002ff000001610000000000000000fb0000001e004d006f00740069006f006e00200050006c0061006e006e0069006e00670100000374000001890000000000000000fb00000044004d006f00740069006f006e0050006c0061006e006e0069006e00670020002d0020005400720061006a006500630074006f0072007900200053006c006900640065007200000001470000004a0000001600000016fb000000280020002d0020005400720061006a006500630074006f0072007900200053006c00690064006500720000000000ffffffff0000000000000000fb0000000c00540065006c0065006f007000000002c10000008d0000004700fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007300000002ac000000a20000005c00fffffffb0000001200530065006c0065006300740069006f006e00000002a8000000a60000005c00fffffffb0000000800540069006d006500000003130000003b0000003900ffffff00000003000002ed0000012afc0100000001fb0000000c00430061006d00650072006101000002b3000002ed000000000000000000000556000003a700000001000000020000000100000002fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  QMainWindow State: 000000ff00000000fd0000000200000000000001f30000033ffc020000000dfb000000100044006900730070006c006100790073010000003d00000110000000c900fffffffc00000153000002290000019a0100001cfa000000010100000002fb0000000c00430061006d0065007200610100000000ffffffff0000006900fffffffb0000001c004d006f00740069006f006e0050006c0061006e006e0069006e00670100000000000002ad000001f300fffffffb00000024005200760069007a00560069007300750061006c0054006f006f006c0073004700750069000000012e0000005b0000004100fffffffb0000000800480065006c00700000000342000000bb0000006e00fffffffb0000000a0056006900650077007300000003b0000000b0000000a400fffffffb0000000c00430061006d00650072006100000002ff000001610000000000000000fb0000001e004d006f00740069006f006e00200050006c0061006e006e0069006e00670100000374000001890000000000000000fb00000044004d006f00740069006f006e0050006c0061006e006e0069006e00670020002d0020005400720061006a006500630074006f0072007900200053006c006900640065007200000001470000004a0000001600000016fb000000280020002d0020005400720061006a006500630074006f0072007900200053006c00690064006500720000000000ffffffff0000000000000000fb0000000c00540065006c0065006f007000000002c10000008d0000004700fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007300000002ac000000a20000005c00fffffffb0000001200530065006c0065006300740069006f006e00000002a8000000a60000005c00fffffffb0000000800540069006d006500000003130000003b0000003900ffffff00000003000002ed0000012afc0100000001fb0000000c00430061006d00650072006101000002b3000002ed00000000000000000000054e0000033f00000001000000020000000100000002fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   RvizVisualToolsGui:
     collapsed: false
   Selection:
@@ -1068,6 +1009,6 @@ Window Geometry:
     collapsed: false
   Views:
     collapsed: false
-  Width: 1871
-  X: 49
+  Width: 1863
+  X: 57
   Y: 27

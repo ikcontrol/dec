@@ -47,12 +47,12 @@ apf_collision_avoidance:
       alpha: 6
       vd_max: 0.5
       c: 5
-      ro: 0.45
+      ro: 0.70
       pivot_rep_vector: True
    robot_structure: &robot_structure
       cp_names: *cps
       base_segment: "base_link"
-      ee_segment: "apf_cp_tool_center_point"
+      ee_segment: "apf_cp_wrist_3_link"
       joint_limits_ns: "/robot_description_planning"
    camera: &camera_config
       camera_ns: "/camera1/aligned_depth_to_color"

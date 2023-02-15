@@ -43,11 +43,11 @@ apf_collision_avoidance:
 
 apf_collision_avoidance:
    flacco_params: &flacco_params
-      v_max: 2.5
-      alpha: 2
+      v_max: 2.5 # 2.0
+      alpha: 2 #  6
       vd_max: 0.5
       c: 5
-      ro: 0.4
+      ro: 0.70
       pivot_rep_vector: False
    robot_structure: &robot_structure
       cp_names: *cps
