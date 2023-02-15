@@ -10,3 +10,6 @@
 [submodule "ca_application/movement_commander"]
 	path = ca_application/movement_commander
 	url = http://kaugitea.ikerlan.es/diego.rodriguez/movement_commander.git
+[submodule "ca_application/simu_helpers"]
+	path = ca_application/simu_helpers
+	url = http://kaugitea.ikerlan.es/diego.rodriguez/simu_helpers.git
