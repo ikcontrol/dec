@@ -37,8 +37,8 @@ int main(int argc, char** argv)
     spinner.start();
     ROS_INFO("Waiting for topic /camera1/color/image_raw to come up..");
     ros::topic::waitForMessage<sensor_msgs::Image>("/camera1/color/image_raw");
-    ROS_INFO("Waiting for topic /camera2/color/image_raw to come up..");
-    ros::topic::waitForMessage<sensor_msgs::Image>("/camera2/color/image_raw");
+    // ROS_INFO("Waiting for topic /camera2/color/image_raw to come up..");
+    // ros::topic::waitForMessage<sensor_msgs::Image>("/camera2/color/image_raw");
     pic_handling::image_processing imApp(nh);
     ROS_INFO("The image proccesing node has been finally started...");
   

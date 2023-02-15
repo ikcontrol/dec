@@ -176,15 +176,6 @@ namespace pic_handling
             void publish_objects(int cont);                                                         // publish static, dynamic and scene segmentation
 
             
-
-            
-            
-
-
-
-
-
-
             /* Useful private attributes of the class */
             ros::NodeHandle _nh;                                                // ROS node handler
 
@@ -197,26 +188,35 @@ namespace pic_handling
 
 
             bool bImageProcessingAppRunning = false;                            // Attribute to store wheter the image_processing class is running or not
-            bool bColorStored1, bColorStored2, bDepthStored1, bDepthStored2;    // Attributes to store whether or not the camera received images has been stored
+            bool bColorStored1, bDepthStored;                                   // Attributes to store whether or not the camera received images has been stored
+            // bool bColorStored2, bDepthStored2;                                  // Attributes to store whether or not the camera received images has been stored
             bool bIsProcessing;                                                 // Attribute to check whether or not the main_loop() is busy processing the images or not
 
             image_conversion icCamGrabber1;                                     // Object instantiation for managing the first camera
-            image_conversion icCamGrabber2;                                     // Object instantiation for manging the second camera pictures of the algorithm
+            // image_conversion icCamGrabber2;                                  // Object instantiation for manging the second camera pictures of the algorithm
 
-            cv::Mat mColorPic1, mColorPic2, mDepthPic1, mDepthPic2;             // Instantiation of the stored color and depth pics to work with
-            cv::Mat mDepthDistance1, mDepthDistance2;                           // Instantiation of the objects to store the distance pictures matrix.
-            cv::Mat mDepthColor1, mDepthColor2;                                 // Instantiation of the objects to store the colour_jet distance pictures.
-            cv::Mat mColorProcessed1, mColorProcessed2;                         // Instantiation of the objects to store the processed image of color cameras
+            cv::Mat mColorPic1, mDepthPic1;                                     // Instantiation of the stored color and depth pics to work with
+            // cv::Mat mColorPic2, mDepthPic2;                                     // Instantiation of the stored color and depth pics to work with
+            cv::Mat mDepthDistance1;                                            // Instantiation of the objects to store the distance pictures matrix.
+            // cv::Mat mDepthDistance2;                                            // Instantiation of the objects to store the distance pictures matrix.
+            cv::Mat mDepthColor1;                                               // Instantiation of the objects to store the colour_jet distance pictures.
+            // cv::Mat mDepthColor2;                                               // Instantiation of the objects to store the colour_jet distance pictures.
+            cv::Mat mColorProcessed1;                                           // Instantiation of the objects to store the processed image of color cameras
+            // cv::Mat mColorProcessed2;                                           // Instantiation of the objects to store the processed image of color cameras
 
 
-            sensor_msgs::CameraInfoConstPtr ciColorInfoPtr1, ciColorInfoPtr2;   // Instantiation of sensor_msgs::CameraInfoConstPtr attributes to check wheter the topics are being published or not.
-            sensor_msgs::CameraInfo ciColorInfo1, ciColorInfo2;                 // Instantiation of sensor_msgs::CameraInfo attributes to store the calibration parameters of the camera.
-            sensor_msgs::CameraInfoConstPtr ciDepthInfoPtr1, ciDepthInfoPtr2;   // Instantiation of sensor_msgs::CameraInfoConstPtr attributes to check wheter the topics are being published or not.
-            sensor_msgs::CameraInfo ciDepthInfo1, ciDepthInfo2;                 // Instantiation of sensor_msgs::CameraInfo attributes to store the calibration parameters of the camera.
+            sensor_msgs::CameraInfoConstPtr ciColorInfoPtr1;                    // Instantiation of sensor_msgs::CameraInfoConstPtr attributes to check wheter the topics are being published or not.
+            // sensor_msgs::CameraInfoConstPtr ciColorInfoPtr2;                    // Instantiation of sensor_msgs::CameraInfoConstPtr attributes to check wheter the topics are being published or not.
+            sensor_msgs::CameraInfo ciColorInfo1;                               // Instantiation of sensor_msgs::CameraInfo attributes to store the calibration parameters of the camera.
+            // sensor_msgs::CameraInfo ciColorInfo2;                               // Instantiation of sensor_msgs::CameraInfo attributes to store the calibration parameters of the camera.
+            sensor_msgs::CameraInfoConstPtr ciDepthInfoPtr1;                    // Instantiation of sensor_msgs::CameraInfoConstPtr attributes to check wheter the topics are being published or not.
+            // sensor_msgs::CameraInfoConstPtr ciDepthInfoPtr2;                    // Instantiation of sensor_msgs::CameraInfoConstPtr attributes to check wheter the topics are being published or not.
+            sensor_msgs::CameraInfo ciDepthInfo1;                               // Instantiation of sensor_msgs::CameraInfo attributes to store the calibration parameters of the camera.
+            // sensor_msgs::CameraInfo ciDepthInfo2;                               // Instantiation of sensor_msgs::CameraInfo attributes to store the calibration parameters of the camera.
             double dCam1_cx, dCam1_fx, dCam1_cy, dCam1_fy;                      // Instantiation of the attributes to store the extrinsics of the color camera 1 calibration
-            double dCam2_cx, dCam2_fx, dCam2_cy, dCam2_fy;                      // Instantiation of the attribtues to store the extrinsics of the color camera 2 calibration
+            // double dCam2_cx, dCam2_fx, dCam2_cy, dCam2_fy;                      // Instantiation of the attribtues to store the extrinsics of the color camera 2 calibration
             double dCamD1_cx, dCamD1_fx, dCamD1_cy, dCamD1_fy;                  // Instantiation of the attributes to store the extrinsics of the depth camera 1 calibration
-            double dCamD2_cx, dCamD2_fx, dCamD2_cy, dCamD2_fy;                  // Instantiation of the attributes to store the extrinsics of the depth camera 2 calibration 
+            // double dCamD2_cx, dCamD2_fx, dCamD2_cy, dCamD2_fy;                  // Instantiation of the attributes to store the extrinsics of the depth camera 2 calibration 
 
 
 
@@ -240,20 +240,20 @@ namespace pic_handling
             /* Setters and Getters */
             bool getbIsProcessing();                                            // Returns if the processing of the picture is being done or not
             void showCam1ColorPic();                                            // Returns the attribute mColorPic1 (raw images taken by the RSD435)
-            void showCam2ColorPic();                                            // Returns the attribute mColorPic2 (raw images taken by the RSD435)
+            // void showCam2ColorPic();                                            // Returns the attribute mColorPic2 (raw images taken by the RSD435)
             void showCam1DepthPic();                                            // Returns the attribute mDepthPic1 (raw images taken by the RSD435)
-            void showCam2DepthPic();                                            // Returns the attribute mDepthPic2 (raw images taken by the RSD435)
+            // void showCam2DepthPic();                                            // Returns the attribute mDepthPic2 (raw images taken by the RSD435)
             void showCam1ColorProcessedPic();                                   // Returns the attribute mColorProcessed1 (processed image for camera 1 after detecting the obstacles)
-            void showCam2ColorProcessedPic();                                   // Returns the attribute mColorProcessed2 (processed image for camera 2 after detecting the obstacles)
+            // void showCam2ColorProcessedPic();                                   // Returns the attribute mColorProcessed2 (processed image for camera 2 after detecting the obstacles)
             cv::Scalar getsLowerThreshold();                                    // Returns the value of the lower threshold for an HSV filter
             cv::Scalar getsUpperThreshold();                                    // Returns the value of the upper threshold for an HSV filter
             double getdAreaThreshold();                                         // Returns the value of the area threshold for deleting the non-obstacle detected noise
             double getdDistanceThreshold();                                     // Returns the distance threshold in meters to check the matching of sides and centers between pics of camera 1 and camera 2
             int getErosioniKernelSize();                                        // Returns the size of the erosion kernel used
             sensor_msgs::CameraInfo getCam1ColorInfo();                         // Returns the information of the ROS color camera 1 configuration
-            sensor_msgs::CameraInfo getCam2ColorInfo();                         // Returns the information of the ROS color camera 2 configuration
+            // sensor_msgs::CameraInfo getCam2ColorInfo();                         // Returns the information of the ROS color camera 2 configuration
             sensor_msgs::CameraInfo getCam1DepthInfo();                         // Returns the information of the ROS depth camera 1 configuration
-            sensor_msgs::CameraInfo getCam2DepthInfo();                         // Returns the information of the ROS depth camera 2 configuration
+            // sensor_msgs::CameraInfo getCam2DepthInfo();                         // Returns the information of the ROS depth camera 2 configuration
             obs_carthesian_position getObstaclesXYZPositions();                 // Returns the XYZ, minimum carthesian radius, and XYZ_diff for each of the detected obstacles
 
 
