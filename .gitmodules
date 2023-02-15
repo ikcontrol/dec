@@ -7,3 +7,6 @@
 [submodule "ca_control/app_apf_collision_avoidance"]
 	path = ca_control/app_apf_collision_avoidance
 	url = http://kaugitea.ikerlan.es/robotics/app_apf_collision_avoidance.git
+[submodule "ca_application/movement_commander"]
+	path = ca_application/movement_commander
+	url = http://kaugitea.ikerlan.es/diego.rodriguez/movement_commander.git
