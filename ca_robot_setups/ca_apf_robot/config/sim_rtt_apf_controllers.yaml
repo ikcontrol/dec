@@ -43,9 +43,9 @@ apf_collision_avoidance:
 
 apf_collision_avoidance:
    flacco_params: &flacco_params
-      v_max: 2
+      v_max: 2.5
       alpha: 6
-      vd_max: 0.5
+      vd_max: 0.4
       c: 5
       ro: 0.70
       pivot_rep_vector: True
