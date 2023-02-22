@@ -47,7 +47,7 @@ apf_collision_avoidance:
       alpha: 6
       vd_max: 0.4
       c: 5
-      ro: 0.70
+      ro: 0.90
       pivot_rep_vector: True
    robot_structure: &robot_structure
       cp_names: *cps
