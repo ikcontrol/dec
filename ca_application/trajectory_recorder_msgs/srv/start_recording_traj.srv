@@ -1,0 +1,6 @@
+# Request Parameters
+
+---
+# Response Parameters
+bool started             # Returns true if the trajectory has been succesfully stored, otherwise false
+bool error_recording     # Returns true when started == false because the node is busy recording another trajectory

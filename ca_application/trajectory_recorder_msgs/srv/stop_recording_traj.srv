@@ -1,0 +1,6 @@
+# Request Parameters
+
+---
+# Response Parameters
+bool stopped             # Returns true if the trajectory has been succesfully stored, otherwise false
+bool error_not_recording # Returns true whenever the recording cannot be stopped due not to be recording
