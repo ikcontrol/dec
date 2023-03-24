@@ -10,8 +10,8 @@ control_points:
    - apf_cp_wrist_3_link
    - apf_cp_tool_center_point
 ro: 0.4 # Search radius
-depth_image_topic: "/camera1/depth_obstacles/image" # "/camera1/depth_registered_filtered/image_rect"
-camera_info_topic: "/camera1/depth_obstacles/camera_info" # "/camera1/depth_registered_filtered/camera_info"
+depth_image_topic: "/camera1/depth_registered_filtered/image_rect" # "/camera1/depth_registered_filtered/image_rect"   /camera1/depth_obstacles/image
+camera_info_topic: "/camera1/depth_registered_filtered/camera_info" # "/camera1/depth_registered_filtered/camera_info"
 fixed_frame: "base_link"
 legacy_dist_calc: False
 loose_timing: True

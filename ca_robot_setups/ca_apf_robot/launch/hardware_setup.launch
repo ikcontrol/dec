@@ -32,13 +32,13 @@ xsi:noNamespaceSchemaLocation="https://gist.githubusercontent.com/nalt/dfa2abc9d
   <node name="rviz" pkg="rviz" type="rviz" if="$(arg gui)" args="-d $(arg rvizconfig)" respawn="true"/>
   
   <!-- URDF FILTER: Setup -->
-  <!-- <param name="gripper_model" command="$(find xacro)/xacro '$(find ca_apf_robot)/urdf/gripper.xacro'" />
+  <param name="gripper_model" command="$(find xacro)/xacro '$(find ca_apf_robot)/urdf/gripper.xacro'" />
   <param name="robot_model" textfile="$(find ca_apf_robot)/urdf/ur10e.urdf" />
   <node pkg="realtime_urdf_filter" type="realtime_urdf_filter" name="d345_urdf_filter" output="screen">
     <remap from="~input_depth" to="/camera1/depth/image_rect_raw" />
     <remap from="~output_depth" to="/camera1/depth_registered_filtered/image_rect" />
     <remap from="~output_mask" to="/urdf_filtered_mask" />
     <rosparam command="load" file="$(find ca_apf_robot)/config/filter_parameters.yaml"/>
-  </node> -->
+  </node>
 
 </launch>

@@ -43,7 +43,7 @@ apf_collision_avoidance:
 
 apf_collision_avoidance:
    flacco_params: &flacco_params
-      v_max: 2.5 # 2.0
+      v_max: 2.0 # 2.0
       alpha: 2 #  6
       vd_max: 0.5
       c: 5
@@ -55,7 +55,7 @@ apf_collision_avoidance:
       ee_segment: "apf_cp_tool_center_point"
       joint_limits_ns: "/robot_description_planning"
    camera: &camera_config
-      camera_ns: "/camera1/aligned_depth_to_color" # "/camera1/depth_registered_filtered"
+      camera_ns: "/camera1/depth_registered_filtered" # "/camera1/depth_registered_filtered"  "/camera1/aligned_depth_to_color"
       camera_frame: "rs_d435_cam_depth_optical_frame"
       robot_frame: "base_link"
 
