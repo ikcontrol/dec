@@ -1,0 +1,77 @@
+<mxfile host="65bd71144e">
+    <diagram id="cb_4Rjue3ssV7RIQUO_7" name="Page-1">
+        <mxGraphModel dx="921" dy="600" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" background="#ffffff" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="21" value="FIWARE Server" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" parent="1" vertex="1">
+                    <mxGeometry x="770" y="160" width="157" height="230" as="geometry"/>
+                </mxCell>
+                <mxCell id="20" style="edgeStyle=none;html=1;entryX=0;entryY=0.25;entryDx=0;entryDy=0;startArrow=classic;startFill=1;endSize=6;fillColor=default;" parent="1" source="2" target="3" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="2" value="Manipulator" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" parent="1" vertex="1">
+                    <mxGeometry x="76" y="188" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="33" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;startArrow=classic;startFill=1;endSize=6;fillColor=default;" parent="1" source="3" target="32" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="3" value="RT Control PC" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" parent="1" vertex="1">
+                    <mxGeometry x="290" y="160" width="460" height="230" as="geometry"/>
+                </mxCell>
+                <mxCell id="4" value="DTS" style="whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="332.5" y="250" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="6" value="DEC" style="whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="1" vertex="1">
+                    <mxGeometry x="460.5" y="250" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="8" value="" style="shape=flexArrow;endArrow=classic;startArrow=classic;html=1;endWidth=20;endSize=6;width=36;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="1" edge="1">
+                    <mxGeometry width="100" height="100" relative="1" as="geometry">
+                        <mxPoint x="302" y="350" as="sourcePoint"/>
+                        <mxPoint x="737" y="350" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="12" value="ROS" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=none;" parent="8" vertex="1" connectable="0">
+                    <mxGeometry x="-0.062" y="-3" relative="1" as="geometry">
+                        <mxPoint x="15" y="-3" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="13" value="USE CASE SPECIFIC AND OTHER SHOP4CF COMPONENTS" style="whiteSpace=wrap;html=1;dashed=1;" parent="1" vertex="1">
+                    <mxGeometry x="587.5" y="250" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="15" value="" style="shape=flexArrow;endArrow=classic;startArrow=none;html=1;endWidth=20;endSize=6;width=36;startFill=0;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" edge="1">
+                    <mxGeometry width="100" height="100" relative="1" as="geometry">
+                        <mxPoint x="320" y="220" as="sourcePoint"/>
+                        <mxPoint x="920" y="220" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="16" value="NGSI REST API" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=none;" parent="15" vertex="1" connectable="0">
+                    <mxGeometry x="-0.062" y="-3" relative="1" as="geometry">
+                        <mxPoint x="15" y="-3" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="22" value="DBs" style="whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="788.5" y="290" width="120" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="23" value="ORION-LD" style="whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="788.5" y="260" width="120" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="24" value="Quantum Leap" style="whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="788.5" y="320" width="120" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="25" value="Etc." style="whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="788.5" y="350" width="120" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="28" style="edgeStyle=none;html=1;entryX=0;entryY=0.75;entryDx=0;entryDy=0;startArrow=classic;startFill=1;endSize=6;fillColor=default;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" parent="1" source="30" target="3" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="30" value="RGBD Camera&lt;span style=&quot;color: rgba(0, 0, 0, 0); font-family: monospace; font-size: 0px; text-align: start;&quot;&gt;%3CmxGraphModel%3E%3Croot%3E%3CmxCell%20id%3D%220%22%2F%3E%3CmxCell%20id%3D%221%22%20parent%3D%220%22%2F%3E%3CmxCell%20id%3D%222%22%20value%3D%22Manipulator%22%20style%3D%22rounded%3D0%3BwhiteSpace%3Dwrap%3Bhtml%3D1%3BfillColor%3D%23ffe6cc%3BstrokeColor%3D%23d79b00%3B%22%20vertex%3D%221%22%20parent%3D%221%22%3E%3CmxGeometry%20x%3D%2276%22%20y%3D%22188%22%20width%3D%22120%22%20height%3D%2260%22%20as%3D%22geometry%22%2F%3E%3C%2FmxCell%3E%3C%2Froot%3E%3C%2FmxGraphModel%3E&lt;/span&gt;&lt;span style=&quot;color: rgba(0, 0, 0, 0); font-family: monospace; font-size: 0px; text-align: start;&quot;&gt;%3CmxGraphModel%3E%3Croot%3E%3CmxCell%20id%3D%220%22%2F%3E%3CmxCell%20id%3D%221%22%20parent%3D%220%22%2F%3E%3CmxCell%20id%3D%222%22%20value%3D%22Manipulator%22%20style%3D%22rounded%3D0%3BwhiteSpace%3Dwrap%3Bhtml%3D1%3BfillColor%3D%23ffe6cc%3BstrokeColor%3D%23d79b00%3B%22%20vertex%3D%221%22%20parent%3D%221%22%3E%3CmxGeometry%20x%3D%2276%22%20y%3D%22188%22%20width%3D%22120%22%20height%3D%2260%22%20as%3D%22geometry%22%2F%3E%3C%2FmxCell%3E%3C%2Froot%3E%3C%2FmxGraphModel%3E&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" parent="1" vertex="1">
+                    <mxGeometry x="76" y="303" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="32" value="HMI" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" parent="1" vertex="1">
+                    <mxGeometry x="460.5" y="440" width="120" height="60" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

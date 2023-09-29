@@ -1,0 +1,60 @@
+<mxfile host="65bd71144e">
+    <diagram id="fub64nVZ-CAEU50-Hv_E" name="Page-1">
+        <mxGraphModel dx="1216" dy="1514" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="24" value="FIWARE" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=top;" parent="1" vertex="1">
+                    <mxGeometry x="80" y="-250" width="560" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="21" value="ROS NETWORK" style="rounded=1;whiteSpace=wrap;html=1;verticalAlign=top;" parent="1" vertex="1">
+                    <mxGeometry x="80" y="-100" width="560" height="140" as="geometry"/>
+                </mxCell>
+                <mxCell id="12" value="DEC" style="rounded=1;whiteSpace=wrap;html=1;verticalAlign=top;" parent="1" vertex="1">
+                    <mxGeometry x="80" y="100" width="560" height="180" as="geometry"/>
+                </mxCell>
+                <mxCell id="8" style="edgeStyle=none;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;startArrow=classic;startFill=1;" parent="1" target="2" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="190" y="42" as="sourcePoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="11" style="edgeStyle=none;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" target="10" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="240" y="150" as="sourcePoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="2" value="controller_manager&lt;br&gt;&lt;i&gt;hw specific&lt;/i&gt;" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;" parent="1" vertex="1">
+                    <mxGeometry x="90" y="134" width="200" height="130" as="geometry"/>
+                </mxCell>
+                <mxCell id="5" value="&lt;b&gt;[PLUGIN]&lt;/b&gt; Evasive Controller" style="rounded=1;whiteSpace=wrap;html=1;spacingLeft=0;" parent="1" vertex="1">
+                    <mxGeometry x="100" y="194" width="180" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="7" style="edgeStyle=none;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="3" target="2" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="3" value="depth_image_filter" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="485" y="169" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="23" style="edgeStyle=none;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="10" target="25" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="240" y="-210" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="10" value="ros_fiware_bridge" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="175" y="-47" width="130" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="19" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="18" edge="1" target="3">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="552.0000610351562" y="188.5999755859375" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="18" value="Depth Camera" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="485" y="-57" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="25" value="ORION_LD Context Broker" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="175" y="-220" width="130" height="50" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

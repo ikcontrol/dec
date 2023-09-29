@@ -1,0 +1,60 @@
+<mxfile host="65bd71144e">
+    <diagram id="mKCfP9jhOnLu-DaD2Pn5" name="Page-1">
+        <mxGraphModel dx="318" dy="535" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" background="#ffffff" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="qf1diwaIVTCJtGhCtxI0-6" value="RT Capable Control PC" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;" parent="1" vertex="1">
+                    <mxGeometry x="360" y="170" width="180" height="280" as="geometry"/>
+                </mxCell>
+                <mxCell id="qf1diwaIVTCJtGhCtxI0-1" value="(RGB)D Cameras" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="110" y="200" width="136" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="qf1diwaIVTCJtGhCtxI0-2" value="(RGB)D Cameras" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="120" y="210" width="136" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="qf1diwaIVTCJtGhCtxI0-3" value="(RGB)D Cameras" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="130" y="220" width="136" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="qf1diwaIVTCJtGhCtxI0-8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="qf1diwaIVTCJtGhCtxI0-4" target="qf1diwaIVTCJtGhCtxI0-7" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="qf1diwaIVTCJtGhCtxI0-4" value="(RGB)D Cameras" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="140" y="230" width="136" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="qf1diwaIVTCJtGhCtxI0-10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;startArrow=classic;startFill=1;" parent="1" source="qf1diwaIVTCJtGhCtxI0-5" target="qf1diwaIVTCJtGhCtxI0-9" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="qf1diwaIVTCJtGhCtxI0-5" value="Collaborative Robot" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="120" y="370" width="136" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="qf1diwaIVTCJtGhCtxI0-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;startArrow=none;startFill=0;" parent="1" source="qf1diwaIVTCJtGhCtxI0-7" target="qf1diwaIVTCJtGhCtxI0-9" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="qf1diwaIVTCJtGhCtxI0-7" value="Environment Tracking" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="382" y="215" width="136" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="5" style="edgeStyle=none;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="qf1diwaIVTCJtGhCtxI0-9" target="7" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="680" y="400" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="qf1diwaIVTCJtGhCtxI0-9" value="Collaborative Evasion" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="382" y="370" width="136" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="2" value="Filtered&lt;br&gt;Point Cloud" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
+                    <mxGeometry x="440" y="300" width="90" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="3" value="Robot State&lt;br&gt;and Commands" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
+                    <mxGeometry x="256" y="400" width="110" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="6" value="System State&lt;br&gt;Data" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
+                    <mxGeometry x="540" y="360" width="90" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="7" value="Context Broker" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="630" y="370" width="136" height="60" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
