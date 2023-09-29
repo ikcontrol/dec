@@ -30,8 +30,8 @@ Before being fed to the APF-based controller, the raw RGBD images are filtered t
 | **Component Usability:** | Video from a WIP version showing similar functionality: [https://youtu.be/MqjKQv6fBsQ](https://youtu.be/MqjKQv6fBsQ) |
 | **Versions:** | Single free version, option for paid support. |
 | **Component Usability:** | Push from 3-4 to 5-6 |
-| **Instructions Video:** | TBD |
-| **Git:** | TBD |
+| **Instructions Video:** | [TBD](https://www.youtube.com/watch?v=OeH5jF41des) |
+| **Git:** | [TBD](https://github.com/ikcontrol/dec) |
 | **RAMP:** | TBD |
 | **Docker:** | N/A |
 
