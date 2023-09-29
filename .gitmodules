@@ -4,9 +4,3 @@
 [submodule "ca_control/rtt_ur_controllers"]
 	path = ca_control/rtt_ur_controllers
 	url = git@kaugitea.ikerlan.es:robotics/rtt_ur_controllers.git
-[submodule "ca_application/movement_commander"]
-	path = ca_application/movement_commander
-	url = git@kaugitea.ikerlan.es:diego.rodriguez/movement_commander.git
-[submodule "ca_application/simu_helpers"]
-	path = ca_application/simu_helpers
-	url = git@kaugitea.ikerlan.es:diego.rodriguez/simu_helpers.git
