@@ -1,65 +1,75 @@
-# APF-Based Collision Avoidance Application
+# DEC Component Documentation
 
-## What can I expect from this repository?
-The APF-Based Collision Avoidance Application consist on the main repository of Diego Rodríguez's Ph.D. (diego.rodriguez@ikerlan.es - link to the document or site when finished). This application has been developed for the `ros_melodic` distribution and it the RT control is base on the `orocos_package`.
+The DEC Component is a low level (local) component that provides real time evasive capabilities to a robot manipulator. The DEC component is based on a real time control loop that runs an Artificial Potential Fields (APF) based algorithm to overlay a repulsive velocity on top of the current robot motions based on input from depth camera. The control loop also implements a mechanism to avoid running into singular or low manipulability configurations. 
 
-The current repo is divided into three sub-repos listed below:
-* **ca_application (link)**: this repo contains the developed `ros_packages` for the main application functionalities. Among this funcitonalities, you can found the `scene_segementation`, `ca_apf_gui`, and other `ros_packages`.
-* **ca_control (link)**: this repo contains the developed RT controllers required to run the robot in both scenarios: the real robot and simulations.
-* **ca_robot_setups (link)**: this repo contains the main configurations and launch files to run the robot in simulations and in the laboratory. It is an auxiliar package that requires the `ur10e_hw_integration` (link) to run.
+Before being fed to the APF-based controller, the raw RGBD images are filtered to filter out the elements of the environment that are not to be evaded by the robot, i.e., the static elements of the environment and the robot itself and its manipulation targets.
 
-## Dependencies
-To run the **APF-Based Collision Avoidance Application** it is required the following `ros_packages` with their corresponding development branches. The list below highlights the required external dependencies and versions requierd:
-* **Dependency 1** (version + link).
-* **Dependency 2** (version + link).
+## Description
+
+| | Dynamic Efficient Collaboration |
+|-|-|
+| **Shorthand:**   | DEC |
+| **Maintainer:**   | Ikerlan S. Coop. |
+| **Application Area:**   | Improvement of collaboration efficiency  |
+| **Main Functions:**   |  Tracks the presence of dynamic obstacles in the environment and adjusts dynamically the robot trajectory in order to avoid interference between human and robot tasks. Also provides semantic information on the state of the robot regarding the current collaboration state. |
+| **Interfaces and Data-Input:** | Real time depth camera data (at least from one camera), real time robot joint position and velocity states and the robot's model (URDF) |
+| **Functional Architecture Diagram:** | ![](rsc/use_case/overall_diagram.png) |
+| **Main Non-Functional Requirements/dependencies:** | The PC executing the DEC should be real-time capable, currently PREEMPT-RT patched Linux systems are supported. An OpenGL 4 compatible GPU is required. |
+| **Hardware Requirements:** | At least one depth camera, a computer with a (wired) real time connection and control loop to the manipulator.  |
+| **Security Threats:** | Run on a separate/segregated network (ROS security) without access to the public internet or to any network not authorized to use it.|
+| **Privacy Threats:** | No specific privacy requirements. No personal information, camera or 3D data logging. |
+| **Execution Place:** | Local. |
+| **Privacy Threats:** | Internal development, deployment instructions only upon (approved) request. |
+| **User Interface:** | Text configuration files and online configuration GUI |
+| **Supported Devices:** | Any robot with ROS driver, URDF description and real time joint angles. Any Depth Camera with a ROS driver.
+| **User defined scenarios (non-technical) and relevant pilot cases:** | Efficient human-robot collaboration. Use case: Household appliance disassembly (COOP) |
+| **Roles/Actors:** | Collaborative Robots. |
+| **Component Type:** | Native app. |
+| **Development Environment:** | ROS 1, C++ source. |
+| **TRL:** | Push from 3-4 to 5-6 |
+| **Component Usability:** | Video from a WIP version showing similar functionality: [https://youtu.be/MqjKQv6fBsQ](https://youtu.be/MqjKQv6fBsQ) |
+| **Versions:** | Single free version, option for paid support. |
+| **Component Usability:** | Push from 3-4 to 5-6 |
+| **Instructions Video:** | TBD |
+| **Git:** | TBD |
+| **RAMP:** | TBD |
+| **Docker:** | N/A |
 
 ## Installation
-The following installation process is required to succesfully run the **APF-Based Collision Avoidance Application**. Open a new terminal (`ctrl`+`alt`+`t`) and the copy and run the following commands:
+Since the DEC component is given in the form of a docker image, the fastest way to download it is by pulling the image from the ramp site.
+
 ```
-cd ros_wss
-mkdir -p ws_ca_apf/src && cd ws_ca_apf #or whatever name you want for your work space
-catkin init
-cd src
-git clone -b <branch> https://git.url
-cd ..
-rosdep install --from-paths src --ignore-src -r -y
-catkin build
+sudo docker pull <link:to_ramp_page>
 ```
 
-Once it is succesfully compiled, source the solution:
-```
-source ~/ros_wss/ws_ca_apf/devel/setup.bash
-```
+Or in a manual way, you can also download the `dec.tar` file from [here](link). Then you have to load the image into docker by typing the following command:
 
-In case this sourcing is required to last permanently on your computer, don't forget to echo it into the compiling environment variables:
 ```
-echo "source ~/ros_wss/ws_ca_apf/devel/setup.bash" >> ~/.bashrc
+docker load --input dec.tar
 ```
 
-## Official releases
-There is still no official original release for the actual packages distribuition that contains the APF-based controller combined with a suitable singularity-free control strategy.
-* **Release TAG Name**: 
-  * Description: 
-  * Developers list:
-  * Mantainers list:
-  * Package list:
-    * *Package 1*: 
-    * *Package 2*:
-    * *...*:
-    * *Package n*:
 
+## Running
+To run an example of a simulation of the DEC component please execute the following command:
+```
+sudo docker run -it --privileged --device=/dev/dri --group-add video --volume=/tmp/.X11-unix:/tmp/.X11-unix --env="DISPLAY=$DISPLAY" --network host dec
+```
 
-## Development status
-Major code updates:
-* The scene_segmentation_filter and APF_Controller has already been synchronized and coordinated (real hardware and simulation).
+To launch the docker image on an iterative mode, please copy instead the following:
+```
+sudo docker run -it --privileged --device=/dev/dri --group-add video --volume=/tmp/.X11-unix:/tmp/.X11-unix --env="DISPLAY=$DISPLAY" --network host dec /bin/bash
+```
 
-Pending tasks:
-* Automated Gazebo obstacles movement simulation nodes.
-* Automated static objects RViZ publisher node.
-* Auotopositioning node for the RealSense D435 Cameras.
+### Warning disclaimer
+The given examples of the docker image are prepared regarding to the specific use case and demonstrator developed during the COOP project. Therefore, this examples will run correctly on a laboratory setup with an identical distribution as the one found at IKERLAN's Digilab. For this reason, for any other scenario the image should be extended to adapt the environment of the robot to that specific use case.  
 
-## Mantainers
-The repo is currently mantained by:
-* **Diego Rodríguez (KAU)**: diego.rodriguez@ikerlan.es
-* **Ander González (KAU)**: ander.gonzalez@ikerlan.es
-* **Josu Sinovas (KAU)**: jsinovas@ikerlan.es
+## Contact and maintainers
+If additional support is required, please contact to:
+* Diego Rodríguez: diego.rodriguez@ikerlan.es
+* Ander González: ander.gonzalez@ikerlan.es
+
+---
+
+*Developed at IKERLAN S. Coop.*
+
+<img src="https://www.ikerlan.es/img/logo-ikerlan-brta.svg" />
