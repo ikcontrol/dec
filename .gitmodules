@@ -4,9 +4,6 @@
 [submodule "ca_control/rtt_ur_controllers"]
 	path = ca_control/rtt_ur_controllers
 	url = git@kaugitea.ikerlan.es:robotics/rtt_ur_controllers.git
-[submodule "ca_control/app_apf_collision_avoidance"]
-	path = ca_control/app_apf_collision_avoidance
-	url = git@kaugitea.ikerlan.es:robotics/app_apf_collision_avoidance.git
 [submodule "ca_application/movement_commander"]
 	path = ca_application/movement_commander
 	url = git@kaugitea.ikerlan.es:diego.rodriguez/movement_commander.git
