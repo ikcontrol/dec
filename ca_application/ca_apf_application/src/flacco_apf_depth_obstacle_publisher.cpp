@@ -177,7 +177,7 @@ void DepthObstaclePublisher::post_proces_img(cv::Mat& cv_img)
     const auto& cnt = contours[idx];
     if (cv::contourArea(cnt) < cfg.min_contour_area)  // Config
     {
-      cv::drawContours(cv_img, contours, idx, cv::Scalar(cfg.replace_value), CV_FILLED);
+      cv::drawContours(cv_img, contours, idx, cv::Scalar(cfg.replace_value), cv::FILLED);
       continue;
     }
   }

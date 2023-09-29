@@ -1,7 +1,0 @@
-<?xml version="1.0"?>
-<launch>
-
-  <!-- Launch user_interface node -->
-  <node name="application_gui" pkg="app_gui" type="app_gui" output="screen"/>
-
-</launch>

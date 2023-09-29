@@ -60,11 +60,6 @@ add_library(${PROJECT_NAME}
  src/helper/robotiq_gripper_helper.cpp
 )
 target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES})
-install (TARGETS ${PROJECT_NAME}
-        ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-        LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-        RUNTIME DESTINATION ${CATKIN_GLOBAL_BIN_DESTINATION})
-
 
 # Obstacle publiser
 add_executable(apf_obstacle_publisher_node
@@ -90,6 +85,29 @@ add_dependencies(apf_ee_recorder
 )
 target_link_libraries(apf_ee_recorder
   ${catkin_LIBRARIES}
+)
+
+
+#############
+## INSTALL ##
+#############
+## Mark executables for installation
+## See http://docs.ros.org/melodic/api/catkin/html/howto/format1/building_executables.html
+install(TARGETS apf_obstacle_publisher_node apf_ee_recorder
+  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
+
+## Mark libraries for installation
+install (TARGETS ${PROJECT_NAME}
+        ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+        LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+        RUNTIME DESTINATION ${CATKIN_GLOBAL_BIN_DESTINATION})
+
+## Mark cpp header files for installation
+install(DIRECTORY include/ # ${PROJECT_NAME}/
+  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+  FILES_MATCHING PATTERN "*.h"
+  PATTERN ".svn" EXCLUDE
 )
 
 install(PROGRAMS scripts/launch_gl_compat.bash DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})

@@ -1,5 +1,0 @@
-# Request Parameters
-trajectory_msgs/JointTrajectory trajectory_rcv
----
-# Response Parameters
-bool stored             # Returns true if the trajectory has been succesfully stored, otherwise false

@@ -1,6 +1,0 @@
-# An example for self defining custom actions
-float32 my_goal
----
-int32 my_result
----
-string my_feedback
