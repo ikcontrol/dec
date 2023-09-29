@@ -12,15 +12,3 @@ This package is mantained by:
 * Ander González: ander.gonzalez@ikerlan.es
 
 This package was originally developed on first instance by Ander González with a different `ros_package` distribuition.
-
-## Official releases
-There is still no official original release for the actual packages distribuition that contains the APF-based controller combined with a suitable singularity-free control strategy.
-* **Release TAG Name**: 
-  * Description: 
-  * Developers list:
-  * Mantainers list:
-  * Package list:
-    * *Package 1*: 
-    * *Package 2*:
-    * *...*:
-    * *Package n*:
